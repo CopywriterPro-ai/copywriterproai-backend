@@ -1,21 +1,15 @@
-image: node
-
-stages:
-  - lint
-
 eslint:
+  <<: *exclude_tags
   stage: lint
+  image: node
+  tags:
+    - web
+  before_script:
+    - call npm i -g eslint-cli
+    - call npm i eslint --save-dev
+    - call npm i @typescript-eslint/parser --save-dev
+    - call npm i @typescript-eslint/eslint-plugin --save-dev
+    - call npm i eslint-plugin-security --save-dev
   script:
-    # Install eslint
-    - |
-      npm install eslint \
-      eslint-config-airbnb \
-      eslint-config-prettier \
-      eslint-plugin-flowtype \ 
-      eslint-plugin-import \
-      eslint-plugin-jsx-a11y \
-      eslint-plugin-prettier \
-      eslint-plugin-react
-    # Run eslint
-    - ./node_modules/.bin/eslint --init
-    #- node_modules/eslint/bin/eslint.js .
+    - node node_modules\eslint\bin\eslint.js --ext .js,.jsx,.ts,.tsx src/
+  allow_failure: true
