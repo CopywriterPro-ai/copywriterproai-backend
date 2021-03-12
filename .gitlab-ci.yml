@@ -11,7 +11,7 @@ eslint:
       npm install eslint \
       eslint-config-airbnb \
       eslint-config-prettier \
-      eslint-plugin-flowtype \ # Any ideas on what I might want to do next?
+      eslint-plugin-flowtype \ 
       eslint-plugin-import \
       eslint-plugin-jsx-a11y \
       eslint-plugin-prettier \
