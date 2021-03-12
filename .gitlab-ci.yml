@@ -1,5 +1,4 @@
 eslint:
-  <<: *exclude_tags
   stage: lint
   image: node
   tags:
