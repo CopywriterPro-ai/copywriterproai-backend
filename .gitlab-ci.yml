@@ -17,4 +17,5 @@ eslint:
       eslint-plugin-prettier \
       eslint-plugin-react
     # Run eslint
-    - node_modules/eslint/bin/eslint.js .
+    - ./node_modules/.bin/eslint --init
+    #- node_modules/eslint/bin/eslint.js .
