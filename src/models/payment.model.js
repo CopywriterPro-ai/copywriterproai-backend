@@ -26,7 +26,7 @@ const paymentSchema = mongoose.Schema(
           type: Date,
           required: true,
           trim: true,
-        }
+        },
       },
     ],
   },

@@ -15,11 +15,11 @@ const likeSchema = mongoose.Schema(
           required: true,
           trim: true,
         },
-        generatedContentsIndexes: { 
+        generatedContentsIndexes: {
           type: Array,
           required: true,
           default: [],
-        }
+        },
       },
     ],
   },
