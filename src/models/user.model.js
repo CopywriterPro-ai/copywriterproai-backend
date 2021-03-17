@@ -6,22 +6,11 @@ const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    email: {
-      type: String,
+    phone: {
+      type: Number,
       required: true,
       unique: true,
       trim: true,
-      lowercase: true,
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error('Invalid email');
-        }
-      },
     },
     password: {
       type: String,
@@ -35,11 +24,58 @@ const userSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
+    name: {
+      type: String,
+      required: true,
+      max: 10,
+      min: 3,
+      trim: true,
+    },
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+    },
     role: {
       type: String,
       enum: roles,
       default: 'user',
     },
+    accountStatus: {
+      type: String,
+      enum: ['active', 'blocked'],
+      default: 'active',
+    },
+    wordsLeft: {
+      type: Number,
+      required: true,
+      trim: true,
+      default: 1000,
+    },
+    paymentId: {
+      type: mongoose.Schema.ObjectId,
+      trim: true,
+      unique: true,
+    },
+    subscription: {
+      type: String,
+      enum: ['Freemium', 'Premium - Monthly', 'Premium - Annual'],
+      default: 'Freemium',
+    },
+    bookmarks: [
+      {
+        contentId: {
+          type: mongoose.Schema.ObjectId,
+          required: true,
+          trim: true,
+        },
+        generatedContentsIndexes: { 
+          type: Array,
+          required: true,
+          default: [],
+        }
+      },
+    ],
   },
   {
     timestamps: true,
