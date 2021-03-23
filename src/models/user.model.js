@@ -6,8 +6,8 @@ const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
-    phone: {
-      type: Number,
+    phoneNumber: {
+      type: String,
       required: true,
       unique: true,
       trim: true,
@@ -24,15 +24,10 @@ const userSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
-    name: {
-      type: String,
-      required: true,
-      max: 10,
-      min: 3,
-      trim: true,
-    },
     email: {
       type: String,
+      required: true,
+      unique: true,
       trim: true,
       lowercase: true,
     },
@@ -40,6 +35,10 @@ const userSchema = mongoose.Schema(
       type: String,
       enum: roles,
       default: 'user',
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
     accountStatus: {
       type: String,
@@ -85,6 +84,17 @@ const userSchema = mongoose.Schema(
 // add plugin that converts mongoose to json
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
+
+/**
+ * Check if email is taken
+ * @param {string} phoneNumber - The user's phone number
+ * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
+ * @returns {Promise<boolean>}
+ */
+userSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
+  const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
+  return !!user;
+};
 
 /**
  * Check if email is taken

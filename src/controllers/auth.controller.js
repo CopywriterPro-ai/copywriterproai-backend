@@ -2,14 +2,28 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService, emailService } = require('../services');
 
-const requestOTP = catchAsync(async (req, res) => {
-  
-});
-
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.status(httpStatus.CREATED).send({ user, tokens });
+  await authService.requestOneTimePassword(user.phoneNumber);
+  res.status(httpStatus.CREATED).send({ user });
+});
+
+const verifyAccount = catchAsync(async (req, res) => {
+  const { userId, phoneNumber, OTP } = req.body;
+  const user = await userService.getUserById(userId);
+  if (!user || (user.phoneNumber !== phoneNumber)) {
+    res.status(httpStatus.NOT_FOUND).send({ message: 'User not found!' });
+  } else if (user.isVerified) {
+    res.status(httpStatus.OK).send({ message: 'Account is already verified!' });
+  } else {
+    const { status } = await authService.verifyPhoneNumber(phoneNumber, OTP);
+    if (status !== 'approved') {
+      res.status(httpStatus.BAD_REQUEST).send({ message: 'Account verification failed.' });
+    } else {
+      await userService.updateUserById(user, userId, { isVerified: true });
+      res.status(httpStatus.OK).send({ message: 'Your account is verified!' });
+    }
+  }
 });
 
 const login = catchAsync(async (req, res) => {
@@ -35,8 +49,8 @@ const resetPassword = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  requestOTP,
   register,
+  verifyAccount,
   login,
   logout,
   refreshTokens,

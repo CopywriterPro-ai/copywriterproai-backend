@@ -5,6 +5,35 @@ const Token = require('../models/token.model');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 
+const config = require('../config/config');
+const twilio = require('twilio')(config.twilio.twilioAccountSID, config.twilio.twilioAuthToken);
+
+const requestOneTimePassword = async (phoneNumber) => {
+  try {
+    const phoneNumberVerificationData = await twilio.verify
+      .services(config.twilio.twilioServiceVerificationSID)
+      .verifications.create({
+        to: phoneNumber,
+        channel: 'sms',
+      });
+    return phoneNumberVerificationData;
+  } catch (err) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Something went wrong!');
+  }
+};
+
+const verifyPhoneNumber = async (phoneNumber, code) => {
+  try {
+    const phoneNumberVerificationData = await twilio.verify
+      .services(config.twilio.twilioServiceVerificationSID)
+      .verificationChecks.create({ to: phoneNumber, code });
+
+    return phoneNumberVerificationData;
+  } catch (err) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Something went wrong!');
+  }
+};
+
 /**
  * Login with username and password
  * @param {string} email
@@ -76,4 +105,6 @@ module.exports = {
   logout,
   refreshAuth,
   resetPassword,
+  requestOneTimePassword,
+  verifyPhoneNumber,
 };

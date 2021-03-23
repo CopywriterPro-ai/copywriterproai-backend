@@ -19,6 +19,27 @@ const getUsers = {
   }),
 };
 
+const getUser = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+};
+
+const updateUser = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object()
+    .keys({
+      email: Joi.string().email(),
+      role: Joi.string(),
+      isVerified: Joi.boolean(),
+      accountStatus: Joi.string(),
+      wordsLeft: Joi.number(),
+    })
+    .min(1),
+};
+
 const updateUserInfo = {
   body: Joi.object().keys({
     name: Joi.string().required(),
@@ -36,6 +57,8 @@ const updateUserInterest = {
 module.exports = {
   createUser,
   getUsers,
+  getUser,
+  updateUser,
   updateUserInfo,
   updateUserInterest,
 };

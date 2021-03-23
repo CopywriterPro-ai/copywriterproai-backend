@@ -29,6 +29,15 @@ const deleteUser = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const updateUser = catchAsync(async (req, res) => {
+  const user = await userService.getUserById(req.params.userId);
+  if (!user) {
+    res.status(httpStatus.NOT_FOUND).send({ message: 'User not found!' });
+  }
+  const updatedUserInfo = await userService.updateUserById(user, req.params.userId, req.body);
+  res.status(httpStatus.OK).send(updatedUserInfo);
+});
+
 const updateUserInfo = catchAsync(async (req, res) => {
 
 });
@@ -50,6 +59,7 @@ module.exports = {
   getUsers,
   getUser,
   deleteUser,
+  updateUser,
   updateUserInfo,
   updateUserBookmarks,
   updateUserLikes,
