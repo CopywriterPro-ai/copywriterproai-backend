@@ -32,7 +32,7 @@ const contentSchema = mongoose.Schema(
       type: Array,
       required: true,
       default: [],
-    }
+    },
   },
   {
     timestamps: true,

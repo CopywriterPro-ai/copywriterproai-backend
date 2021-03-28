@@ -1,28 +1,30 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, userService, tokenService, emailService } = require('../services');
+const { authService, userService, tokenService, interestService } = require('../services');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
-  await authService.requestOneTimePassword(user.phoneNumber);
+  // await authService.requestOneTimePassword(user.phoneNumber);
   res.status(httpStatus.CREATED).send({ user });
 });
 
 const verifyAccount = catchAsync(async (req, res) => {
   const { userId, phoneNumber, OTP } = req.body;
   const user = await userService.getUserById(userId);
-  if (!user || (user.phoneNumber !== phoneNumber)) {
+  if (!user || user.phoneNumber !== phoneNumber) {
     res.status(httpStatus.NOT_FOUND).send({ message: 'User not found!' });
   } else if (user.isVerified) {
     res.status(httpStatus.OK).send({ message: 'Account is already verified!' });
   } else {
-    const { status } = await authService.verifyPhoneNumber(phoneNumber, OTP);
-    if (status !== 'approved') {
-      res.status(httpStatus.BAD_REQUEST).send({ message: 'Account verification failed.' });
-    } else {
-      await userService.updateUserById(user, userId, { isVerified: true });
+    // const { status } = await authService.verifyPhoneNumber(phoneNumber, OTP);
+    // if (status !== 'approved') {
+    //   res.status(httpStatus.BAD_REQUEST).send({ message: 'Account verification failed.' });
+    // } else {
+      await userService.createUserPayment(userId);
+      await interestService.createUserInterest(userId);
+      await userService.updateUserById(user, userId, { isVerified: true, bookmarks: {} });
       res.status(httpStatus.OK).send({ message: 'Your account is verified!' });
-    }
+    // }
   }
 });
 

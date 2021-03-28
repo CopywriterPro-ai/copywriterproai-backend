@@ -3,11 +3,10 @@ const { toJSON, paginate } = require('./plugins');
 
 const paymentSchema = mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.ObjectId,
-      required: true,
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
       trim: true,
-      unique: true,
+      ref: 'User',
     },
     paymentsHistory: [
       {

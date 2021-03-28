@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
@@ -51,30 +50,14 @@ const userSchema = mongoose.Schema(
       trim: true,
       default: 1000,
     },
-    paymentId: {
-      type: mongoose.Schema.ObjectId,
-      trim: true,
-      unique: true,
-    },
     subscription: {
       type: String,
       enum: ['Freemium', 'Premium - Monthly', 'Premium - Annual'],
       default: 'Freemium',
     },
-    bookmarks: [
-      {
-        contentId: {
-          type: mongoose.Schema.ObjectId,
-          required: true,
-          trim: true,
-        },
-        generatedContentsIndexes: { 
-          type: Array,
-          required: true,
-          default: [],
-        }
-      },
-    ],
+    bookmarks: {
+      type: mongoose.Schema.Types.Mixed,
+    },
   },
   {
     timestamps: true,

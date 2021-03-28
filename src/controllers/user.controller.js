@@ -1,6 +1,5 @@
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
-const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
 
@@ -17,10 +16,7 @@ const getUsers = catchAsync(async (req, res) => {
 });
 
 const getUser = catchAsync(async (req, res) => {
-  const user = await userService.getUserById(req.params.userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
+  const user = await userService.checkUserExistsOrNot(req.params.userId);
   res.send(user);
 });
 
@@ -30,28 +26,15 @@ const deleteUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  const user = await userService.getUserById(req.params.userId);
-  if (!user) {
-    res.status(httpStatus.NOT_FOUND).send({ message: 'User not found!' });
-  }
+  const user = await userService.checkUserExistsOrNot(req.params.userId);
   const updatedUserInfo = await userService.updateUserById(user, req.params.userId, req.body);
   res.status(httpStatus.OK).send(updatedUserInfo);
 });
 
-const updateUserInfo = catchAsync(async (req, res) => {
-
-});
-
 const updateUserBookmarks = catchAsync(async (req, res) => {
-
-});
-
-const updateUserLikes = catchAsync(async (req, res) => {
-
-});
-
-const updateUserDislikes = catchAsync(async (req, res) => {
-
+  const user = await userService.checkUserExistsOrNot(req.params.userId);
+  const updatedUserInfo = await userService.updateBookmarks(user, req.body);
+  res.status(httpStatus.OK).send(updatedUserInfo);
 });
 
 module.exports = {
@@ -60,8 +43,5 @@ module.exports = {
   getUser,
   deleteUser,
   updateUser,
-  updateUserInfo,
   updateUserBookmarks,
-  updateUserLikes,
-  updateUserDislikes,
 };
