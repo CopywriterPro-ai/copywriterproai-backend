@@ -19,7 +19,8 @@ const verifyAccount = {
 
 const login = {
   body: Joi.object().keys({
-    email: Joi.string().email().required(),
+    email: Joi.string(),
+    phoneNumber: Joi.string(),
     password: Joi.string().required(),
   }),
 };

@@ -84,8 +84,8 @@ const checkUserExistsOrNot = async (userId) => {
  * @param {string} email
  * @returns {Promise<User>}
  */
-const getUserByEmail = async (email) => {
-  return User.findOne({ email });
+const getUser = async (identity) => {
+  return User.findOne(identity);
 };
 
 /**
@@ -135,7 +135,7 @@ module.exports = {
   createUserDislike,
   queryUsers,
   getUserById,
-  getUserByEmail,
+  getUser,
   checkUserExistsOrNot,
   updateUserById,
   updateBookmarks,

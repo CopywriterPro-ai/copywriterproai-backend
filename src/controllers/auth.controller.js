@@ -4,7 +4,7 @@ const { authService, userService, tokenService, interestService } = require('../
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
-  // await authService.requestOneTimePassword(user.phoneNumber);
+  await authService.requestOneTimePassword(user.phoneNumber);
   res.status(httpStatus.CREATED).send({ user });
 });
 
@@ -16,21 +16,23 @@ const verifyAccount = catchAsync(async (req, res) => {
   } else if (user.isVerified) {
     res.status(httpStatus.OK).send({ message: 'Account is already verified!' });
   } else {
-    // const { status } = await authService.verifyPhoneNumber(phoneNumber, OTP);
-    // if (status !== 'approved') {
-    //   res.status(httpStatus.BAD_REQUEST).send({ message: 'Account verification failed.' });
-    // } else {
+    const { status } = await authService.verifyPhoneNumber(phoneNumber, OTP);
+    if (status !== 'approved') {
+      res.status(httpStatus.BAD_REQUEST).send({ message: 'Account verification failed.' });
+    } else {
       await userService.createUserPayment(userId);
       await interestService.createUserInterest(userId);
       await userService.updateUserById(user, userId, { isVerified: true, bookmarks: {} });
       res.status(httpStatus.OK).send({ message: 'Your account is verified!' });
-    // }
+    }
   }
 });
 
 const login = catchAsync(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await authService.loginUserWithEmailAndPassword(email, password);
+  const { phoneNumber, email, password } = req.body;
+  const user = phoneNumber
+    ? await authService.loginUser({ phoneNumber }, password)
+    : await authService.loginUser({ email }, password);
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
 });

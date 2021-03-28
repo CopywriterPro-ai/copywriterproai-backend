@@ -40,10 +40,12 @@ const verifyPhoneNumber = async (phoneNumber, code) => {
  * @param {string} password
  * @returns {Promise<User>}
  */
-const loginUserWithEmailAndPassword = async (email, password) => {
-  const user = await userService.getUserByEmail(email);
+const loginUser = async (identity, password) => {
+  const user = await userService.getUser(identity);
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+  } else if(!user.isVerified) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Account not verified!');
   }
   return user;
 };
@@ -101,7 +103,7 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
 };
 
 module.exports = {
-  loginUserWithEmailAndPassword,
+  loginUser,
   logout,
   refreshAuth,
   resetPassword,
