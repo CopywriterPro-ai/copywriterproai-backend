@@ -41,16 +41,21 @@ const updateUser = {
 };
 
 const updateUserInfo = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
   body: Joi.object().keys({
-    name: Joi.string().required(),
     email: Joi.string().email(),
   }),
 };
 
 const updateUserInterest = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
   body: Joi.object().keys({
-    contentId: Joi.string().custom(objectId),
-    generatedContentsIndexes: Joi.string().required(),
+    contentId: Joi.string().custom(objectId).required(),
+    index: Joi.number().required(),
   }),
 };
 

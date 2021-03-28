@@ -2,7 +2,7 @@ const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
+const { userController } = require('../../controllers');
 
 const router = express.Router();
 
@@ -18,19 +18,11 @@ router
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
 router
-  .route('/update/info')
-  .patch(auth('updateUserInfo'), validate(userValidation.updateUserInfo), userController.updateUserInfo);
+  .route('/:userId/update/info')
+  .patch(auth('updateUserInfo'), validate(userValidation.updateUserInfo), userController.updateUser);
 
 router
-  .route('/update/bookmarks')
-  .patch(auth('updateUserBookmarks'), validate(userValidation.updateUserInterest), userController.updateUserBookmarks);
-
-router
-  .route('/update/likes')
-  .patch(auth('updateUserLikes'), validate(userValidation.updateUserInterest), userController.updateUserLikes);
-
-router
-  .route('/update/dislikes')
-  .patch(auth('updateUserDislikes'), validate(userValidation.updateUserInterest), userController.updateUserDislikes);
+  .route('/:userId/update/bookmarks')
+  .patch(auth('updateUserInfo'), validate(userValidation.updateUserInterest), userController.updateUserBookmarks);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const { User, Payment, Dislike } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const config = require('../config/config');
@@ -32,6 +32,22 @@ const createUser = async (userBody) => {
   return user;
 };
 
+const createUserPayment = async (userId) => {
+  const userPayment = {
+    _id: userId,
+    paymentsHistory: [],
+  };
+  await Payment.create(userPayment);
+};
+
+const createUserDislike = async (userId) => {
+  const userDislike = {
+    _id: userId,
+    dislikes: {},
+  };
+  await Dislike.create(userDislike);
+};
+
 /**
  * Query for users
  * @param {Object} filter - Mongo filter
@@ -53,6 +69,14 @@ const queryUsers = async (filter, options) => {
  */
 const getUserById = async (id) => {
   return User.findById(id);
+};
+
+const checkUserExistsOrNot = async (userId) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  return user;
 };
 
 /**
@@ -79,6 +103,18 @@ const updateUserById = async (user, userId, updateBody) => {
   return user;
 };
 
+const updateBookmarks = async (user, { contentId, index }) => {
+  const { bookmarks } = user;
+  if ([contentId] in bookmarks) {
+    bookmarks[contentId].push(index);
+  } else {
+    bookmarks[contentId] = [index];
+  }
+  await user.markModified('bookmarks');
+  await user.save();
+  return user;
+};
+
 /**
  * Delete user by id
  * @param {ObjectId} userId
@@ -95,9 +131,13 @@ const deleteUserById = async (userId) => {
 
 module.exports = {
   createUser,
+  createUserPayment,
+  createUserDislike,
   queryUsers,
   getUserById,
   getUserByEmail,
+  checkUserExistsOrNot,
   updateUserById,
+  updateBookmarks,
   deleteUserById,
 };
