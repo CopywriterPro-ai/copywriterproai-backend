@@ -22,17 +22,17 @@ const checkDocumentExistsOrNot = async (id) => {
   return userInterest;
 };
 
-const updateInterests = async (userInterest, interestType, { contentId, index }) => {
+const updateInterest = async (userInterest, interestType, { contentId, index }) => {
   const { interests } = userInterest;
   if ([contentId] in interests) {
-    if (interests[contentId][interestType].includes(index)) {
-      throw new ApiError(httpStatus.CONFLICT, 'Already reacted!');
+    if (interests[contentId][`${interestType}s`].includes(index)) {
+      throw new ApiError(httpStatus.CONFLICT, `Already ${interestType}d!`);
     } else {
-      interests[contentId][interestType].push(index);
+      interests[contentId][`${interestType}s`].push(index);
     }
   } else {
-    interests[contentId] = [[], []];
-    interests[contentId][interestType] = [index];
+    interests[contentId] = { likes: [], dislikes: [] };
+    interests[contentId][`${interestType}s`] = [index];
   }
   await userInterest.markModified('interests');
   await userInterest.save();
@@ -43,5 +43,5 @@ module.exports = {
   createUserInterest,
   getUserInterestsById,
   checkDocumentExistsOrNot,
-  updateInterests,
+  updateInterest,
 };

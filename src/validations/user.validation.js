@@ -49,7 +49,7 @@ const updateUserInfo = {
   }),
 };
 
-const updateUserInterest = {
+const updateUserBookmarks = {
   params: Joi.object().keys({
     userId: Joi.required().custom(objectId),
   }),
@@ -65,5 +65,5 @@ module.exports = {
   getUser,
   updateUser,
   updateUserInfo,
-  updateUserInterest,
+  updateUserBookmarks,
 };
