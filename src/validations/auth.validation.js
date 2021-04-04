@@ -37,10 +37,17 @@ const refreshTokens = {
   }),
 };
 
+const forgotPassword = {
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+  }),
+};
+
 const resetPassword = {
   body: Joi.object().keys({
-    otp: Joi.string().length(6).required(),
-    password: Joi.string().required().custom(password),
+    email: Joi.string().email().required(),
+    OTP: Joi.string().length(6).required(),
+    password: Joi.string().required().custom(password).required(),
   }),
 };
 
@@ -50,5 +57,6 @@ module.exports = {
   login,
   logout,
   refreshTokens,
+  forgotPassword,
   resetPassword,
 };

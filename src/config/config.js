@@ -14,7 +14,8 @@ const envVarsSchema = Joi.object()
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
     TWILIO_ACCOUNT_SID: Joi.string().required().description('Twilio account SID'),
     TWILIO_AUTH_TOKEN: Joi.string().required().description('Twilio auth token'),
-    SERVICE_VERIFICATION_SID: Joi.string().required().description('Twilio service verification SID'),
+    TWILIO_SERVICE_VERIFICATION_SID: Joi.string().required().description('Twilio service verification SID'),
+    STRIPE_SECRET_KEY: Joi.string().required().description('Stripe secret key'),
     SMTP_HOST: Joi.string().description('server that will send the emails'),
     SMTP_PORT: Joi.number().description('port to connect to the email server'),
     SMTP_USERNAME: Joi.string().description('username for email server'),
@@ -50,6 +51,9 @@ module.exports = {
     twilioAccountSID: envVars.TWILIO_ACCOUNT_SID,
     twilioAuthToken: envVars.TWILIO_AUTH_TOKEN,
     twilioServiceVerificationSID: envVars.SERVICE_VERIFICATION_SID,
+  },
+  stripe: {
+    stripeSecretKey: envVars.STRIPE_SECRET_KEY,
   },
   email: {
     smtp: {

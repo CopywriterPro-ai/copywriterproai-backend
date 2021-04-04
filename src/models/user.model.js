@@ -58,6 +58,11 @@ const userSchema = mongoose.Schema(
     bookmarks: {
       type: mongoose.Schema.Types.Mixed,
     },
+    OTP: {
+      type: String,
+      length: 6,
+      trim: true,
+    },
   },
   {
     timestamps: true,

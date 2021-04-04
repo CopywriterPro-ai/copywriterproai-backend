@@ -7,7 +7,7 @@ const twilio = require('twilio')(config.twilio.twilioAccountSID, config.twilio.t
 
 const lookupPhoneNumber = async (phoneNumber) => {
   try {
-    const phoneNumberVerificationData = await twilio.lookups.v1.phoneNumbers(phoneNumber).fetch({ countryCode: 'BD' });
+    const phoneNumberVerificationData = await twilio.lookups.v1.phoneNumbers(phoneNumber).fetch();
     return phoneNumberVerificationData;
   } catch (err) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Please provide a valid phone number');
@@ -88,6 +88,15 @@ const getUser = async (identity) => {
   return User.findOne(identity);
 };
 
+const setPasswordResetCode = async (email, OTP) => {
+  const user = await getUser({ email });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  Object.assign(user, { OTP } );
+  await user.save();
+};
+
 /**
  * Update user by id
  * @param {ObjectId} userId
@@ -136,6 +145,7 @@ module.exports = {
   queryUsers,
   getUserById,
   getUser,
+  setPasswordResetCode,
   checkUserExistsOrNot,
   updateUserById,
   updateBookmarks,
