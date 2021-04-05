@@ -36,8 +36,9 @@ const sendResetPasswordEmailUsingOTP = async (to) => {
   // replace this url with the link to the reset password page of your front-end app
   const OTP = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
   const html = `<div> Dear user, <div> <br>
-  <div>To reset your password, you have to enter this verification code when prompted: <b>${OTP}</b>. </div> <br>
-  <div>If you did not request any password resets, then ignore this email. </div>`;
+  <div>To reset your password, you have to enter this verification code when prompted: <b>${OTP}</b>. <br>
+  If you did not request any password resets, then ignore this email. </div> <br>
+  <div>Thank you, <br>The AICopywriter Team</br></div>`;
 
   await userService.setPasswordResetCode(to, OTP);
   await sendEmail(to, subject, html);

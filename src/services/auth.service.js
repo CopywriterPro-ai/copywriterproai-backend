@@ -44,7 +44,7 @@ const loginUser = async (identity, password) => {
   const user = await userService.getUser(identity);
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
-  } else if(!user.isVerified) {
+  } else if (!user.isVerified) {
     throw new ApiError(httpStatus.FORBIDDEN, 'Account not verified!');
   }
   return user;
@@ -108,11 +108,14 @@ const resetPassword = async ({ email, OTP, password }) => {
     if (!user) {
       throw new Error();
     }
-    if(user.OTP && user.OTP !== OTP) {
+    if (user.OTP && user.OTP !== OTP) {
       await userService.updateUserById(user, user.id, { OTP: null });
       throw new Error();
+    } else if (user.OTP && user.OTP === OTP) {
+      await userService.updateUserById(user, user.id, { password, OTP: null });
+    } else {
+      throw new Error();
     }
-    await userService.updateUserById(user, user.id, { password, OTP: null });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
   }

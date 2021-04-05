@@ -49,12 +49,12 @@ const refreshTokens = catchAsync(async (req, res) => {
 
 const forgotPassword = catchAsync(async (req, res) => {
   await emailService.sendResetPasswordEmailUsingOTP(req.body.email);
-  res.status(httpStatus.NO_CONTENT).send();
+  res.status(httpStatus.OK).send({ message: 'An email has been sent to you with password reset instructions' });
 });
 
 const resetPassword = catchAsync(async (req, res) => {
   await authService.resetPassword(req.body);
-  res.status(httpStatus.NO_CONTENT).send();
+  res.status(httpStatus.OK).send({ message: 'Pasaword reset successful' });
 });
 
 module.exports = {
