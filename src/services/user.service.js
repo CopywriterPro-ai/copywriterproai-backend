@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User, Payment, Dislike } = require('../models');
+const { User, Payment } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const config = require('../config/config');
@@ -38,14 +38,6 @@ const createUserPayment = async (userId) => {
     paymentsHistory: [],
   };
   await Payment.create(userPayment);
-};
-
-const createUserDislike = async (userId) => {
-  const userDislike = {
-    _id: userId,
-    dislikes: {},
-  };
-  await Dislike.create(userDislike);
 };
 
 /**
@@ -93,7 +85,7 @@ const setPasswordResetCode = async (email, OTP) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  Object.assign(user, { OTP } );
+  Object.assign(user, { OTP });
   await user.save();
 };
 
@@ -115,7 +107,11 @@ const updateUserById = async (user, userId, updateBody) => {
 const updateBookmarks = async (user, { contentId, index }) => {
   const { bookmarks } = user;
   if ([contentId] in bookmarks) {
-    bookmarks[contentId].push(index);
+    if (bookmarks[contentId].includes(index)) {
+      throw new ApiError(httpStatus.CONFLICT, `Already bookmarked!`);
+    } else {
+      bookmarks[contentId].push(index);
+    }
   } else {
     bookmarks[contentId] = [index];
   }
@@ -141,7 +137,6 @@ const deleteUserById = async (userId) => {
 module.exports = {
   createUser,
   createUserPayment,
-  createUserDislike,
   queryUsers,
   getUserById,
   getUser,

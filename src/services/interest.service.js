@@ -28,6 +28,11 @@ const updateInterest = async (userInterest, interestType, { contentId, index }) 
     if (interests[contentId][`${interestType}s`].includes(index)) {
       throw new ApiError(httpStatus.CONFLICT, `Already ${interestType}d!`);
     } else {
+      if (interestType === 'dislike' && interests[contentId]['likes'].includes(index)) {
+        interests[contentId]['likes'] = interests[contentId]['likes'].filter(ind => ind !== index);
+      } else if (interestType === 'like' && interests[contentId]['dislikes'].includes(index)) {
+        interests[contentId]['dislikes'] = interests[contentId]['dislikes'].filter(ind => ind !== index);
+      }
       interests[contentId][`${interestType}s`].push(index);
     }
   } else {

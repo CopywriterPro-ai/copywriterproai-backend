@@ -21,12 +21,15 @@ const contentSchema = mongoose.Schema(
     wordLimit: {
       type: Number,
       trim: true,
-      default: 30,
+      default: null,
     },
     tone: {
       type: String,
       trim: true,
       default: 'neutral',
+    },
+    openAPIInformation: {
+      type: mongoose.Schema.Types.Mixed,
     },
     generatedContents: {
       type: Array,

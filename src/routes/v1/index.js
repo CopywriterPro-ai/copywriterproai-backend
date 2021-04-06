@@ -1,7 +1,7 @@
 const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
-const generatorRoute = require('./generator.route');
+const contentRoute = require('./content.route');
 const paymentRoute = require('./payment.route');
 const interestRoute = require('./interest.route');
 
@@ -18,7 +18,7 @@ const defaultRoutes = [
   },
   {
     path: '/contents',
-    route: generatorRoute,
+    route: contentRoute,
   },
   {
     path: '/payments',
