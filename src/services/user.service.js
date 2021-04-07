@@ -1,6 +1,18 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const { User, Payment } = require('../models');
 const ApiError = require('../utils/ApiError');
+
+const config = require('../config/config');
+const twilio = require('twilio')(config.twilio.twilioAccountSID, config.twilio.twilioAuthToken);
+
+const lookupPhoneNumber = async (phoneNumber) => {
+  try {
+    const phoneNumberVerificationData = await twilio.lookups.v1.phoneNumbers(phoneNumber).fetch();
+    return phoneNumberVerificationData;
+  } catch (err) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Please provide a valid phone number');
+  }
+};
 
 /**
  * Create a user
@@ -8,11 +20,24 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
-  if (await User.isEmailTaken(userBody.email)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  if (await User.isPhoneNumberTaken(userBody.phoneNumber)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'This phone number is already registered!');
   }
+  if (await User.isEmailTaken(userBody.email)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'This email is already registered!');
+  }
+  const { phoneNumber } = userBody;
+  await lookupPhoneNumber(phoneNumber);
   const user = await User.create(userBody);
   return user;
+};
+
+const createUserPayment = async (userId) => {
+  const userPayment = {
+    _id: userId,
+    paymentsHistory: [],
+  };
+  await Payment.create(userPayment);
 };
 
 /**
@@ -38,13 +63,30 @@ const getUserById = async (id) => {
   return User.findById(id);
 };
 
+const checkUserExistsOrNot = async (userId) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  return user;
+};
+
 /**
  * Get user by email
  * @param {string} email
  * @returns {Promise<User>}
  */
-const getUserByEmail = async (email) => {
-  return User.findOne({ email });
+const getUser = async (identity) => {
+  return User.findOne(identity);
+};
+
+const setPasswordResetCode = async (email, OTP) => {
+  const user = await getUser({ email });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  Object.assign(user, { OTP });
+  await user.save();
 };
 
 /**
@@ -53,15 +95,27 @@ const getUserByEmail = async (email) => {
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
-const updateUserById = async (userId, updateBody) => {
-  const user = await getUserById(userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
+const updateUserById = async (user, userId, updateBody) => {
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
   Object.assign(user, updateBody);
+  await user.save();
+  return user;
+};
+
+const updateBookmarks = async (user, { contentId, index }) => {
+  const { bookmarks } = user;
+  if ([contentId] in bookmarks) {
+    if (bookmarks[contentId].includes(index)) {
+      throw new ApiError(httpStatus.CONFLICT, `Already bookmarked!`);
+    } else {
+      bookmarks[contentId].push(index);
+    }
+  } else {
+    bookmarks[contentId] = [index];
+  }
+  await user.markModified('bookmarks');
   await user.save();
   return user;
 };
@@ -82,9 +136,13 @@ const deleteUserById = async (userId) => {
 
 module.exports = {
   createUser,
+  createUserPayment,
   queryUsers,
   getUserById,
-  getUserByEmail,
+  getUser,
+  setPasswordResetCode,
+  checkUserExistsOrNot,
   updateUserById,
+  updateBookmarks,
   deleteUserById,
 };

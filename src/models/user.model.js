@@ -1,27 +1,15 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    email: {
+    phoneNumber: {
       type: String,
       required: true,
       unique: true,
       trim: true,
-      lowercase: true,
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error('Invalid email');
-        }
-      },
     },
     password: {
       type: String,
@@ -35,10 +23,45 @@ const userSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
     role: {
       type: String,
       enum: roles,
       default: 'user',
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    accountStatus: {
+      type: String,
+      enum: ['active', 'blocked'],
+      default: 'active',
+    },
+    wordsLeft: {
+      type: Number,
+      required: true,
+      trim: true,
+      default: 1000,
+    },
+    subscription: {
+      type: String,
+      enum: ['Freemium', 'Premium - Monthly', 'Premium - Annual'],
+      default: 'Freemium',
+    },
+    bookmarks: {
+      type: mongoose.Schema.Types.Mixed,
+    },
+    OTP: {
+      type: String,
+      length: 6,
+      trim: true,
     },
   },
   {
@@ -49,6 +72,17 @@ const userSchema = mongoose.Schema(
 // add plugin that converts mongoose to json
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
+
+/**
+ * Check if email is taken
+ * @param {string} phoneNumber - The user's phone number
+ * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
+ * @returns {Promise<boolean>}
+ */
+userSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
+  const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
+  return !!user;
+};
 
 /**
  * Check if email is taken

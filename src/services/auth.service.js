@@ -5,16 +5,47 @@ const Token = require('../models/token.model');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 
+const config = require('../config/config');
+const twilio = require('twilio')(config.twilio.twilioAccountSID, config.twilio.twilioAuthToken);
+
+const requestOneTimePassword = async (phoneNumber) => {
+  try {
+    const phoneNumberVerificationData = await twilio.verify
+      .services(config.twilio.twilioServiceVerificationSID)
+      .verifications.create({
+        to: phoneNumber,
+        channel: 'sms',
+      });
+    return phoneNumberVerificationData;
+  } catch (err) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Something went wrong!');
+  }
+};
+
+const verifyPhoneNumber = async (phoneNumber, code) => {
+  try {
+    const phoneNumberVerificationData = await twilio.verify
+      .services(config.twilio.twilioServiceVerificationSID)
+      .verificationChecks.create({ to: phoneNumber, code });
+
+    return phoneNumberVerificationData;
+  } catch (err) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Something went wrong!');
+  }
+};
+
 /**
  * Login with username and password
  * @param {string} email
  * @param {string} password
  * @returns {Promise<User>}
  */
-const loginUserWithEmailAndPassword = async (email, password) => {
-  const user = await userService.getUserByEmail(email);
+const loginUser = async (identity, password) => {
+  const user = await userService.getUser(identity);
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+  } else if (!user.isVerified) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Account not verified!');
   }
   return user;
 };
@@ -51,29 +82,50 @@ const refreshAuth = async (refreshToken) => {
   }
 };
 
-/**
- * Reset password
- * @param {string} resetPasswordToken
- * @param {string} newPassword
- * @returns {Promise}
- */
-const resetPassword = async (resetPasswordToken, newPassword) => {
+// /**
+//  * Reset password
+//  * @param {string} resetPasswordToken
+//  * @param {string} newPassword
+//  * @returns {Promise}
+//  */
+// const resetPassword = async (resetPasswordToken, newPassword) => {
+//   try {
+//     const resetPasswordTokenDoc = await tokenService.verifyToken(resetPasswordToken, tokenTypes.RESET_PASSWORD);
+//     const user = await userService.getUserById(resetPasswordTokenDoc.user);
+//     if (!user) {
+//       throw new Error();
+//     }
+//     await userService.updateUserById(user.id, { password: newPassword });
+//     await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
+//   } catch (error) {
+//     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
+//   }
+// };
+
+const resetPassword = async ({ email, OTP, password }) => {
   try {
-    const resetPasswordTokenDoc = await tokenService.verifyToken(resetPasswordToken, tokenTypes.RESET_PASSWORD);
-    const user = await userService.getUserById(resetPasswordTokenDoc.user);
+    const user = await userService.getUser({ email });
     if (!user) {
       throw new Error();
     }
-    await userService.updateUserById(user.id, { password: newPassword });
-    await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
+    if (user.OTP && user.OTP !== OTP) {
+      await userService.updateUserById(user, user.id, { OTP: null });
+      throw new Error();
+    } else if (user.OTP && user.OTP === OTP) {
+      await userService.updateUserById(user, user.id, { password, OTP: null });
+    } else {
+      throw new Error();
+    }
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
   }
 };
 
 module.exports = {
-  loginUserWithEmailAndPassword,
+  loginUser,
   logout,
   refreshAuth,
   resetPassword,
+  requestOneTimePassword,
+  verifyPhoneNumber,
 };
