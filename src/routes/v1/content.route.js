@@ -7,11 +7,11 @@ const { contentController } = require('../../controllers');
 const router = express.Router();
 
 router
-  .route('/:userId/generate/paraphrase')
+  .route('/generate/paraphrase')
   .post(auth('generateContent'), validate(contentValidation.paraphrase), contentController.generate);
 
 router
-  .route('/:userId/generate/product-description')
+  .route('/generate/product-description')
   .post(auth('generateContent'), validate(contentValidation.productDescription), contentController.generate);
 
 module.exports = router;

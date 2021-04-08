@@ -8,9 +8,9 @@ const generate = catchAsync(async (req, res) => {
   let generatedContent;
 
   if (task === 'paraphrasing') {
-    generatedContent = await contentService.paraphrase(req.params.userId, req.body);
-  } else if (task === 'product description') {
-    generatedContent = await contentService.productDescription(req.params.userId, req.body);
+    generatedContent = await contentService.paraphrase(req.user._id, req.body);
+  } else if (task === 'product-description') {
+    generatedContent = await contentService.productDescription(req.user._id, req.body);
   }
 
   res.status(httpStatus.OK).send(generatedContent);

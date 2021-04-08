@@ -45,6 +45,14 @@ const removeSpaces = (text) => {
   return text.trim().replace(/ +(?= )/g, '');
 };
 
+const getAllTexts = (contents) => {
+  const generatedTexts = [];
+  for (let i = 0; i < contents.length; i++) {
+    generatedTexts.push(contents[i].text);
+  }
+  return generatedTexts;
+};
+
 const paraphrase = async (userId, { userText }) => {
   const formattedUserText = removeSpaces(userText);
 
@@ -54,14 +62,17 @@ Original: Symptoms of influenza include fever and nasal congestion.
 Paraphrase: A stuffy nose and elevated temperature are signs you may have the flu.
 Original: ${formattedUserText}\nParaphrase:`;
 
-  const paraphrasedContent = await generateContentUsingGPT3('davinci', prompt, 0.75, 0.9, 0.9, 1, ['\n']);
+  const paraphrasedContents = await generateContentUsingGPT3('davinci', prompt, 0.75, 0.9, 0.9, 1, ['\n']);
 
-  const formattedContents = await formatContents(userId, prompt, 'paraphrasing', paraphrasedContent);
+  const formattedContents = await formatContents(userId, prompt, 'paraphrasing', paraphrasedContents);
   const content = await Content.create(formattedContents);
+
+  const generatedTexts = getAllTexts(paraphrasedContents.choices);
 
   const userResponse = {
     id: content._id,
-    paraphrasedText: paraphrasedContent.choices[0].text,
+    task: 'paraphrasing',
+    generatedTexts,
   };
 
   return userResponse;
@@ -82,14 +93,17 @@ Target people: ${removeSpaces(targetPeople)}
 Feature: ${removeSpaces(features)}
 Product description:`;
 
-  const paraphrasedContent = await generateContentUsingGPT3('curie', prompt, 1, 0.3, 0.1, 1, ['""""""', '\n']);
+  const paraphrasedContents = await generateContentUsingGPT3('curie', prompt, 1, 0.3, 0.1, 2, ['""""""', '\n']);
 
-  const formattedContents = await formatContents(userId, prompt, 'paraphrasing', paraphrasedContent);
+  const formattedContents = await formatContents(userId, prompt, 'productDescription', paraphrasedContents);
   const content = await Content.create(formattedContents);
+
+  const generatedTexts = getAllTexts(paraphrasedContents.choices);
 
   const userResponse = {
     id: content._id,
-    productDescription: paraphrasedContent.choices[0].text,
+    task: 'product-description',
+    generatedTexts,
   };
 
   return userResponse;
