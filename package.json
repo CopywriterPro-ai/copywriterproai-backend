@@ -37,7 +37,7 @@
     "mongoose": "^5.12.0",
     "morgan": "^1.10.0",
     "nodemailer": "^6.5.0",
-    "openai-api": "^1.1.1",
+    "openai-api": "^1.0.18",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "pm2": "^4.5.5",
