@@ -8,7 +8,9 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(auth('getPurchaseInfo'), validate(paymentValidation.getPurchaseInfo), paymentController.getPurchaseInfo)
-  .post(auth('managePurchase'), validate(paymentValidation.storePurchaseInfo), paymentController.storePurchaseInfo);
+  // .get(auth('getPurchaseInfo'), validate(paymentValidation.getPurchaseInfo), paymentController.getPurchaseInfo)
+  .get(auth(), validate(paymentValidation.getPurchaseInfo), paymentController.getPurchaseInfo)
+  // .post(auth('managePurchase'), validate(paymentValidation.storePurchaseInfo), paymentController.storePurchaseInfo);
+  .post(auth(), paymentController.storePurchaseInfo);
 
 module.exports = router;
