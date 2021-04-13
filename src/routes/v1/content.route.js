@@ -7,11 +7,31 @@ const { contentController } = require('../../controllers');
 const router = express.Router();
 
 router
-  .route('/:userId/generate/paraphrase')
+  .route('/generate/paraphrase')
   .post(auth('generateContent'), validate(contentValidation.paraphrase), contentController.generate);
 
 router
-  .route('/:userId/generate/product-description')
+  .route('/generate/product-description')
   .post(auth('generateContent'), validate(contentValidation.productDescription), contentController.generate);
+
+router
+  .route('/generate/campaign-post-idea')
+  .post(auth('generateContent'), validate(contentValidation.campaignPostIdeaFromBusinessType), contentController.generate);
+
+router
+  .route('/generate/facebook-ad-primary-texts')
+  .post(auth('generateContent'), validate(contentValidation.facebookAdPrimaryTexts), contentController.generate);
+
+router
+  .route('/generate/facebook-ad-headlines')
+  .post(auth('generateContent'), validate(contentValidation.facebookAdHeadlines), contentController.generate);
+
+router
+  .route('/generate/facebook-ad-link-descriptions')
+  .post(auth('generateContent'), validate(contentValidation.facebookAdLinkDescription), contentController.generate);
+
+router
+  .route('/generate/facebook-ads-from-product-description')
+  .post(auth('generateContent'), validate(contentValidation.facebookAdsFromProductDescription), contentController.generate);
 
 module.exports = router;

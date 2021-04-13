@@ -18,6 +18,43 @@ const productDescription = {
   }),
 };
 
+const campaignPostIdeaFromBusinessType = {
+  body: Joi.object().keys({
+    task: Joi.valid('facebook-campaign-post', 'twitter-campaign-post').required(),
+    platformType: Joi.string().required(),
+  }),
+};
+
+const facebookAdPrimaryTexts = {
+  body: Joi.object().keys({
+    task: Joi.valid('facebook-ad-primary-texts').required(),
+    platformType: Joi.string().required(),
+    context: Joi.string().required(),
+  })
+};
+
+const facebookAdHeadlines = {
+  body: Joi.object().keys({
+    task: Joi.valid('facebook-ad-headlines').required(),
+    platformType: Joi.string().required(),
+  }),
+};
+
+const facebookAdLinkDescription = {
+  body: Joi.object().keys({
+    task: Joi.valid('facebook-ad-link-descriptions').required(),
+    platformType: Joi.string().required(),
+    headline: Joi.string().required(),
+  }),
+};
+
+const facebookAdsFromProductDescription = {
+  body: Joi.object().keys({
+    task: Joi.valid('facebook-ads-from-product-description').required(),
+    product: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -31,4 +68,9 @@ const productDescription = {
 module.exports = {
   paraphrase,
   productDescription,
+  campaignPostIdeaFromBusinessType,
+  facebookAdPrimaryTexts,
+  facebookAdHeadlines,
+  facebookAdLinkDescription,
+  facebookAdsFromProductDescription,
 };
