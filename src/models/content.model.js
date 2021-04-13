@@ -8,7 +8,7 @@ const contentSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    originalContent: {
+    prompt: {
       type: String,
       required: true,
       trim: true,

@@ -14,4 +14,24 @@ router
   .route('/generate/product-description')
   .post(auth('generateContent'), validate(contentValidation.productDescription), contentController.generate);
 
+router
+  .route('/generate/campaign-post-idea')
+  .post(auth('generateContent'), validate(contentValidation.campaignPostIdeaFromBusinessType), contentController.generate);
+
+router
+  .route('/generate/facebook-ad-primary-texts')
+  .post(auth('generateContent'), validate(contentValidation.facebookAdPrimaryTexts), contentController.generate);
+
+router
+  .route('/generate/facebook-ad-headlines')
+  .post(auth('generateContent'), validate(contentValidation.facebookAdHeadlines), contentController.generate);
+
+router
+  .route('/generate/facebook-ad-link-descriptions')
+  .post(auth('generateContent'), validate(contentValidation.facebookAdLinkDescription), contentController.generate);
+
+router
+  .route('/generate/facebook-ads-from-product-description')
+  .post(auth('generateContent'), validate(contentValidation.facebookAdsFromProductDescription), contentController.generate);
+
 module.exports = router;

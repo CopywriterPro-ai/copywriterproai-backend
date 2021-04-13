@@ -11,6 +11,16 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await contentService.paraphrase(req.user._id, req.body);
   } else if (task === 'product-description') {
     generatedContent = await contentService.productDescription(req.user._id, req.body);
+  } else if (task.substr(task.indexOf('-') + 1, task.length) === 'campaign-post') {
+    generatedContent = await contentService.campaignPostFromBusinessType(req.user._id, task, req.body);
+  } else if (task === 'facebook-ad-primary-texts') {
+    generatedContent = await contentService.facebookAdPrimaryTexts(req.user._id, req.body);
+  } else if (task === 'facebook-ad-headlines') {
+    generatedContent = await contentService.facebookAdHeadlines(req.user._id, req.body);
+  } else if (task === 'facebook-ad-link-descriptions') {
+    generatedContent = await contentService.facebookAdLinkDescription(req.user._id, req.body);
+  } else if (task === 'facebook-ads-from-product-description') {
+    generatedContent = await contentService.facebookAdsFromProductDescription(req.user._id, req.body);
   }
 
   res.status(httpStatus.OK).send(generatedContent);
