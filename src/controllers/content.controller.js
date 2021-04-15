@@ -21,6 +21,14 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await contentService.facebookAdLinkDescription(req.user._id, req.body);
   } else if (task === 'facebook-ads-from-product-description') {
     generatedContent = await contentService.facebookAdsFromProductDescription(req.user._id, req.body);
+  } else if (task === 'linkedin-ad-texts') {
+    generatedContent = await contentService.linkedinAdTexts(req.user._id, req.body);
+  } else if (task === 'google-ad-headlines') {
+    generatedContent = await contentService.googleAdHeadlines(req.user._id, req.body);
+  } else if (task === 'youtube-video-titles-from-description') {
+    generatedContent = await contentService.youtubeVideoTitleFromDescription(req.user._id, req.body);
+  } else if (task === 'youtube-video-ideas') {
+    generatedContent = await contentService.youtubeVideoIdeas(req.user._id, req.body);
   }
 
   res.status(httpStatus.OK).send(generatedContent);
