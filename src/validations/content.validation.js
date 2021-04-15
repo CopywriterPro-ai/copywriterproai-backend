@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const paraphrase = {
   body: Joi.object().keys({
-    task: Joi.string().required(),
+    task: Joi.valid('paraphrasing').required(),
     userText: Joi.string().required(),
     wordLimit: Joi.number().integer(),
   }),
@@ -10,11 +10,11 @@ const paraphrase = {
 
 const productDescription = {
   body: Joi.object().keys({
-    task: Joi.string().required(),
+    task: Joi.valid('product-description').required(),
     productName: Joi.string().required(),
     type: Joi.string().required(),
     targetPeople: Joi.string().required(),
-    features: Joi.string().required(),
+    benefits: Joi.string().required(),
   }),
 };
 
@@ -55,6 +55,36 @@ const facebookAdsFromProductDescription = {
   }),
 };
 
+const linkedinAdTexts = {
+  body: Joi.object().keys({
+    task: Joi.valid('linkedin-ad-texts').required(),
+    platformType: Joi.string().required(),
+    context: Joi.string().required(),
+  })
+};
+
+const googleAdHeadlines = {
+  body: Joi.object().keys({
+    task: Joi.valid('google-ad-headlines').required(),
+    name: Joi.string().required(),
+    platform: Joi.string().required(),
+  }),
+};
+
+const youtubeVideoTitleFromDescription = {
+  body: Joi.object().keys({
+    task: Joi.valid('youtube-video-titles-from-description').required(),
+    description: Joi.string().required(),
+  }),
+};
+
+const youtubeVideoIdeas = {
+  body: Joi.object().keys({
+    task: Joi.valid('youtube-video-ideas').required(),
+    topic: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -73,4 +103,8 @@ module.exports = {
   facebookAdHeadlines,
   facebookAdLinkDescription,
   facebookAdsFromProductDescription,
+  linkedinAdTexts,
+  googleAdHeadlines,
+  youtubeVideoTitleFromDescription,
+  youtubeVideoIdeas,
 };

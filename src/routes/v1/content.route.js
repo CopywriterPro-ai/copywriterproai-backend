@@ -34,4 +34,20 @@ router
   .route('/generate/facebook-ads-from-product-description')
   .post(auth('generateContent'), validate(contentValidation.facebookAdsFromProductDescription), contentController.generate);
 
+router
+  .route('/generate/linkedin-ad-texts')
+  .post(auth('generateContent'), validate(contentValidation.linkedinAdTexts), contentController.generate);
+
+router
+  .route('/generate/google-ad-headlines')
+  .post(auth('generateContent'), validate(contentValidation.googleAdHeadlines), contentController.generate);
+
+router
+  .route('/generate/youtube-video-titles-from-description')
+  .post(auth('generateContent'), validate(contentValidation.youtubeVideoTitleFromDescription), contentController.generate);
+
+router
+  .route('/generate/youtube-video-ideas')
+  .post(auth('generateContent'), validate(contentValidation.youtubeVideoIdeas), contentController.generate);
+
 module.exports = router;

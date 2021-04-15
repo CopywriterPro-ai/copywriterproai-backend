@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-await-in-loop */
 const OpenAI = require('openai-api');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
@@ -25,18 +27,13 @@ const generateContentUsingGPT3 = async (engine, prompt, temperature, frequencyPe
   return gptResponse.data;
 };
 
-const formatContents = async (userId, documentType, prompt, generatedContent) => {
+const formatContents = async (userId, documentType, prompt, apiInfos, choices) => {
   const contentInformation = {
     userId,
     prompt,
     documentType,
-    openAPIInformation: {
-      id: generatedContent.id,
-      object: generatedContent.object,
-      created: generatedContent.created,
-      model: generatedContent.model,
-    },
-    generatedContents: generatedContent.choices,
+    openAPIInformation: apiInfos,
+    generatedContents: choices,
   };
   return contentInformation;
 };
@@ -45,28 +42,23 @@ const removeSpaces = (text) => {
   return text.trim().replace(/ +(?= )/g, '');
 };
 
-const getAllTexts = (contents) => {  
-  return contents[0].text.split('\n');
-};
-
 const cleanAllTexts = (contents) => {
   return contents.filter((text) => text.trim() !== '').map((text) => text.substr(text.indexOf('-') + 1, text.length).trim());
 };
 
-const storeData = async (userId, task, prompt, paraphrasedContents) => {
-  const formattedContents = await formatContents(userId, task, prompt, paraphrasedContents);
+const storeData = async (userId, task, prompt, apiInfos, choices) => {
+  const formattedContents = await formatContents(userId, task, prompt, apiInfos, choices);
   const content = await Content.create(formattedContents);
-  const generatedTexts = getAllTexts(paraphrasedContents.choices);
-  const cleanTexts = cleanAllTexts(generatedTexts);
+  return content;
+};
 
-  const userResponse = {
-    id: content._id,
+const formatResponse = (id, task, generatedTexts) => {
+  return {
+    id,
     task,
-    generatedTexts: cleanTexts,
+    generatedTexts,
   };
-
-  return userResponse;
-}
+};
 
 const paraphrase = async (userId, { userText }) => {
   const prompt = `Original: He has tons of stuff to throw away.
@@ -76,44 +68,83 @@ Paraphrase: A stuffy nose and elevated temperature are signs you may have the fl
 Original: ${removeSpaces(userText)}
 Paraphrase:`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('davinci', prompt, 0.75, 0.9, 0.9, ['\n']);
-  const userResponse = await storeData(userId, 'paraphrasing', prompt, paraphrasedContents);
+  let paraphrasedContents;
+  while (1) {
+    paraphrasedContents = await generateContentUsingGPT3('davinci', prompt, 0.9, 0.9, 0.9, ['\n']);
+    if (
+      paraphrasedContents.choices &&
+      paraphrasedContents.choices[0].text.trim() !== '' &&
+      paraphrasedContents.choices[0].text.trim() !== removeSpaces(userText)
+    ) {
+      paraphrasedContents.choices[0].text = paraphrasedContents.choices[0].text.trim();
+      break;
+    }
+  }
+  const { id, object, created, model, choices } = paraphrasedContents;
+  const { _id, generatedContents } = await storeData(
+    userId,
+    'paraphrasing',
+    prompt,
+    { id, object, created, model },
+    choices[0].text
+  );
+  const userResponse = formatResponse(_id, 'paraphrasing', generatedContents);
 
   return userResponse;
 };
 
-const productDescription = async (userId, { productName, type, targetPeople, features }) => {
-  const prompt = `""""""
-Product Name: Spirit II E-210 gas grill
-Type: Grilling system
-Target people: Everyone
-Feature: Small in size, two-burner, GS4 grilling system, iGrill
-Product description
-Spirit II E-210, a two-burner grill is built to fit small spaces, and packed with features such as the powerful GS4 grilling system, iGrill capability, and convenient side tables for placing serving trays.
-""""""
-Product Name: ${removeSpaces(productName)}
+const productDescription = async (userId, { productName, type, targetPeople, benefits }) => {
+  const prompt = `Write Product description for following Product details
+"""
+Name: ${removeSpaces(productName)}
 Type: ${removeSpaces(type)}
 Target people: ${removeSpaces(targetPeople)}
-Feature: ${removeSpaces(features)}
-Product description:`;
+Benefits: ${removeSpaces(benefits)}
+Description:
+`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('curie', prompt, 1, 0.1, 0.3, ['""""""', '\n']);
-  const userResponse = await storeData(userId, 'product-description', prompt, paraphrasedContents);
+  const openAPIInformationsList = [];
+  const productDescriptionsList = [];
+
+  for (i = 0; i < 5; i++) {
+    const generatedProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.3, [
+      '"""',
+      '\n\n',
+    ]);
+    const { id, object, created, model, choices } = generatedProductDescription;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    productDescriptionsList.push(choices[0].text.trim());
+  }
+
+  const { _id, generatedContents } = await storeData(
+    userId,
+    'product-description',
+    prompt,
+    openAPIInformationsList,
+    productDescriptionsList
+  );
+  const userResponse = formatResponse(_id, 'product-description', generatedContents);
 
   return userResponse;
 };
+
+const processListContents = async (userId, task, prompt, { id, object, created, model, choices }) => {
+  const contents = cleanAllTexts(choices[0].text.split('\n'));
+  const { _id, generatedContents } = await storeData(userId, task, prompt, { id, object, created, model }, contents);
+  return formatResponse(_id, task, generatedContents);
+}
 
 const campaignPostFromBusinessType = async (userId, task, { platformType }) => {
   const prompt = `Write a Facebook Ad Primary text from the given context.
 
 Platform: ${removeSpaces(platformType)}
 List of 5 Primary text:
+
 -`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  const userResponse = await storeData(userId, task, prompt, paraphrasedContents);
-
-  return userResponse;
+  const campaignPostIdea = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  return processListContents(userId, task, prompt, campaignPostIdea);
 };
 
 const facebookAdPrimaryTexts = async (userId, { platformType, context }) => {
@@ -122,12 +153,11 @@ const facebookAdPrimaryTexts = async (userId, { platformType, context }) => {
 Platform: ${removeSpaces(platformType)}
 Context: ${removeSpaces(context)}
 List of 5 Primary texts:
+
 -`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  const userResponse = await storeData(userId, 'facebook-ad-primary-texts', prompt, paraphrasedContents);
-
-  return userResponse;
+  const primaryTexts = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  return processListContents(userId, 'facebook-ad-primary-texts', prompt, primaryTexts);
 };
 
 const facebookAdHeadlines = async (userId, { platformType }) => {
@@ -143,12 +173,11 @@ const facebookAdHeadlines = async (userId, { platformType }) => {
 Now write 5 catchy short Headline for following platform
 
 Platform: ${removeSpaces(platformType)}
+
 -`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  const userResponse = await storeData(userId, 'facebook-ad-headlines', prompt, paraphrasedContents);
-
-  return userResponse;
+  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  return processListContents(userId, 'facebook-ad-headlines', prompt, headlines);
 };
 
 const facebookAdLinkDescription = async (userId, { platformType, headline }) => {
@@ -157,12 +186,11 @@ const facebookAdLinkDescription = async (userId, { platformType, headline }) => 
 Platform: ${removeSpaces(platformType)}
 Headline: ${removeSpaces(headline)}
 List of 5 Link descriptions:
+
 -`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  const userResponse = await storeData(userId, 'facebook-ad-link-descriptions', prompt, paraphrasedContents);
-
-  return userResponse;
+  const linkDescriptions = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  return processListContents(userId, 'facebook-ad-link-descriptions', prompt, linkDescriptions);
 };
 
 const facebookAdsFromProductDescription = async (userId, { product }) => {
@@ -170,12 +198,64 @@ const facebookAdsFromProductDescription = async (userId, { product }) => {
 
 Product: ${removeSpaces(product)}
 List of 5 Ads:
+
 -`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.4, ['\n\n']);
-  const userResponse = await storeData(userId, 'facebook-ads-from-product-description', prompt, paraphrasedContents);
+  const adsFromProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.4, ['\n\n']);
+  return processListContents(userId, 'facebook-ads-from-product-description', prompt, adsFromProductDescription);
+};
 
-  return userResponse;
+const linkedinAdTexts = async (userId, { platformType, context }) => {
+  const prompt = `Generate LinkedIn catchy Marketing text for following platform
+
+Platform: ${removeSpaces(platformType)}
+Context: ${removeSpaces(context)}
+List of 5 Marketing text: 
+
+-`;
+
+  const adTexts = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.3, ['\n\n']);
+  return processListContents(userId, 'linkedin-ad-texts', prompt, adTexts);
+};
+
+const googleAdHeadlines = async (userId, { name, platform }) => {
+  const prompt = `Google Ad Headline Examples:
+- Upwork™: Hire The Best - Trust Your Job To True Experts
+- Expert SEO Services UK | SEO Agency Of The Year 2019
+- Website hoting from £2.50 | Get 50% off all packages
+- Injury Lawyers 4U™ | Expert Legal Advice
+- Beds at Beds.co.ca | Biggest Ever Bed Sale
+
+Now Write 5 short Google Ad Headlines for Following like Examples.
+
+Name: ${removeSpaces(name)}
+Platform: ${removeSpaces(platform)}
+
+-`;
+
+  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.9, 0.3, 0.2, ['\n\n']);
+  return processListContents(userId, 'google-ad-headlines', prompt, headlines);
+};
+
+const youtubeVideoTitleFromDescription = async (userId, { description }) => {
+  const prompt = `Write a Title that hints Description
+
+Description: ${removeSpaces(description)}
+List of 5 Titles:
+
+-`;
+
+  const titlesFromDescription = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.3, 0.4, ['\n\n']);
+  return processListContents(userId, 'youtube-video-titles-from-description', prompt, titlesFromDescription);
+};
+
+const youtubeVideoIdeas = async (userId, { topic }) => {
+  const prompt = `Generate 5 awesome YouTube video idea about ${removeSpaces(topic)}.
+
+-`;
+
+  const videoIdeas = await generateContentUsingGPT3('davinci-instruct-beta', prompt, 0.8, 0.2, 0.3, ['\n\n']);
+  return processListContents(userId, 'youtube-video-ideas', prompt, videoIdeas);
 };
 
 const checkContentExistsOrNot = async ({ contentId, index }) => {
@@ -193,5 +273,9 @@ module.exports = {
   facebookAdHeadlines,
   facebookAdLinkDescription,
   facebookAdsFromProductDescription,
+  linkedinAdTexts,
+  googleAdHeadlines,
+  youtubeVideoTitleFromDescription,
+  youtubeVideoIdeas,
   checkContentExistsOrNot,
 };
