@@ -18,6 +18,22 @@ const productDescription = {
   }),
 };
 
+const makeProductDescriptionSEOFriendly = {
+  body: Joi.object().keys({
+    task: Joi.valid('seo-friendly-product-description').required(),
+    userText: Joi.string().required(),
+  }),
+};
+
+const productReview = {
+  body: Joi.object().keys({
+    task: Joi.valid('product-review').required(),
+    product: Joi.string().required(),
+    rating: Joi.string().required(),
+    comment: Joi.string().required(),
+  }),
+};
+
 const campaignPostIdeaFromBusinessType = {
   body: Joi.object().keys({
     task: Joi.valid('facebook-campaign-post', 'twitter-campaign-post').required(),
@@ -30,7 +46,7 @@ const facebookAdPrimaryTexts = {
     task: Joi.valid('facebook-ad-primary-texts').required(),
     platformType: Joi.string().required(),
     context: Joi.string().required(),
-  })
+  }),
 };
 
 const facebookAdHeadlines = {
@@ -55,12 +71,20 @@ const facebookAdsFromProductDescription = {
   }),
 };
 
+const instagramAdTexts = {
+  body: Joi.object().keys({
+    task: Joi.valid('instagram-ad-texts').required(),
+    platformType: Joi.string().required(),
+    context: Joi.string().required(),
+  }),
+};
+
 const linkedinAdTexts = {
   body: Joi.object().keys({
     task: Joi.valid('linkedin-ad-texts').required(),
     platformType: Joi.string().required(),
     context: Joi.string().required(),
-  })
+  }),
 };
 
 const googleAdHeadlines = {
@@ -68,6 +92,14 @@ const googleAdHeadlines = {
     task: Joi.valid('google-ad-headlines').required(),
     name: Joi.string().required(),
     platform: Joi.string().required(),
+  }),
+};
+
+const googleAdDescriptions = {
+  body: Joi.object().keys({
+    task: Joi.valid('google-ad-descriptions').required(),
+    platform: Joi.string().required(),
+    audience: Joi.string().required(),
   }),
 };
 
@@ -85,6 +117,14 @@ const youtubeVideoIdeas = {
   }),
 };
 
+const imageIdeasFromAdText = {
+  body: Joi.object().keys({
+    task: Joi.valid('image-idea-from-ad-text').required(),
+    product: Joi.string().required(),
+    adText: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -98,13 +138,18 @@ const youtubeVideoIdeas = {
 module.exports = {
   paraphrase,
   productDescription,
+  makeProductDescriptionSEOFriendly,
+  productReview,
   campaignPostIdeaFromBusinessType,
   facebookAdPrimaryTexts,
   facebookAdHeadlines,
   facebookAdLinkDescription,
   facebookAdsFromProductDescription,
+  instagramAdTexts,
   linkedinAdTexts,
   googleAdHeadlines,
+  googleAdDescriptions,
   youtubeVideoTitleFromDescription,
   youtubeVideoIdeas,
+  imageIdeasFromAdText,
 };
