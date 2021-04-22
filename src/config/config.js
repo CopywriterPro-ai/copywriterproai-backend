@@ -54,7 +54,7 @@ module.exports = {
   twilio: {
     twilioAccountSID: envVars.TWILIO_ACCOUNT_SID,
     twilioAuthToken: envVars.TWILIO_AUTH_TOKEN,
-    twilioServiceVerificationSID: envVars.SERVICE_VERIFICATION_SID,
+    twilioServiceVerificationSID: envVars.TWILIO_SERVICE_VERIFICATION_SID,
   },
   stripe: {
     stripeSecretKey: envVars.STRIPE_SECRET_KEY,
