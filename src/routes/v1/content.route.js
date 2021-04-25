@@ -79,7 +79,7 @@ router
   .post(auth('generateContent'), validate(contentValidation.websiteShortDescription), contentController.generate);
 
 router
-  .route('/generate/keywords-from-text')
+  .route('/generate/website-keywords-from-text')
   .post(auth('generateContent'), validate(contentValidation.keywordsFromText), contentController.generate);
 
 module.exports = router;

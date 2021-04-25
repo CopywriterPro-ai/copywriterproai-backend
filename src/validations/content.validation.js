@@ -142,7 +142,7 @@ const websiteShortDescription = {
 
 const keywordsFromText = {
   body: Joi.object().keys({
-    task: Joi.valid('keywords-from-text').required(),
+    task: Joi.valid('website-keywords-from-text').required(),
     primaryText: Joi.string().required(),
   }),
 };

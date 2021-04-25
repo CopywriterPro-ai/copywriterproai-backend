@@ -58,13 +58,13 @@ Keywords:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
-    'keywords-from-text',
+    'website-keywords-from-text',
     prompt,
     openAPIInformationsList,
     KeywordsFromTextList
   );
 
-  const userResponse = formatResponse(_id, 'keywords-from-text', generatedContents);
+  const userResponse = formatResponse(_id, 'website-keywords-from-text', generatedContents);
 
   return userResponse;
 };

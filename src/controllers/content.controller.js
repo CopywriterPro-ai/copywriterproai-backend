@@ -42,7 +42,7 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await generator.emailSubjectFromBody.emailSubjectsFromBody(req.user._id, req.body);
   } else if (task === 'website-short-description') {
     generatedContent = await generator.websiteShortDescription.generateWebsiteShortDescription(req.user._id, req.body);
-  } else if (task === 'keywords-from-text') {
+  } else if (task === 'website-keywords-from-text') {
     generatedContent = await generator.websiteShortDescription.generateKeywordsFromText(req.user._id, req.body);
   }
 
