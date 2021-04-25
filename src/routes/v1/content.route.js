@@ -90,4 +90,12 @@ router
   .route('/generate/youtube-channel-tags-from-description')
   .post(auth('generateContent'), validate(contentValidation.channelTagsFromDescription), contentController.generate);
 
+router
+  .route('/generate/website-seo-friendly-blog-ideas')
+  .post(auth('generateContent'), validate(contentValidation.seoFriendlyBlogIdeas), contentController.generate);
+
+router
+  .route('/generate/website-landing-page-headline')
+  .post(auth('generateContent'), validate(contentValidation.landingPageHeadline), contentController.generate);
+
 module.exports = router;

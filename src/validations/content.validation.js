@@ -161,6 +161,23 @@ const channelTagsFromDescription = {
   }),
 };
 
+const seoFriendlyBlogIdeas = {
+  body: Joi.object().keys({
+    task: Joi.valid('website-seo-friendly-blog-ideas').required(),
+    content: Joi.string().required(),
+    desiredOutcome: Joi.string().required(),
+    industry: Joi.string().required(),
+    targetAudience: Joi.string().required(),
+  }),
+};
+
+const landingPageHeadline = {
+  body: Joi.object().keys({
+    task: Joi.valid('website-landing-page-headline').required(),
+    businessType: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -193,4 +210,6 @@ module.exports = {
   keywordsFromText,
   videoTagsFromDescription,
   channelTagsFromDescription,
+  seoFriendlyBlogIdeas,
+  landingPageHeadline,
 };

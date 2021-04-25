@@ -39,17 +39,20 @@ const generate = catchAsync(async (req, res) => {
   } else if (task === 'image-idea-from-ad-text') {
     generatedContent = await generator.commonTask.imageIdeasFromAdText(req.user._id, req.body);
   } else if (task === 'email-subject-from-body') {
-    generatedContent = await generator.emailSubjectFromBody.emailSubjectsFromBody(req.user._id, req.body);
+    generatedContent = await generator.email.emailSubjectsFromBody(req.user._id, req.body);
   } else if (task === 'website-short-description') {
-    generatedContent = await generator.websiteShortDescription.generateWebsiteShortDescription(req.user._id, req.body);
+    generatedContent = await generator.website.generateWebsiteShortDescription(req.user._id, req.body);
   } else if (task === 'website-keywords-from-text') {
-    generatedContent = await generator.websiteShortDescription.generateKeywordsFromText(req.user._id, req.body);
+    generatedContent = await generator.website.generateKeywordsFromText(req.user._id, req.body);
   } else if (task === 'youtube-video-tags-from-description') {
     generatedContent = await generator.youtube.generateVideoTagsFromDescription(req.user._id, req.body);
   } else if (task === 'youtube-channel-tags-from-description') {
     generatedContent = await generator.youtube.generateChannelTagsFromDescription(req.user._id, req.body);
+  } else if (task === 'website-seo-friendly-blog-ideas') {
+    generatedContent = await generator.website.generateSEOFriendlyBlogIdeas(req.user._id, req.body);
+  } else if (task === 'website-landing-page-headline') {
+    generatedContent = await generator.website.generateLandingPageHeadline(req.user._id, req.body);
   }
-
   res.status(httpStatus.OK).send(generatedContent);
 });
 

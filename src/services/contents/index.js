@@ -6,5 +6,5 @@ module.exports.linkedIn = require('./linkedIn.contents');
 module.exports.instagram = require('./instagram.contents');
 module.exports.youtube = require('./youtube.contents');
 module.exports.commonTask = require('./common.contents');
-module.exports.emailSubjectFromBody = require('./email.contents');
-module.exports.websiteShortDescription = require('./website.contents');
+module.exports.email = require('./email.contents');
+module.exports.website = require('./website.contents');
