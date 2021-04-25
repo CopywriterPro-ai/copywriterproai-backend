@@ -98,8 +98,43 @@ Review:`;
   return userResponse;
 };
 
+const generateProductName = async (userId, { productDescription, keywords, productNames }) => {
+  const prompt = `This is a product name generator
+
+Product description: A home milkshake maker
+Seed words: fast, healthy, compact
+Product names: HomeShaker, Fit Shaker, QuickShake, Shake Maker
+
+Product description: ${removeSpaces(productDescription)}
+Seed words: ${removeSpaces(keywords)}
+Product names:`;
+
+  const openAPIInformationsList = [];
+  const generateProductNameList = [];
+
+  for (let i = 0; i < 5; i++) {
+    const productName = await generateContentUsingGPT3('davinci', 60, prompt, 0.5, 0, 0, ['\n', 'Product names:']);
+    const { id, object, created, model, choices } = productName;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    generateProductNameList.push(choices[0].text.trim());
+  }
+  const { _id, generatedContents } = await storeData(
+    userId,
+    'product-name',
+    prompt,
+    openAPIInformationsList,
+    generateProductNameList
+  );
+
+  const userResponse = formatResponse(_id, 'product-name', generatedContents);
+
+  return userResponse;
+};
+
 module.exports = {
   productDescription,
   makeProductDescriptionSEOFriendly,
   productReview,
+  generateProductName,
 };

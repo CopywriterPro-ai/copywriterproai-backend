@@ -98,4 +98,8 @@ router
   .route('/generate/website-landing-page-headline')
   .post(auth('generateContent'), validate(contentValidation.landingPageHeadline), contentController.generate);
 
+router
+  .route('/generate/product-name')
+  .post(auth('generateContent'), validate(contentValidation.productName), contentController.generate);
+
 module.exports = router;

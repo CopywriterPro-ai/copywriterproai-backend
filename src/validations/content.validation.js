@@ -178,6 +178,14 @@ const landingPageHeadline = {
   }),
 };
 
+const productName = {
+  body: Joi.object().keys({
+    task: Joi.valid('product-name').required(),
+    productDescription: Joi.string().required(),
+    keywords: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -212,4 +220,5 @@ module.exports = {
   channelTagsFromDescription,
   seoFriendlyBlogIdeas,
   landingPageHeadline,
+  productName,
 };
