@@ -125,6 +125,13 @@ const imageIdeasFromAdText = {
   }),
 };
 
+const generatedSubjectFromBody = {
+  body: Joi.object().keys({
+    task: Joi.valid('email-subject-from-body').required(),
+    emailBody: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -152,4 +159,5 @@ module.exports = {
   youtubeVideoTitleFromDescription,
   youtubeVideoIdeas,
   imageIdeasFromAdText,
+  generatedSubjectFromBody,
 };

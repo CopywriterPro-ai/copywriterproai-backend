@@ -70,4 +70,8 @@ router
   .route('/generate/image-idea-from-ad-text')
   .post(auth('generateContent'), validate(contentValidation.imageIdeasFromAdText), contentController.generate);
 
+router
+  .route('/generate/email-subject-from-body')
+  .post(auth('generateContent'), validate(contentValidation.generatedSubjectFromBody), contentController.generate);
+
 module.exports = router;

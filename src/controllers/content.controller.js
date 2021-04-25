@@ -38,6 +38,8 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await generator.youtube.youtubeVideoIdeas(req.user._id, req.body);
   } else if (task === 'image-idea-from-ad-text') {
     generatedContent = await generator.commonTask.imageIdeasFromAdText(req.user._id, req.body);
+  } else if (task === 'email-subject-from-body') {
+    generatedContent = await generator.emailSubjectFromBody.emailSubjectsFromBody(req.user._id, req.body);
   }
 
   res.status(httpStatus.OK).send(generatedContent);
