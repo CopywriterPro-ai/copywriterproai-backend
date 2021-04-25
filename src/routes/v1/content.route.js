@@ -74,4 +74,12 @@ router
   .route('/generate/email-subject-from-body')
   .post(auth('generateContent'), validate(contentValidation.generatedSubjectFromBody), contentController.generate);
 
+router
+  .route('/generate/website-short-description')
+  .post(auth('generateContent'), validate(contentValidation.websiteShortDescription), contentController.generate);
+
+router
+  .route('/generate/keywords-from-text')
+  .post(auth('generateContent'), validate(contentValidation.keywordsFromText), contentController.generate);
+
 module.exports = router;

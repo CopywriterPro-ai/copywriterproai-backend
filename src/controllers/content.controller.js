@@ -40,6 +40,10 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await generator.commonTask.imageIdeasFromAdText(req.user._id, req.body);
   } else if (task === 'email-subject-from-body') {
     generatedContent = await generator.emailSubjectFromBody.emailSubjectsFromBody(req.user._id, req.body);
+  } else if (task === 'website-short-description') {
+    generatedContent = await generator.websiteShortDescription.generateWebsiteShortDescription(req.user._id, req.body);
+  } else if (task === 'keywords-from-text') {
+    generatedContent = await generator.websiteShortDescription.generateKeywordsFromText(req.user._id, req.body);
   }
 
   res.status(httpStatus.OK).send(generatedContent);

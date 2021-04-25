@@ -132,6 +132,21 @@ const generatedSubjectFromBody = {
   }),
 };
 
+const websiteShortDescription = {
+  body: Joi.object().keys({
+    task: Joi.valid('website-short-description').required(),
+    industryType: Joi.string().required(),
+    businessName: Joi.string().required(),
+  }),
+};
+
+const keywordsFromText = {
+  body: Joi.object().keys({
+    task: Joi.valid('keywords-from-text').required(),
+    primaryText: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -160,4 +175,6 @@ module.exports = {
   youtubeVideoIdeas,
   imageIdeasFromAdText,
   generatedSubjectFromBody,
+  websiteShortDescription,
+  keywordsFromText,
 };

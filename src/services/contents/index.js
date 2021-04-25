@@ -7,3 +7,4 @@ module.exports.instagram = require('./instagram.contents');
 module.exports.youtube = require('./youtube.contents');
 module.exports.commonTask = require('./common.contents');
 module.exports.emailSubjectFromBody = require('./email.contents');
+module.exports.websiteShortDescription = require('./website.contents');
