@@ -44,6 +44,10 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await generator.websiteShortDescription.generateWebsiteShortDescription(req.user._id, req.body);
   } else if (task === 'website-keywords-from-text') {
     generatedContent = await generator.websiteShortDescription.generateKeywordsFromText(req.user._id, req.body);
+  } else if (task === 'youtube-video-tags-from-description') {
+    generatedContent = await generator.youtube.generateVideoTagsFromDescription(req.user._id, req.body);
+  } else if (task === 'youtube-channel-tags-from-description') {
+    generatedContent = await generator.youtube.generateChannelTagsFromDescription(req.user._id, req.body);
   }
 
   res.status(httpStatus.OK).send(generatedContent);

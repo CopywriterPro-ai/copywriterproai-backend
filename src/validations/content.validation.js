@@ -147,6 +147,20 @@ const keywordsFromText = {
   }),
 };
 
+const videoTagsFromDescription = {
+  body: Joi.object().keys({
+    task: Joi.valid('youtube-video-tags-from-description').required(),
+    primaryText: Joi.string().required(),
+  }),
+};
+
+const channelTagsFromDescription = {
+  body: Joi.object().keys({
+    task: Joi.valid('youtube-channel-tags-from-description').required(),
+    primaryText: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -177,4 +191,6 @@ module.exports = {
   generatedSubjectFromBody,
   websiteShortDescription,
   keywordsFromText,
+  videoTagsFromDescription,
+  channelTagsFromDescription,
 };

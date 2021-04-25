@@ -50,7 +50,7 @@ Keywords:`;
   const KeywordsFromTextList = [];
 
   for (let i = 0; i < 1; i++) {
-    const KeywordsFromText = await generateContentUsingGPT3('davinci', 500, prompt, 0.7, 0.3, 0, ['Keywords:']);
+    const KeywordsFromText = await generateContentUsingGPT3('davinci', 500, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
     const { id, object, created, model, choices } = KeywordsFromText;
 
     openAPIInformationsList.push({ id, object, created, model });

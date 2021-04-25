@@ -82,4 +82,12 @@ router
   .route('/generate/website-keywords-from-text')
   .post(auth('generateContent'), validate(contentValidation.keywordsFromText), contentController.generate);
 
+router
+  .route('/generate/youtube-video-tags-from-description')
+  .post(auth('generateContent'), validate(contentValidation.videoTagsFromDescription), contentController.generate);
+
+router
+  .route('/generate/youtube-channel-tags-from-description')
+  .post(auth('generateContent'), validate(contentValidation.channelTagsFromDescription), contentController.generate);
+
 module.exports = router;
