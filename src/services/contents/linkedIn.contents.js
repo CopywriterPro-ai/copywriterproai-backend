@@ -19,7 +19,8 @@ List of 5 Marketing text:
   return processListContents(userId, 'linkedin-ad-texts', prompt, adTexts);
 };
 
-const generateLinkedInSummary = async (userId, { name, professionalHeadline }) => {
+const generateLinkedInSummary = async (userId, { name, profession, skills }) => {
+  const professionalHeadline = `${profession} + ', +${skills}`;
   const prompt = `Generate LinkedIn profile summary according to Harvard career experts
 
 Name: Jessica Yan
