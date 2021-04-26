@@ -186,6 +186,14 @@ const productName = {
   }),
 };
 
+const linkedInSummary = {
+  body: Joi.object().keys({
+    task: Joi.valid('linkedin-summary').required(),
+    name: Joi.string().required(),
+    professionalHeadline: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -221,4 +229,5 @@ module.exports = {
   seoFriendlyBlogIdeas,
   landingPageHeadline,
   productName,
+  linkedInSummary,
 };

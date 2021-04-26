@@ -54,6 +54,8 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await generator.website.generateLandingPageHeadline(req.user._id, req.body);
   } else if (task === 'product-name') {
     generatedContent = await generator.product.generateProductName(req.user._id, req.body);
+  } else if (task === 'linkedin-summary') {
+    generatedContent = await generator.linkedIn.generateLinkedInSummary(req.user._id, req.body);
   }
   res.status(httpStatus.OK).send(generatedContent);
 });

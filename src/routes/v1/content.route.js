@@ -102,4 +102,8 @@ router
   .route('/generate/product-name')
   .post(auth('generateContent'), validate(contentValidation.productName), contentController.generate);
 
+router
+  .route('/generate/linkedin-summary')
+  .post(auth('generateContent'), validate(contentValidation.linkedInSummary), contentController.generate);
+
 module.exports = router;
