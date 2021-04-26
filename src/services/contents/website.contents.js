@@ -76,12 +76,13 @@ Content: Online marketing
 Desired outcome: More sales
 Industry: Advertising
 Target audience: SEO beginners
-Headlines: Get Rid of Low Rankings Once and For All, How to Recover From Online Marketing Low Rankings, 7 Little-Known Factors That Could Affect Your Online Marketing, Why You Might Be Failing at Online Marketing.
+Headlines: Get Rid of Low Rankings Once and For All.\nHow to Recover From Online Marketing Low Rankings.\n7 Little-Known Factors That Could Affect Your Online Marketing.\n
+Why You Might Be Failing at Online Marketing.
 Content: Software agency
 Desired outcome: More sales
 Industry: Information technology
 Target audience: CEO, CTO
-Headlines: How Successful CEOs Build Software Agencies, 9 Reasons Why Software Agencies Fail, Tips for CEOs to Ensure Their Software Agency Survives.
+Headlines: How Successful CEOs Build Software Agencies.\n9 Reasons Why Software Agencies Fail.\nTips for CEOs to Ensure Their Software Agency Survives.
 Content: ${removeSpaces(content)}
 Desired outcome: ${removeSpaces(desiredOutcome)}
 Industry: ${removeSpaces(industry)}
@@ -91,7 +92,7 @@ Headlines:`;
   const openAPIInformationsList = [];
   const seoFriendlyBlogIdeasList = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 10; i++) {
     const seoFriendlyBlogIdeas = await generateContentUsingGPT3('davinci', 500, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
     const { id, object, created, model, choices } = seoFriendlyBlogIdeas;
 
