@@ -111,16 +111,25 @@ Headlines:`;
   return userResponse;
 };
 
-// TODO: Have to refactor and reimplement this method (Please don't use on prod)
 const generateLandingPageHeadline = async (userId, { businessType }) => {
-  const prompt = `Generate High-Converting Landing page headline ${businessType}
-  Headlines:`;
+  const prompt = `Generate High-Converting Landing page headline that will makes user to pay for the service
+
+Product: Website hosting platform which fast, secure.
+Headlines: The only website hosting platform you'll need!\nWorried about security?\nEverything you need for a successful website.\nYour one-stop-shop for hosting.\n
+It's time to make your website a masterpiece.\nA company you can trust with your business.
+Product: Marketing Agency
+Headlines: Let's start taking your business to new heights.\nGrow your business with a Marketing Agency.\n
+Make an impact with your marketing strategy.\nIt's time to take your business to the next level.\nLet's start taking your business to new heights.
+Product: A fintech company that replaces bank
+Headlines: Banking made simple.\nThe new way to bank.\nA fresh banking experience for today's customer.\nAn easy way to get all the benefits of a bank, without any of the hassles.
+Product: ${businessType}
+Headlines:`;
 
   const openAPIInformationsList = [];
   const landingPageHeadlineList = [];
 
-  for (let i = 0; i < 3; i++) {
-    const seoFriendlyBlogIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.7, 0.3, 0, [
+  for (let i = 0; i < 5; i++) {
+    const seoFriendlyBlogIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 1, 0, [
       '\n',
       'Headlines:',
     ]);
