@@ -28,9 +28,9 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await generator.facebook.facebookAdPrimaryTexts(req.user._id, req.body);
   } else if (task === 'linkedin-ad-texts') {
     generatedContent = await generator.linkedIn.linkedinAdTexts(req.user._id, req.body);
-  } else if (task === 'google-ad-headlines') {
+  } else if (task === 'ads-google-headlines') {
     generatedContent = await generator.google.googleAdHeadlines(req.user._id, req.body);
-  } else if (task === 'google-ad-descriptions') {
+  } else if (task === 'ads-google-descriptions') {
     generatedContent = await generator.google.googleAdDescriptions(req.user._id, req.body);
   } else if (task === 'youtube-video-titles-from-description') {
     generatedContent = await generator.youtube.youtubeVideoTitleFromDescription(req.user._id, req.body);

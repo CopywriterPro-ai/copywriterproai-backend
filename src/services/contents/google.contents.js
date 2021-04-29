@@ -16,7 +16,7 @@ Audience: ${audience}
 -`;
 
   const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 0.2, 0.3, ['\n\n']);
-  return processListContents(userId, 'google-ad-headlines', prompt, headlines);
+  return processListContents(userId, 'ads-google-headlines', prompt, headlines);
 };
 
 const googleAdDescriptions = async (userId, { platform, audience }) => {
@@ -31,7 +31,9 @@ Audience: ${audience}
   const googleAdDescriptionsList = [];
 
   for (let i = 0; i < 5; i++) {
-    const generatedAdDescription = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 0.2, 0.3, ['\n\n']);
+    const generatedAdDescription = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 0.2, 0.3, [
+      '\n\n',
+    ]);
     const { id, object, created, model, choices } = generatedAdDescription;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -40,12 +42,12 @@ Audience: ${audience}
 
   const { _id, generatedContents } = await storeData(
     userId,
-    'google-ad-descriptions',
+    'ads-google-descriptions',
     prompt,
     openAPIInformationsList,
     googleAdDescriptionsList
   );
-  const userResponse = formatResponse(_id, 'google-ad-descriptions', generatedContents);
+  const userResponse = formatResponse(_id, 'ads-google-descriptions', generatedContents);
 
   return userResponse;
 };
