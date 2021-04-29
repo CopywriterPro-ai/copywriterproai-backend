@@ -5,10 +5,10 @@ const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = re
 const productDescription = async (userId, { productName, type, audience, benefits }) => {
   const prompt = `Write Product description for following Product details
 """
-Name: ${removeSpaces(productName)}
-Type: ${removeSpaces(type)}
-Audience: ${removeSpaces(audience)}
-Benefits: ${removeSpaces(benefits)}
+Name: ${productName}
+Type: ${type}
+Audience: ${audience}
+Benefits: ${benefits}
 Description:
 `;
 

@@ -121,7 +121,7 @@ const imageIdeasFromAdText = {
   body: Joi.object().keys({
     task: Joi.valid('image-idea-from-ad-text').required(),
     product: Joi.string().required(),
-    adText: Joi.string().required(),
+    adsText: Joi.string().required(),
   }),
 };
 
@@ -174,7 +174,7 @@ const seoFriendlyBlogIdeas = {
 const landingPageHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('website-landing-page-headline').required(),
-    businessType: Joi.string().required(),
+    businessType: Joi.string().trim().required(),
   }),
 };
 

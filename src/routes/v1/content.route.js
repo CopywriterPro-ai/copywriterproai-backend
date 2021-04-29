@@ -7,7 +7,7 @@ const { contentController } = require('../../controllers');
 const router = express.Router();
 
 router
-  .route('/generate/paraphrase')
+  .route('/generate/paraphrasing')
   .post(auth('generateContent'), validate(contentValidation.paraphrase), contentController.generate);
 
 router

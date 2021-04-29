@@ -14,7 +14,7 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await generator.product.makeProductDescriptionSEOFriendly(req.user._id, req.body);
   } else if (task === 'product-review') {
     generatedContent = await generator.product.productReview(req.user._id, req.body);
-  } else if (task.substr(task.indexOf('-') + 1, task.length) === 'campaign-post') {
+  } else if (task.substr(task.indexOf('-') + 1, task.length) === 'facebook-campaign-post') {
     generatedContent = await generator.facebook.campaignPostFromBusinessType(req.user._id, task, req.body);
   } else if (task === 'facebook-ad-primary-texts') {
     generatedContent = await generator.facebook.facebookAdPrimaryTexts(req.user._id, req.body);

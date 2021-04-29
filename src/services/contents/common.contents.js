@@ -1,9 +1,9 @@
 const { generateContentUsingGPT3, removeSpaces, processListContents } = require('../content.service');
 
 const imageIdeasFromAdText = async (userId, { product, adText }) => {
-  const prompt = `Generate image content for following Ad of the product.
-Product: ${removeSpaces(product)}
-Ad: ${removeSpaces(adText)}
+  const prompt = `Generate image content for following Ads of the product.
+Product: ${product}
+Ads: ${adText}
 List of 5 Image contents:
 -`;
 
