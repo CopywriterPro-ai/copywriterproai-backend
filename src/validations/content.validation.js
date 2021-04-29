@@ -89,7 +89,7 @@ const linkedinAdTexts = {
 
 const googleAdHeadlines = {
   body: Joi.object().keys({
-    task: Joi.valid('google-ad-headlines').required(),
+    task: Joi.valid('ads-google-headlines').required(),
     name: Joi.string().required(),
     platform: Joi.string().required(),
   }),
@@ -97,7 +97,7 @@ const googleAdHeadlines = {
 
 const googleAdDescriptions = {
   body: Joi.object().keys({
-    task: Joi.valid('google-ad-descriptions').required(),
+    task: Joi.valid('ads-google-descriptions').required(),
     platform: Joi.string().required(),
     audience: Joi.string().required(),
   }),

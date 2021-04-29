@@ -51,11 +51,11 @@ router
   .post(auth('generateContent'), validate(contentValidation.linkedinAdTexts), contentController.generate);
 
 router
-  .route('/generate/google-ad-headlines')
+  .route('/generate/ads-google-headlines')
   .post(auth('generateContent'), validate(contentValidation.googleAdHeadlines), contentController.generate);
 
 router
-  .route('/generate/google-ad-descriptions')
+  .route('/generate/ads-google-descriptions')
   .post(auth('generateContent'), validate(contentValidation.googleAdDescriptions), contentController.generate);
 
 router
