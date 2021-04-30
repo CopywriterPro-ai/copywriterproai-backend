@@ -13,7 +13,7 @@ Description:`;
   const openAPIInformationsList = [];
   const websiteShortDescriptionList = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const websiteShortDescription = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 0.7, 0.3, 0, [
       '\n',
       'Description:',
@@ -92,7 +92,7 @@ Headlines:`;
   const openAPIInformationsList = [];
   const seoFriendlyBlogIdeasList = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const seoFriendlyBlogIdeas = await generateContentUsingGPT3('davinci', 500, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
     const { id, object, created, model, choices } = seoFriendlyBlogIdeas;
 

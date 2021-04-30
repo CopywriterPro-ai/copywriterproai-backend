@@ -9,7 +9,7 @@ Subject:`;
   const openAPIInformationsList = [];
   const emailSubjectsFromBodyList = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const emailSubjectFromBody = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 0.7, 1, 0, [
       '\n',
       'Subject:',

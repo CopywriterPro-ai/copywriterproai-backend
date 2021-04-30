@@ -12,16 +12,18 @@ const productDescription = {
   body: Joi.object().keys({
     task: Joi.valid('product-description').required(),
     productName: Joi.string().required(),
-    type: Joi.string().required(),
-    targetPeople: Joi.string().required(),
-    benefits: Joi.string().required(),
+    productType: Joi.string().required(),
   }),
 };
 
 const makeProductDescriptionSEOFriendly = {
   body: Joi.object().keys({
     task: Joi.valid('seo-friendly-product-description').required(),
-    userText: Joi.string().required(),
+    productName: Joi.string().trim().required(),
+    productType: Joi.string().trim().required(),
+    productFeatures: Joi.string().trim().required(),
+    productBenefits: Joi.string().trim().required(),
+    targetAudience: Joi.string().trim().required(),
   }),
 };
 
