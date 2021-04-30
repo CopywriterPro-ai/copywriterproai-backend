@@ -8,13 +8,21 @@ const generate = catchAsync(async (req, res) => {
 
   if (task === 'paraphrasing') {
     generatedContent = await generator.writing.paraphrase(req.user._id, req.body);
+  } else if (task === 'blog-outline') {
+    generatedContent = await generator.writing.blogOutline(req.user._id, req.body);
+  } else if (task === 'blog-idea') {
+    generatedContent = await generator.writing.blogIdea(req.user._id, req.body);
+  } else if (task === 'blog-headline') {
+    generatedContent = await generator.writing.blogHeadline(req.user._id, req.body);
+  } else if (task === 'blog-intro') {
+    generatedContent = await generator.writing.blogIntro(req.user._id, req.body);
   } else if (task === 'product-description') {
     generatedContent = await generator.product.productDescription(req.user._id, req.body);
   } else if (task === 'seo-friendly-product-description') {
     generatedContent = await generator.product.makeProductDescriptionSEOFriendly(req.user._id, req.body);
   } else if (task === 'product-review') {
     generatedContent = await generator.product.productReview(req.user._id, req.body);
-  } else if (task.substr(task.indexOf('-') + 1, task.length) === 'facebook-campaign-post') {
+  } else if (task === 'facebook-campaign-post') {
     generatedContent = await generator.facebook.campaignPostFromBusinessType(req.user._id, task, req.body);
   } else if (task === 'facebook-ad-primary-texts') {
     generatedContent = await generator.facebook.facebookAdPrimaryTexts(req.user._id, req.body);

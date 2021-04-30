@@ -11,6 +11,22 @@ router
   .post(auth('generateContent'), validate(contentValidation.paraphrase), contentController.generate);
 
 router
+  .route('/generate/blog-outline')
+  .post(auth('generateContent'), validate(contentValidation.blogOutline), contentController.generate);
+
+router
+  .route('/generate/blog-idea')
+  .post(auth('generateContent'), validate(contentValidation.blogIdea), contentController.generate);
+
+router
+  .route('/generate/blog-headline')
+  .post(auth('generateContent'), validate(contentValidation.blogHeadline), contentController.generate);
+
+router
+  .route('/generate/blog-intro')
+  .post(auth('generateContent'), validate(contentValidation.blogIntro), contentController.generate);
+
+router
   .route('/generate/product-description')
   .post(auth('generateContent'), validate(contentValidation.productDescription), contentController.generate);
 
