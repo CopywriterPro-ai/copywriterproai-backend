@@ -8,6 +8,39 @@ const paraphrase = {
   }),
 };
 
+const blogOutline = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-outline').required(),
+    numberOfPoints: Joi.number().required(),
+    blogAbout: Joi.string().required(),
+  }),
+};
+
+const blogIdea = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-idea').required(),
+    productName: Joi.string().required(),
+    productDescription: Joi.string().required(),
+  }),
+};
+
+const blogHeadline = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-headline').required(),
+    productName: Joi.string().required(),
+    productDescription: Joi.string().required(),
+    blogAbout: Joi.string().required(),
+  }),
+};
+
+const blogIntro = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-intro').required(),
+    title: Joi.string().required(),
+    about: Joi.string().required(),
+  }),
+};
+
 const productDescription = {
   body: Joi.object().keys({
     task: Joi.valid('product-description').required(),
@@ -207,6 +240,10 @@ const linkedInSummary = {
 
 module.exports = {
   paraphrase,
+  blogOutline,
+  blogIdea,
+  blogHeadline,
+  blogIntro,
   productDescription,
   makeProductDescriptionSEOFriendly,
   productReview,
