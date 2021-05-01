@@ -54,9 +54,13 @@ Now write 5 catchy short Headline for following platform
 
 Platform: ${removeSpaces(platformType)}
 <<<<<<< HEAD
+<<<<<<< HEAD
 List of 5 catchy short Headline
 =======
 >>>>>>> 4d1bab4099a056013d3efba980979a3d28cf233e
+=======
+List of 5 catchy short Headline
+>>>>>>> 71efcebb3fabb0f9a6314a0587b6220b1f2a6469
 -`;
 
   const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.1, ['\n\n']);
