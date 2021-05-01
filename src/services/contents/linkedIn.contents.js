@@ -15,7 +15,7 @@ List of 5 Marketing text:
 
 -`;
 
-  const adTexts = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.8, 0.2, 0.3, ['\n\n']);
+  const adTexts = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.3, ['\n\n']);
   return processListContents(userId, 'linkedin-ad-texts', prompt, adTexts);
 };
 
@@ -38,7 +38,7 @@ Summary:`;
   const generateLinkedInSummaryList = [];
 
   for (let i = 0; i < 3; i++) {
-    const linkedInSummary = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.7, 0, 0, [
+    const linkedInSummary = await generateContentUsingGPT3('davinci-instruct-beta', 400, prompt, 0.7, 0, 0, [
       '\n',
       'Summary:',
     ]);

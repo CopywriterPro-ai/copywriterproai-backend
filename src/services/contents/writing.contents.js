@@ -17,7 +17,7 @@ Paraphrase:`;
 
   let paraphrasedContents;
   while (1) {
-    paraphrasedContents = await generateContentUsingGPT3('davinci', 500, prompt, 0.9, 0.9, 0.9, ['\n']);
+    paraphrasedContents = await generateContentUsingGPT3('davinci', 200, prompt, 0.9, 0.9, 0.9, ['\n']);
     if (
       paraphrasedContents.choices &&
       paraphrasedContents.choices[0].text.trim() !== '' &&
@@ -85,7 +85,7 @@ Description: ${productDescription}
 Blog ideas:
 -`;
 
-  const blogIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.8, 0.2, 0.3, ['\n\n']);
+  const blogIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.3, ['\n\n']);
   return processListContents(userId, 'blog-idea', prompt, blogIdeas);
 };
 
@@ -99,7 +99,7 @@ About: ${blogAbout}
 Blog titles:
 -`;
 
-  const blogHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 0.2, 0.1, ['\n\n']);
+  const blogHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.9, 0.2, 0.1, ['\n\n']);
   return processListContents(userId, 'blog-headline', prompt, blogHeadlines);
 };
 
@@ -113,7 +113,7 @@ Intro:`;
   const blogIntrosList = [];
 
   for (let i = 0; i < 5; i++) {
-    const blogIntros = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.8, 0.1, 0.2, ['\n\n']);
+    const blogIntros = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.1, 0.2, ['\n\n']);
     const { id, object, created, model, choices } = blogIntros;
 
     openAPIInformationsList.push({ id, object, created, model });

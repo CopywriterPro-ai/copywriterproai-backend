@@ -8,7 +8,7 @@ List of 5 Primary text:
 
 -`;
 
-  const campaignPostIdea = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  const campaignPostIdea = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
   return processListContents(userId, task, prompt, campaignPostIdea);
 };
 
@@ -21,7 +21,7 @@ List of 5 Primary texts:
 
 -`;
 
-  const primaryTexts = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  const primaryTexts = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
   return processListContents(userId, 'facebook-ad-primary-texts', prompt, primaryTexts);
 };
 
@@ -57,7 +57,7 @@ Now write 5 catchy short Headline for following platform
 Platform: ${removeSpaces(platformType)}
 -`;
 
-  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.1, ['\n\n']);
   return processListContents(userId, 'facebook-ad-headlines', prompt, headlines);
 };
 
@@ -70,7 +70,7 @@ List of 5 Link descriptions:
 
 -`;
 
-  const linkDescriptions = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  const linkDescriptions = await generateContentUsingGPT3('davinci-instruct-beta', 150, prompt, 0.8, 0.2, 0.1, ['\n\n']);
   return processListContents(userId, 'facebook-ad-link-descriptions', prompt, linkDescriptions);
 };
 
@@ -82,7 +82,7 @@ List of 5 Ads:
 
 -`;
 
-  const adsFromProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.8, 0.2, 0.4, [
+  const adsFromProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 150, prompt, 0.8, 0.2, 0.4, [
     '\n\n',
   ]);
   return processListContents(userId, 'facebook-ads-from-product-description', prompt, adsFromProductDescription);
