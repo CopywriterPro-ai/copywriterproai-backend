@@ -1,19 +1,34 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+
+const { Schema } = mongoose;
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 
-const userSchema = mongoose.Schema(
+const userSchema = new Schema(
   {
     phoneNumber: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
     },
+    userId: {
+      type: String,
+    },
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
+    authType: {
+      type: String,
+    },
+    profileAvatar: {
+      type: String,
+    },
     password: {
       type: String,
-      required: true,
       trim: true,
       minlength: 8,
       validate(value) {
@@ -46,7 +61,6 @@ const userSchema = mongoose.Schema(
     },
     wordsLeft: {
       type: Number,
-      required: true,
       trim: true,
       default: 1000,
     },
@@ -57,6 +71,9 @@ const userSchema = mongoose.Schema(
     },
     bookmarks: {
       type: mongoose.Schema.Types.Mixed,
+    },
+    verifySecret: {
+      type: String,
     },
     OTP: {
       type: String,

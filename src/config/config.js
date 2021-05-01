@@ -22,6 +22,9 @@ const envVarsSchema = Joi.object()
     SMTP_USERNAME: Joi.string().description('username for email server'),
     SMTP_PASSWORD: Joi.string().description('password for email server'),
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
+    GOOGLE_OAUTH2_CLIENT_ID: Joi.string().required().description('google oauth2 client id'),
+    GOOGLE_OAUTH2_SECRET_ID: Joi.string().required().description('google oauth2 secret id'),
+    WEB_CLIENT_URL: Joi.string().required().description('frontend web url'),
   })
   .unknown();
 
@@ -40,6 +43,7 @@ module.exports = {
       useCreateIndex: true,
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
     },
   },
   jwt: {
@@ -47,6 +51,10 @@ module.exports = {
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: 10,
+  },
+  googleOauth2: {
+    clientId: envVars.GOOGLE_OAUTH2_CLIENT_ID,
+    secretId: envVars.GOOGLE_OAUTH2_SECRET_ID,
   },
   openAI: {
     openAIAPIKey: envVars.OPENAI_API_KEY,
@@ -69,5 +77,8 @@ module.exports = {
       },
     },
     from: envVars.EMAIL_FROM,
+  },
+  frontendUrl: {
+    web: envVars.WEB_CLIENT_URL,
   },
 };
