@@ -22,15 +22,7 @@ Platform: ${platform}
 List of 5 short Google Ad Headlines
 -`;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 0.3, 0.2, ['\n\n']);
-=======
-  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.9, 0.2, 0.3, ['\n\n']);
->>>>>>> 4d1bab4099a056013d3efba980979a3d28cf233e
-=======
-  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.9, 0.2, 0.3, ['\n\n']);
->>>>>>> 71efcebb3fabb0f9a6314a0587b6220b1f2a6469
   return processListContents(userId, 'ads-google-headlines', prompt, headlines);
 };
 
