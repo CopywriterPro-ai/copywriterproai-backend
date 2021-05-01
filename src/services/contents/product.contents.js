@@ -20,7 +20,7 @@ Short Description:`;
   const productDescriptionSEOFriendlyList = [];
 
   for (let i = 0; i < 3; i++) {
-    const productDescriptionSEOFriendly = await generateContentUsingGPT3('davinci', 60, prompt, 0.5, 0, 0, [
+    const productDescriptionSEOFriendly = await generateContentUsingGPT3('davinci', 300, prompt, 0.5, 0, 0, [
       '\n',
       'Short Description:',
     ]);

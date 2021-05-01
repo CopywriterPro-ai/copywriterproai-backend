@@ -14,7 +14,7 @@ Description:`;
   const websiteShortDescriptionList = [];
 
   for (let i = 0; i < 5; i++) {
-    const websiteShortDescription = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 0.7, 0.3, 0, [
+    const websiteShortDescription = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.7, 0.3, 0, [
       '\n',
       'Description:',
     ]);
@@ -50,7 +50,7 @@ Keywords:`;
   const KeywordsFromTextList = [];
 
   for (let i = 0; i < 1; i++) {
-    const KeywordsFromText = await generateContentUsingGPT3('davinci', 500, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
+    const KeywordsFromText = await generateContentUsingGPT3('davinci', 100, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
     const { id, object, created, model, choices } = KeywordsFromText;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -93,7 +93,7 @@ Headlines:`;
   const seoFriendlyBlogIdeasList = [];
 
   for (let i = 0; i < 5; i++) {
-    const seoFriendlyBlogIdeas = await generateContentUsingGPT3('davinci', 500, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
+    const seoFriendlyBlogIdeas = await generateContentUsingGPT3('davinci', 50, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
     const { id, object, created, model, choices } = seoFriendlyBlogIdeas;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -130,7 +130,7 @@ Headlines:`;
   const landingPageHeadlineList = [];
 
   for (let i = 0; i < 5; i++) {
-    const seoFriendlyBlogIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 1, 0, [
+    const seoFriendlyBlogIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.9, 1, 0, [
       '\n',
       'Headlines:',
     ]);
