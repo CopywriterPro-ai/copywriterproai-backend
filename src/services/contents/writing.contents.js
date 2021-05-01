@@ -82,7 +82,7 @@ const blogIdea = async (userId, { productName, productDescription }) => {
 Name: ${productName}
 Description: ${productDescription}
 
-Blog ideas:
+List of 5 Blog ideas
 -`;
 
   const blogIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.3, ['\n\n']);
@@ -96,7 +96,7 @@ Name: ${productName}
 Description: ${productDescription}
 About: ${blogAbout}
 
-Blog titles:
+List of 5 Blog titles
 -`;
 
   const blogHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.9, 0.2, 0.1, ['\n\n']);

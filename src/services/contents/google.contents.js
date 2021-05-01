@@ -7,15 +7,30 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const googleAdHeadlines = async (userId, { platform, audience }) => {
-  const prompt = `Write 5 benefits Audience will get from following Platform
+const googleAdHeadlines = async (userId, { productName, platform }) => {
+  const prompt = `Google Ad Headline Examples:
+- Upwork™: Hire The Best - Trust Your Job To True Experts
+- Expert SEO Services UK | SEO Agency Of The Year 2019
+- Website hoting from £2.50 | Get 50% off all packages
+- Injury Lawyers 4U™ | Expert Legal Advice
+- Beds at Beds.co.ca | Biggest Ever Bed Sale
 
+Now Write 5 short Google Ad Headlines for Following like Examples.
+
+Name: ${productName}
 Platform: ${platform}
-Audience: ${audience}
-
+List of 5 short Google Ad Headlines
 -`;
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 0.3, 0.2, ['\n\n']);
+=======
   const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.9, 0.2, 0.3, ['\n\n']);
+>>>>>>> 4d1bab4099a056013d3efba980979a3d28cf233e
+=======
+  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.9, 0.2, 0.3, ['\n\n']);
+>>>>>>> 71efcebb3fabb0f9a6314a0587b6220b1f2a6469
   return processListContents(userId, 'ads-google-headlines', prompt, headlines);
 };
 
@@ -24,7 +39,7 @@ const googleAdDescriptions = async (userId, { platform, audience }) => {
 
 Platform: ${platform}
 Audience: ${audience}
-
+List of 5 benefits
 -`;
 
   const openAPIInformationsList = [];

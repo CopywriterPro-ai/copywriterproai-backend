@@ -5,7 +5,6 @@ const campaignPostFromBusinessType = async (userId, task, { platformType }) => {
 
 Platform: ${removeSpaces(platformType)}
 List of 5 Primary text:
-
 -`;
 
   const campaignPostIdea = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
@@ -18,7 +17,6 @@ const facebookAdPrimaryTexts = async (userId, { platformType, context }) => {
 Platform: ${removeSpaces(platformType)}
 Context: ${removeSpaces(context)}
 List of 5 Primary texts:
-
 -`;
 
   const primaryTexts = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
@@ -55,6 +53,14 @@ const facebookAdHeadlines = async (userId, { platformType }) => {
 Now write 5 catchy short Headline for following platform
 
 Platform: ${removeSpaces(platformType)}
+<<<<<<< HEAD
+<<<<<<< HEAD
+List of 5 catchy short Headline
+=======
+>>>>>>> 4d1bab4099a056013d3efba980979a3d28cf233e
+=======
+List of 5 catchy short Headline
+>>>>>>> 71efcebb3fabb0f9a6314a0587b6220b1f2a6469
 -`;
 
   const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.1, ['\n\n']);
@@ -67,7 +73,6 @@ const facebookAdLinkDescription = async (userId, { platformType, headline }) => 
 Platform: ${removeSpaces(platformType)}
 Headline: ${removeSpaces(headline)}
 List of 5 Link descriptions:
-
 -`;
 
   const linkDescriptions = await generateContentUsingGPT3('davinci-instruct-beta', 150, prompt, 0.8, 0.2, 0.1, ['\n\n']);
@@ -79,7 +84,6 @@ const facebookAdsFromProductDescription = async (userId, { product }) => {
 
 Product: ${removeSpaces(product)}
 List of 5 Ads:
-
 -`;
 
   const adsFromProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 150, prompt, 0.8, 0.2, 0.4, [
