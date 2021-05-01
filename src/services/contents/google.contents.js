@@ -22,7 +22,11 @@ Platform: ${platform}
 List of 5 short Google Ad Headlines
 -`;
 
+<<<<<<< HEAD
   const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 0.3, 0.2, ['\n\n']);
+=======
+  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.9, 0.2, 0.3, ['\n\n']);
+>>>>>>> 4d1bab4099a056013d3efba980979a3d28cf233e
   return processListContents(userId, 'ads-google-headlines', prompt, headlines);
 };
 
@@ -38,7 +42,7 @@ List of 5 benefits
   const googleAdDescriptionsList = [];
 
   for (let i = 0; i < 5; i++) {
-    const generatedAdDescription = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 0.2, 0.3, [
+    const generatedAdDescription = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 0.9, 0.2, 0.3, [
       '\n\n',
     ]);
     const { id, object, created, model, choices } = generatedAdDescription;
