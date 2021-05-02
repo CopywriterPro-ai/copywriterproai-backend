@@ -71,14 +71,14 @@ const productReview = {
 
 const campaignPostIdeaFromBusinessType = {
   body: Joi.object().keys({
-    task: Joi.valid('facebook-campaign-post', 'twitter-campaign-post').required(),
+    task: Joi.valid('campaign-facebook-post', 'twitter-campaign-post').required(),
     platformType: Joi.string().required(),
   }),
 };
 
 const facebookAdPrimaryTexts = {
   body: Joi.object().keys({
-    task: Joi.valid('facebook-ad-primary-texts').required(),
+    task: Joi.valid('ads-facebook-primary-texts').required(),
     platformType: Joi.string().required(),
     context: Joi.string().required(),
   }),
@@ -86,14 +86,14 @@ const facebookAdPrimaryTexts = {
 
 const facebookAdHeadlines = {
   body: Joi.object().keys({
-    task: Joi.valid('facebook-ad-headlines').required(),
+    task: Joi.valid('ads-facebook-headlines').required(),
     platformType: Joi.string().required(),
   }),
 };
 
 const facebookAdLinkDescription = {
   body: Joi.object().keys({
-    task: Joi.valid('facebook-ad-link-descriptions').required(),
+    task: Joi.valid('ads-facebook-link-descriptions').required(),
     platformType: Joi.string().required(),
     headline: Joi.string().required(),
   }),

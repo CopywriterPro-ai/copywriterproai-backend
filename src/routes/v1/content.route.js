@@ -43,15 +43,15 @@ router
   .post(auth('generateContent'), validate(contentValidation.campaignPostIdeaFromBusinessType), contentController.generate);
 
 router
-  .route('/generate/facebook-ad-primary-texts')
+  .route('/generate/ads-facebook-primary-texts')
   .post(auth('generateContent'), validate(contentValidation.facebookAdPrimaryTexts), contentController.generate);
 
 router
-  .route('/generate/facebook-ad-headlines')
+  .route('/generate/ads-facebook-headlines')
   .post(auth('generateContent'), validate(contentValidation.facebookAdHeadlines), contentController.generate);
 
 router
-  .route('/generate/facebook-ad-link-descriptions')
+  .route('/generate/ads-facebook-link-descriptions')
   .post(auth('generateContent'), validate(contentValidation.facebookAdLinkDescription), contentController.generate);
 
 router

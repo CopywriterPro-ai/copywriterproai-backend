@@ -22,13 +22,13 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await generator.product.makeProductDescriptionSEOFriendly(req.user._id, req.body);
   } else if (task === 'product-review') {
     generatedContent = await generator.product.productReview(req.user._id, req.body);
-  } else if (task === 'facebook-campaign-post') {
+  } else if (task === 'campaign-facebook-post') {
     generatedContent = await generator.facebook.campaignPostFromBusinessType(req.user._id, task, req.body);
-  } else if (task === 'facebook-ad-primary-texts') {
+  } else if (task === 'ads-facebook-primary-texts') {
     generatedContent = await generator.facebook.facebookAdPrimaryTexts(req.user._id, req.body);
-  } else if (task === 'facebook-ad-headlines') {
+  } else if (task === 'ads-facebook-headlines') {
     generatedContent = await generator.facebook.facebookAdHeadlines(req.user._id, req.body);
-  } else if (task === 'facebook-ad-link-descriptions') {
+  } else if (task === 'ads-facebook-link-descriptions') {
     generatedContent = await generator.facebook.facebookAdLinkDescription(req.user._id, req.body);
   } else if (task === 'facebook-ads-from-product-description') {
     generatedContent = await generator.facebook.facebookAdsFromProductDescription(req.user._id, req.body);

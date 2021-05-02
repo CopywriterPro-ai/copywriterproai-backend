@@ -20,7 +20,7 @@ List of 5 Primary texts:
 -`;
 
   const primaryTexts = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, 'facebook-ad-primary-texts', prompt, primaryTexts);
+  return processListContents(userId, 'ads-facebook-primary-texts', prompt, primaryTexts);
 };
 
 const facebookAdHeadlines = async (userId, { platformType }) => {
@@ -57,19 +57,19 @@ List of 5 catchy short Headline
 -`;
 
   const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, 'facebook-ad-headlines', prompt, headlines);
+  return processListContents(userId, 'ads-facebook-headlines', prompt, headlines);
 };
 
 const facebookAdLinkDescription = async (userId, { platformType, headline }) => {
   const prompt = `Write 5 Link Description for the following Platform and Ad headline.
 
-Platform: ${removeSpaces(platformType)}
-Headline: ${removeSpaces(headline)}
+   Platform: ${removeSpaces(platformType)}
+   Headline: ${removeSpaces(headline)}
 List of 5 Link descriptions:
 -`;
 
   const linkDescriptions = await generateContentUsingGPT3('davinci-instruct-beta', 150, prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, 'facebook-ad-link-descriptions', prompt, linkDescriptions);
+  return processListContents(userId, 'ads-facebook-link-descriptions', prompt, linkDescriptions);
 };
 
 const facebookAdsFromProductDescription = async (userId, { product }) => {
