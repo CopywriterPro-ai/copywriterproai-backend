@@ -24,6 +24,10 @@ const envVarsSchema = Joi.object()
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
     GOOGLE_OAUTH2_CLIENT_ID: Joi.string().required().description('google oauth2 client id'),
     GOOGLE_OAUTH2_SECRET_ID: Joi.string().required().description('google oauth2 secret id'),
+    FACEBOOK_APP_ID: Joi.string().required().description('facebook oauth app secret'),
+    FACEBOOK_APP_SECRET: Joi.string().required().description('facebook oauth app id'),
+    PASSPORT_SECRET_JWT_KEY: Joi.string().required().description('passport secret jwt key'),
+    PASSPORT_AUTH_EXPIRES_TIME: Joi.string().default('10s').description('passport auth expires time'),
     WEB_CLIENT_URL: Joi.string().required().description('frontend web url'),
   })
   .unknown();
@@ -52,9 +56,17 @@ module.exports = {
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: 10,
   },
+  passportConfig: {
+    authSecretKey: envVars.PASSPORT_SECRET_JWT_KEY,
+    authExpireTime: envVars.PASSPORT_AUTH_EXPIRES_TIME,
+  },
   googleOauth2: {
     clientId: envVars.GOOGLE_OAUTH2_CLIENT_ID,
     secretId: envVars.GOOGLE_OAUTH2_SECRET_ID,
+  },
+  facebookOauth: {
+    appId: envVars.FACEBOOK_APP_ID,
+    appSecret: envVars.FACEBOOK_APP_SECRET,
   },
   openAI: {
     openAIAPIKey: envVars.OPENAI_API_KEY,

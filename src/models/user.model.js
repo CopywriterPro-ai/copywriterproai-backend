@@ -4,14 +4,12 @@ const bcrypt = require('bcryptjs');
 const { Schema } = mongoose;
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
+const { authTypes } = require('../config/auths');
+
+const authTypeEnum = Object.values(authTypes);
 
 const userSchema = new Schema(
   {
-    phoneNumber: {
-      type: String,
-      unique: true,
-      trim: true,
-    },
     userId: {
       type: String,
     },
@@ -23,6 +21,7 @@ const userSchema = new Schema(
     },
     authType: {
       type: String,
+      enum: authTypeEnum,
     },
     profileAvatar: {
       type: String,
@@ -41,7 +40,6 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
       lowercase: true,
     },
@@ -72,14 +70,6 @@ const userSchema = new Schema(
     bookmarks: {
       type: mongoose.Schema.Types.Mixed,
     },
-    verifySecret: {
-      type: String,
-    },
-    OTP: {
-      type: String,
-      length: 6,
-      trim: true,
-    },
   },
   {
     timestamps: true,
@@ -89,17 +79,6 @@ const userSchema = new Schema(
 // add plugin that converts mongoose to json
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
-
-/**
- * Check if email is taken
- * @param {string} phoneNumber - The user's phone number
- * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
- * @returns {Promise<boolean>}
- */
-userSchema.statics.isPhoneNumberTaken = async function (phoneNumber, excludeUserId) {
-  const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
-  return !!user;
-};
 
 /**
  * Check if email is taken

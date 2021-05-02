@@ -121,6 +121,14 @@ const resetPassword = async ({ email, OTP, password }) => {
   }
 };
 
+const strategyUser = async ({ sub, authType, userId }) => {
+  const user = await userService.getUser({ _id: sub, authType, userId });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  return user;
+};
+
 module.exports = {
   loginUser,
   logout,
@@ -128,4 +136,5 @@ module.exports = {
   resetPassword,
   requestOneTimePassword,
   verifyPhoneNumber,
+  strategyUser,
 };

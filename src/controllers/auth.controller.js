@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService, interestService, emailService } = require('../services');
+const { frontendUrl } = require('../config/config');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -57,6 +58,18 @@ const resetPassword = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ message: 'Pasaword reset successful' });
 });
 
+const strategyCallback = catchAsync(async (req, res) => {
+  const { userId, authType, _id } = req.user;
+  const jwtToken = tokenService.generateStrategyToken({ userId, authType, _id });
+  res.redirect(`${frontendUrl.web}/?verifyClientToken=${jwtToken}`);
+});
+
+const strategyLogin = catchAsync(async (req, res) => {
+  const user = await authService.strategyUser(req.user);
+  const tokens = await tokenService.generateAuthTokens({ id: user.id });
+  res.status(httpStatus.OK).send({ user, tokens });
+});
+
 module.exports = {
   register,
   verifyAccount,
@@ -65,4 +78,6 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
+  strategyCallback,
+  strategyLogin,
 };

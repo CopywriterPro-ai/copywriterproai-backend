@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { User, Payment } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { authTypes } = require('../config/auths');
 
 const config = require('../config/config');
 const twilio = require('twilio')(config.twilio.twilioAccountSID, config.twilio.twilioAuthToken);
@@ -77,7 +78,8 @@ const checkUserExistsOrNot = async (userId) => {
  * @returns {Promise<User>}
  */
 const getUser = async (identity) => {
-  return User.findOne(identity);
+  const user = await User.findOne(identity);
+  return user;
 };
 
 const setPasswordResetCode = async (email, OTP) => {
@@ -134,6 +136,51 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+const strategyValuesByAuthType = (strategy, profile) => {
+  switch (strategy) {
+    case authTypes.GOOGLE:
+      return {
+        firstName: profile._json.given_name,
+        lastName: profile._json.family_name,
+        email: profile._json.email,
+        profileAvatar: profile._json.picture,
+      };
+    case authTypes.FACEBOOK:
+      return {
+        firstName: profile._json.first_name,
+        lastName: profile._json.last_name,
+        email: profile._json.email,
+        profileAvatar: profile.photos[0].value,
+      };
+    default:
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid strategy');
+  }
+};
+
+const strategyVerify = (authType) => async (accessToken, refreshToken, profile, done) => {
+  try {
+    const user = await User.findOne({ userId: profile.id });
+    if (user) {
+      done(null, user);
+    } else {
+      const userInfo = strategyValuesByAuthType(authType, profile);
+      const emailExist = await User.findOne({ email: userInfo.email });
+      if (emailExist) {
+        throw new ApiError(httpStatus.CONFLICT, 'email already register');
+      }
+      const newUser = await User.create({
+        userId: profile.id,
+        isVerified: true,
+        authType,
+        ...userInfo,
+      });
+      done(null, newUser);
+    }
+  } catch (error) {
+    done(error, false);
+  }
+};
+
 module.exports = {
   createUser,
   createUserPayment,
@@ -145,4 +192,5 @@ module.exports = {
   updateUserById,
   updateBookmarks,
   deleteUserById,
+  strategyVerify,
 };

@@ -1,6 +1,8 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth20');
-const { jwt, googleOauth2 } = require('./config');
+const { Strategy: FacebookStrategy } = require('passport-facebook');
+const { jwt, googleOauth2, facebookOauth } = require('./config');
+const { strategyVerify } = require('../services/user.service');
 const { authTypes } = require('./auths');
 const { tokenTypes } = require('./tokens');
 const { User } = require('../models');
@@ -15,6 +17,13 @@ const googleOptions = {
   clientSecret: googleOauth2.secretId,
   callbackURL: '/v1/auth/google/callback',
   userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
+};
+
+const facebookOptions = {
+  clientID: facebookOauth.appId,
+  clientSecret: facebookOauth.appSecret,
+  callbackURL: '/v1/auth/facebook/callback',
+  profileFields: ['email', 'displayName', 'photos', 'first_name', 'last_name'],
 };
 
 const jwtVerify = async (payload, done) => {
@@ -32,33 +41,12 @@ const jwtVerify = async (payload, done) => {
   }
 };
 
-const googleVerify = async (accessToken, refreshToken, profile, done) => {
-  try {
-    const user = await User.findOne({ userId: profile.id });
-    if (user) {
-      done(null, user);
-    } else {
-      const newUser = await User.create({
-        userId: profile.id,
-        isVerified: true,
-        firstName: profile._json.given_name,
-        lastName: profile._json.family_name,
-        email: profile._json.email,
-        profileAvatar: profile._json.picture,
-        authType: authTypes.GOOGLE,
-      });
-      done(null, newUser);
-    }
-  } catch (error) {
-    done(error, false);
-  }
-};
-
 const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
-
-const googleStrategy = new GoogleStrategy(googleOptions, googleVerify);
+const googleStrategy = new GoogleStrategy(googleOptions, strategyVerify(authTypes.GOOGLE));
+const facebookStrategy = new FacebookStrategy(facebookOptions, strategyVerify(authTypes.FACEBOOK));
 
 module.exports = {
   jwtStrategy,
   googleStrategy,
+  facebookStrategy,
 };

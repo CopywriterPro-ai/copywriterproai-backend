@@ -8,7 +8,7 @@ const passport = require('passport');
 const httpStatus = require('http-status');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
-const { jwtStrategy, googleStrategy } = require('./config/passport');
+const { jwtStrategy, googleStrategy, facebookStrategy } = require('./config/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
@@ -41,10 +41,11 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
-// jwt authentication
+// passportjs authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
 passport.use('google', googleStrategy);
+passport.use('facebook', facebookStrategy);
 
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {
