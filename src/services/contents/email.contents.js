@@ -10,7 +10,7 @@ Subject:`;
   const emailSubjectsFromBodyList = [];
 
   for (let i = 0; i < 5; i++) {
-    const emailSubjectFromBody = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.7, 1, 0, [
+    const emailSubjectFromBody = await generateContentUsingGPT3('davinci-instruct-beta', 20, prompt, 0.7, 1, 0, [
       '\n',
       'Subject:',
     ]);

@@ -79,8 +79,9 @@ const campaignPostIdeaFromBusinessType = {
 const facebookAdPrimaryTexts = {
   body: Joi.object().keys({
     task: Joi.valid('ads-facebook-primary-texts').required(),
-    platformType: Joi.string().required(),
-    context: Joi.string().required(),
+    companyName: Joi.string().required(),
+    businessType: Joi.string().required(),
+    benefits: Joi.string().required(),
   }),
 };
 
@@ -94,8 +95,8 @@ const facebookAdHeadlines = {
 const facebookAdLinkDescription = {
   body: Joi.object().keys({
     task: Joi.valid('ads-facebook-link-descriptions').required(),
+    companyName: Joi.string().required(),
     platformType: Joi.string().required(),
-    headline: Joi.string().required(),
   }),
 };
 
@@ -133,8 +134,11 @@ const googleAdHeadlines = {
 const googleAdDescriptions = {
   body: Joi.object().keys({
     task: Joi.valid('ads-google-descriptions').required(),
-    platform: Joi.string().required(),
-    audience: Joi.string().required(),
+    businessName: Joi.string().required(),
+    productCategories: Joi.string().required(),
+    uniqueness: Joi.string().required(),
+    promotions: Joi.string().required(),
+    keywords: Joi.string().required(),
   }),
 };
 

@@ -11,11 +11,33 @@ List of 5 Primary text:
   return processListContents(userId, task, prompt, campaignPostIdea);
 };
 
-const facebookAdPrimaryTexts = async (userId, { platformType, context }) => {
+const facebookAdPrimaryTexts = async (userId, { platformType, companyName, benefits }) => {
   const prompt = `Write Facebook Ad Primary text for following platform
 
-Platform: ${removeSpaces(platformType)}
-Context: ${removeSpaces(context)}
+Company Name: DoorDash
+Business Type: Online food ordering
+Customers Benefit: Makes the food ordering process easier, place an order at virtually any time, from anywhere, saving time
+Description: Explore our selection of local favourites with $0 delivery fee for your first month. $10 order minimum.
+
+Company Name: DESIGN PICKLE
+Business Type: UI/UX, Graphic Design
+Customers Benefit: On-demand, flat-rate graphic design support by professional designers
+Description: Need Graphic Design Help? In just a few clicks, you can scale your creative output by hiring a Design Pickle Pro designer.\n✓ Hand-Picked Ego-Free Professional Graphic Designers\\n✓ No Overhead Costs\\n✓ Always Available - No PTO, Emergencies, or Sick Days\\n✓ Same-Day Revisions\\n✓ Unlimited Graphic Design Help
+
+Company Name: Bolt
+Business Type: Ride-hailing
+Customers Benefit: Saves Time and Money, Less Stress for Passenger and Driver, You Don't Have to Know The Routes, 20% off
+Ad Creative Description: Get £15 off your first trip with the Bolt app. Enter promo code HEYLONDON in your app and enjoy the discount.
+
+Company Name: Mailchimp
+Business Type: Marketing Automation Platform
+Customers Benefit: Send emails to targeted audiences, re-engage subscribers, interface is simple and customizable
+Description: So your business is up and running! Now what? Grow with a Marketing CRM that gets smarter as you go. That's what.
+
+Business Name: ${platformType}
+Business Type: ${companyName}
+Customers Benefit: ${benefits}
+Description:
 List of 5 Primary texts:
 -`;
 
@@ -60,15 +82,34 @@ List of 5 catchy short Headline
   return processListContents(userId, 'ads-facebook-headlines', prompt, headlines);
 };
 
-const facebookAdLinkDescription = async (userId, { platformType, headline }) => {
+const facebookAdLinkDescription = async (userId, { platformType, companyName }) => {
   const prompt = `Write 5 Link Description for the following Platform and Ad headline.
 
-   Platform: ${removeSpaces(platformType)}
-   Headline: ${removeSpaces(headline)}
-List of 5 Link descriptions:
--`;
+Company Name: DoorDash
+Business Type: Online food ordering
+Description: Explore our selection of local favourites with $0 delivery fee for your first month. $10 order minimum.
 
-  const linkDescriptions = await generateContentUsingGPT3('davinci-instruct-beta', 150, prompt, 0.8, 0.2, 0.1, ['\n\n']);
+Company Name: DESIGN PICKLE
+Business Type: UI/UX, Graphic Design
+Description: Need Graphic Design Help? In just a few clicks, you can scale your creative output by hiring a Design Pickle Pro designer.\n✓ Hand-Picked Ego-Free Professional Graphic Designers\\n✓ No Overhead Costs\\n✓ Always Available - No PTO, Emergencies, or Sick Days\\n✓ Same-Day Revisions\\n✓ Unlimited Graphic Design Help
+
+Company Name: Bolt
+Business Type: Ride-hailing
+Ad Creative Description: Get £15 off your first trip with the Bolt app. Enter promo code HEYLONDON in your app and enjoy the discount.
+
+Company Name: Mailchimp
+Business Type: Marketing Automation Platform
+Description: So your business is up and running! Now what? Grow with a Marketing CRM that gets smarter as you go. That's what
+
+Now write 5 long catchy Description for following platform
+
+Company Name: ${removeSpaces(companyName)}
+Business Type: ${removeSpaces(platformType)}
+Description:
+List of 5 catchy long Description using 150 words
+`;
+
+  const linkDescriptions = await generateContentUsingGPT3('davinci-instruct-beta', 300, prompt, 0.8, 0.2, 0.1, ['\n\n']);
   return processListContents(userId, 'ads-facebook-link-descriptions', prompt, linkDescriptions);
 };
 

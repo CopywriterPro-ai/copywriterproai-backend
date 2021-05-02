@@ -7,7 +7,7 @@ Ads: ${adText}
 List of 5 Image contents:
 -`;
 
-  const imageIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.8, 0.1, 0.2, ['\n\n']);
+  const imageIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.1, 0.2, ['\n\n']);
   return processListContents(userId, 'image-idea-from-ad-text', prompt, imageIdeas);
 };
 

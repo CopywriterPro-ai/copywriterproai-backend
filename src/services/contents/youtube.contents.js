@@ -27,7 +27,7 @@ Title:`;
   const youtubeVideoIdeasList = [];
 
   for (let i = 0; i < 5; i++) {
-    const videoIdeas = await generateContentUsingGPT3('davinci', 50, prompt, 0.9, 0, 0, ['\n', 'Title:']);
+    const videoIdeas = await generateContentUsingGPT3('davinci', 20, prompt, 0.9, 0, 0, ['\n', 'Title:']);
     const { id, object, created, model, choices } = videoIdeas;
 
     openAPIInformationsList.push({ id, object, created, model });
