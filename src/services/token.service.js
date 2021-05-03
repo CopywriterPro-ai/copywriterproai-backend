@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment-timezone');
 const httpStatus = require('http-status');
-const { jwt: jwtConfig, passportConfig } = require('../config/config');
+const { jwt: jwtConfig, passportConfig, verifyMail } = require('../config/config');
 const userService = require('./user.service');
 const { Token } = require('../models');
 const ApiError = require('../utils/ApiError');
@@ -121,6 +121,12 @@ const generateStrategyToken = ({ _id, authType, userId }) => {
   });
 };
 
+const generateMailingToken = (payload) => {
+  return jwt.sign(payload, verifyMail.jwtSecret, {
+    expiresIn: verifyMail.jwtExpires,
+  });
+};
+
 module.exports = {
   generateToken,
   saveToken,
@@ -129,4 +135,5 @@ module.exports = {
   generateAuthTokens,
   generateResetPasswordToken,
   generateStrategyToken,
+  generateMailingToken,
 };
