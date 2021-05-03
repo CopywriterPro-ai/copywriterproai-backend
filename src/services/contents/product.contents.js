@@ -20,7 +20,7 @@ Short Description:`;
   const productDescriptionSEOFriendlyList = [];
 
   for (let i = 0; i < 3; i++) {
-    const productDescriptionSEOFriendly = await generateContentUsingGPT3('davinci', 300, prompt, 0.5, 0, 0, [
+    const productDescriptionSEOFriendly = await generateContentUsingGPT3('davinci', 50, prompt, 0.5, 0, 0, [
       '\n',
       'Short Description:',
     ]);
@@ -65,7 +65,7 @@ Description:`;
   const roductDescriptionSEOFriendlyList = [];
 
   for (let i = 0; i < 3; i++) {
-    const generatedProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.7, 0.2, 0.3, [
+    const generatedProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.7, 0.2, 0.3, [
       '\n',
       'Description:',
     ]);
@@ -97,7 +97,7 @@ Review:`;
 
   let review;
   while (1) {
-    review = await generateContentUsingGPT3('davinci', 200, prompt, 0.3, 0.2, 0.1, ['\n']);
+    review = await generateContentUsingGPT3('davinci', 100, prompt, 0.3, 0.2, 0.1, ['\n']);
     if (review.choices && review.choices[0].text.trim() !== '') {
       review.choices[0].text = review.choices[0].text.trim();
       break;

@@ -126,4 +126,8 @@ router
   .route('/generate/catchy-business-taglines')
   .post(auth('generateContent'), validate(contentValidation.catchyBusinessTaglines), contentController.generate);
 
+router
+  .route('/generate/fiverr-categories-headline')
+  .post(auth('generateContent'), validate(contentValidation.fiverrCategoriesHeadline), contentController.generate);
+
 module.exports = router;

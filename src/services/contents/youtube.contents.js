@@ -27,7 +27,7 @@ Title:`;
   const youtubeVideoIdeasList = [];
 
   for (let i = 0; i < 5; i++) {
-    const videoIdeas = await generateContentUsingGPT3('davinci', 20, prompt, 0.9, 0, 0, ['\n', 'Title:']);
+    const videoIdeas = await generateContentUsingGPT3('davinci', 25, prompt, 0.9, 0, 0, ['\n', 'Title:']);
     const { id, object, created, model, choices } = videoIdeas;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -54,7 +54,7 @@ List of 5 Titles:
 
 -`;
 
-  const titlesFromDescription = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.3, 0.4, ['\n\n']);
+  const titlesFromDescription = await generateContentUsingGPT3('davinci-instruct-beta', 25, prompt, 0.8, 0.3, 0.4, ['\n\n']);
   return processListContents(userId, 'youtube-video-titles-from-description', prompt, titlesFromDescription);
 };
 
@@ -72,7 +72,7 @@ Keywords:`;
   const videoTagsFromDescriptionList = [];
 
   for (let i = 0; i < 1; i++) {
-    const videoTagsFromDescription = await generateContentUsingGPT3('davinci', 80, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
+    const videoTagsFromDescription = await generateContentUsingGPT3('davinci', 50, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
     const { id, object, created, model, choices } = videoTagsFromDescription;
 
     openAPIInformationsList.push({ id, object, created, model });

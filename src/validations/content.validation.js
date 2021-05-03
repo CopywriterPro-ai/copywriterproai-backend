@@ -242,6 +242,13 @@ const catchyBusinessTaglines = {
   }),
 };
 
+const fiverrCategoriesHeadline = {
+  body: Joi.object().keys({
+    task: Joi.valid('fiverr-categories-headline').required(),
+    categoriesName: Joi.string().trim().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -283,4 +290,5 @@ module.exports = {
   productName,
   linkedInSummary,
   catchyBusinessTaglines,
+  fiverrCategoriesHeadline,
 };

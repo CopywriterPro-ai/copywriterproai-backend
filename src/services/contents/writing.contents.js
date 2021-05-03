@@ -17,7 +17,7 @@ Paraphrase:`;
 
   let paraphrasedContents;
   while (1) {
-    paraphrasedContents = await generateContentUsingGPT3('davinci', 200, prompt, 0.9, 0.9, 0.9, ['\n']);
+    paraphrasedContents = await generateContentUsingGPT3('davinci', 50, prompt, 0.9, 0.9, 0.9, ['\n']);
     if (
       paraphrasedContents.choices &&
       paraphrasedContents.choices[0].text.trim() !== '' &&
