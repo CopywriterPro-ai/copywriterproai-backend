@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
-
-const userService = require('./user.service');
+const tokenService = require('./token.service');
+const { mailTypes } = require('../config/mailtype');
 
 const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
@@ -31,17 +31,16 @@ const sendEmail = async (to, subject, html) => {
  * @param {string} token
  * @returns {Promise}
  */
-const sendResetPasswordEmailUsingOTP = async (to) => {
+const sendResetPasswordEmailUsingToken = async (email) => {
   const subject = 'Reset password';
-  // replace this url with the link to the reset password page of your front-end app
-  const OTP = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+  const token = tokenService.generateMailingToken({ type: mailTypes.ACCOUNT_VERIFY, email });
+
   const html = `<div> Dear user, <div> <br>
-  <div>To reset your password, you have to enter this verification code when prompted: <b>${OTP}</b>. <br>
+  <div>To reset your password, you have to enter this verification token when prompted: <b>${token}</b>. <br>
   If you did not request any password resets, then ignore this email. </div> <br>
   <div>Thank you, <br>The AICopywriter Team</br></div>`;
 
-  await userService.setPasswordResetCode(to, OTP);
-  await sendEmail(to, subject, html);
+  await sendEmail(email, subject, html);
 };
 
 /**
@@ -60,8 +59,22 @@ const sendResetPasswordEmailUsingOTP = async (to) => {
 //   await sendEmail(to, subject, text);
 // };
 
+const sendVerifyAccountEmailUsingToken = async ({ id, email }) => {
+  const subject = 'Verify Copywriter Account Email';
+  const token = tokenService.generateMailingToken({ sub: id, type: mailTypes.ACCOUNT_VERIFY, email });
+
+  const html = `<div> Dear user, <div> <br>
+  <p>${token}</p>
+  <div>To reset your password, you have to enter this verification code when prompted: <b>s</b>. <br>
+  If you did not request any password resets, then ignore this email. </div> <br>
+  <div>Thank you, <br>The AICopywriter Team</br></div>`;
+
+  await sendEmail(email, subject, html);
+};
+
 module.exports = {
   transport,
   sendEmail,
-  sendResetPasswordEmailUsingOTP,
+  sendResetPasswordEmailUsingToken,
+  sendVerifyAccountEmailUsingToken,
 };

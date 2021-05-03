@@ -1,26 +1,26 @@
 const Joi = require('joi');
 const { password } = require('./custom.validation');
+const { authTypes } = require('../config/auths');
 
 const register = {
   body: Joi.object().keys({
-    phoneNumber: Joi.string().required(),
+    firstName: Joi.string().max(20).required(),
+    lastName: Joi.string().max(20).required(),
     password: Joi.string().required().custom(password),
     email: Joi.string().email().required(),
+    authType: Joi.string().default(authTypes.EMAIL).valid(authTypes.EMAIL),
   }),
 };
 
 const verifyAccount = {
-  body: Joi.object().keys({
-    userId: Joi.string().required(),
-    phoneNumber: Joi.string().required(),
-    OTP: Joi.string().length(6).required(),
+  query: Joi.object().keys({
+    token: Joi.string().required(),
   }),
 };
 
 const login = {
   body: Joi.object().keys({
-    email: Joi.string(),
-    phoneNumber: Joi.string(),
+    email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
 };
@@ -44,10 +44,11 @@ const forgotPassword = {
 };
 
 const resetPassword = {
+  query: Joi.object().keys({
+    token: Joi.string().required(),
+  }),
   body: Joi.object().keys({
-    email: Joi.string().email().required(),
-    OTP: Joi.string().length(6).required(),
-    password: Joi.string().required().custom(password).required(),
+    password: Joi.string().required().custom(password),
   }),
 };
 

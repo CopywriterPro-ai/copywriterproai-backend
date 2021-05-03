@@ -1,18 +1,7 @@
 const httpStatus = require('http-status');
-const { User, Payment } = require('../models');
+const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
-
-const config = require('../config/config');
-const twilio = require('twilio')(config.twilio.twilioAccountSID, config.twilio.twilioAuthToken);
-
-const lookupPhoneNumber = async (phoneNumber) => {
-  try {
-    const phoneNumberVerificationData = await twilio.lookups.v1.phoneNumbers(phoneNumber).fetch();
-    return phoneNumberVerificationData;
-  } catch (err) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Please provide a valid phone number');
-  }
-};
+const { authTypes } = require('../config/auths');
 
 /**
  * Create a user
@@ -20,24 +9,11 @@ const lookupPhoneNumber = async (phoneNumber) => {
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
-  if (await User.isPhoneNumberTaken(userBody.phoneNumber)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'This phone number is already registered!');
-  }
-  if (await User.isEmailTaken(userBody.email)) {
+  if (await User.isVerifiedEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'This email is already registered!');
   }
-  const { phoneNumber } = userBody;
-  await lookupPhoneNumber(phoneNumber);
   const user = await User.create(userBody);
   return user;
-};
-
-const createUserPayment = async (userId) => {
-  const userPayment = {
-    _id: userId,
-    paymentsHistory: [],
-  };
-  await Payment.create(userPayment);
 };
 
 /**
@@ -77,16 +53,8 @@ const checkUserExistsOrNot = async (userId) => {
  * @returns {Promise<User>}
  */
 const getUser = async (identity) => {
-  return User.findOne(identity);
-};
-
-const setPasswordResetCode = async (email, OTP) => {
-  const user = await getUser({ email });
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
-  Object.assign(user, { OTP });
-  await user.save();
+  const user = await User.findOne(identity);
+  return user;
 };
 
 /**
@@ -134,15 +102,73 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+const deleteunVerifiedUserByEmail = async (email) => {
+  await User.deleteMany({ email, isVerified: false });
+};
+
+const registeredEmail = async (email) => {
+  const user = await User.findOne({ email, isVerified: true });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Email not registered');
+  }
+  return !!user;
+};
+
+const strategyValuesByAuthType = (strategy, profile) => {
+  switch (strategy) {
+    case authTypes.GOOGLE:
+      return {
+        firstName: profile._json.given_name,
+        lastName: profile._json.family_name,
+        email: profile._json.email,
+        profileAvatar: profile._json.picture,
+      };
+    case authTypes.FACEBOOK:
+      return {
+        firstName: profile._json.first_name,
+        lastName: profile._json.last_name,
+        email: profile._json.email,
+        profileAvatar: profile.photos[0].value,
+      };
+    default:
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid strategy');
+  }
+};
+
+const strategyVerify = (authType) => async (accessToken, refreshToken, profile, done) => {
+  try {
+    const user = await User.findOne({ userId: profile.id });
+    if (user) {
+      done(null, user);
+    } else {
+      const userInfo = strategyValuesByAuthType(authType, profile);
+      const emailExist = await User.findOne({ email: userInfo.email });
+      if (emailExist) {
+        throw new ApiError(httpStatus.CONFLICT, 'email already register');
+      }
+      const newUser = await User.create({
+        userId: profile.id,
+        isVerified: true,
+        authType,
+        ...userInfo,
+      });
+      done(null, newUser);
+    }
+  } catch (error) {
+    done(error, false);
+  }
+};
+
 module.exports = {
   createUser,
-  createUserPayment,
   queryUsers,
   getUserById,
   getUser,
-  setPasswordResetCode,
   checkUserExistsOrNot,
   updateUserById,
   updateBookmarks,
   deleteUserById,
+  deleteunVerifiedUserByEmail,
+  registeredEmail,
+  strategyVerify,
 };
