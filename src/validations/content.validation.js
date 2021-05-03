@@ -234,6 +234,14 @@ const linkedInSummary = {
   }),
 };
 
+const catchyBusinessTaglines = {
+  body: Joi.object().keys({
+    task: Joi.valid('catchy-business-taglines').required(),
+    companyName: Joi.string().trim().required(),
+    businessType: Joi.string().trim().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -274,4 +282,5 @@ module.exports = {
   landingPageHeadline,
   productName,
   linkedInSummary,
+  catchyBusinessTaglines,
 };

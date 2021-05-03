@@ -122,4 +122,8 @@ router
   .route('/generate/linkedin-summary')
   .post(auth('generateContent'), validate(contentValidation.linkedInSummary), contentController.generate);
 
+router
+  .route('/generate/catchy-business-taglines')
+  .post(auth('generateContent'), validate(contentValidation.catchyBusinessTaglines), contentController.generate);
+
 module.exports = router;

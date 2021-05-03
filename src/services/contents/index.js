@@ -8,3 +8,4 @@ module.exports.youtube = require('./youtube.contents');
 module.exports.commonTask = require('./common.contents');
 module.exports.email = require('./email.contents');
 module.exports.website = require('./website.contents');
+module.exports.business = require('./business.contents');
