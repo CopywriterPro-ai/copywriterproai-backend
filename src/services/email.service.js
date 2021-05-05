@@ -1,12 +1,12 @@
 const nodemailer = require('nodemailer');
-const config = require('../config/config');
+const { email, env, frontendUrl } = require('../config/config');
 const logger = require('../config/logger');
 const tokenService = require('./token.service');
 const { mailTypes } = require('../config/mailtype');
 
-const transport = nodemailer.createTransport(config.email.smtp);
+const transport = nodemailer.createTransport(email.smtp);
 /* istanbul ignore next */
-if (config.env !== 'test') {
+if (env !== 'test') {
   transport
     .verify()
     .then(() => logger.info('Connected to email server'))
@@ -21,7 +21,7 @@ if (config.env !== 'test') {
  * @returns {Promise}
  */
 const sendEmail = async (to, subject, html) => {
-  const msg = { from: config.email.from, to, subject, html };
+  const msg = { from: email.from, to, subject, html };
   await transport.sendMail(msg);
 };
 
@@ -31,16 +31,16 @@ const sendEmail = async (to, subject, html) => {
  * @param {string} token
  * @returns {Promise}
  */
-const sendResetPasswordEmailUsingToken = async (email) => {
+const sendResetPasswordEmailUsingToken = async (to) => {
   const subject = 'Reset password';
-  const token = tokenService.generateMailingToken({ type: mailTypes.ACCOUNT_VERIFY, email });
+  const token = tokenService.generateMailingToken({ type: mailTypes.ACCOUNT_VERIFY, email: to });
 
   const html = `<div> Dear user, <div> <br>
   <div>To reset your password, you have to enter this verification token when prompted: <b>${token}</b>. <br>
   If you did not request any password resets, then ignore this email. </div> <br>
   <div>Thank you, <br>The AICopywriter Team</br></div>`;
 
-  await sendEmail(email, subject, html);
+  await sendEmail(to, subject, html);
 };
 
 /**
@@ -59,17 +59,17 @@ const sendResetPasswordEmailUsingToken = async (email) => {
 //   await sendEmail(to, subject, text);
 // };
 
-const sendVerifyAccountEmailUsingToken = async ({ id, email }) => {
+const sendVerifyAccountEmailUsingToken = async ({ id, email: to }) => {
   const subject = 'Verify Copywriter Account Email';
-  const token = tokenService.generateMailingToken({ sub: id, type: mailTypes.ACCOUNT_VERIFY, email });
+  const token = tokenService.generateMailingToken({ sub: id, type: mailTypes.ACCOUNT_VERIFY, email: to });
 
   const html = `<div> Dear user, <div> <br>
-  <p>${token}</p>
+  <a href=${frontendUrl.web}/account-verification?token=${token}><button>Verify</button></a>
   <div>To reset your password, you have to enter this verification code when prompted: <b>s</b>. <br>
   If you did not request any password resets, then ignore this email. </div> <br>
   <div>Thank you, <br>The AICopywriter Team</br></div>`;
 
-  await sendEmail(email, subject, html);
+  await sendEmail(to, subject, html);
 };
 
 module.exports = {

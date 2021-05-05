@@ -52,6 +52,12 @@ const resetPassword = {
   }),
 };
 
+const strategyLogin = {
+  query: Joi.object().keys({
+    token: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   register,
   verifyAccount,
@@ -60,4 +66,5 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
+  strategyLogin,
 };
