@@ -56,7 +56,7 @@ const forgotPassword = catchAsync(async (req, res) => {
 const resetPassword = catchAsync(async (req, res) => {
   const { email } = req.token;
   await authService.resetPassword({ password: req.body.password, email });
-  res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'Pasaword reset successful' });
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'Password reset successful, please sign in' });
 });
 
 const strategyCallback = catchAsync(async (req, res) => {
