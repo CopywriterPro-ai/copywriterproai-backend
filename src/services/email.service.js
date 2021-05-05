@@ -36,7 +36,8 @@ const sendResetPasswordEmailUsingToken = async (to) => {
   const token = tokenService.generateMailingToken({ type: mailTypes.ACCOUNT_VERIFY, email: to });
 
   const html = `<div> Dear user, <div> <br>
-  <div>To reset your password, you have to enter this verification token when prompted: <b>${token}</b>. <br>
+  <a href=${frontendUrl.web}/reset-password?token=${token}><button>Reset Password</button></a>
+  <div>To reset your password, you have to enter this verification token when prompted. <br>
   If you did not request any password resets, then ignore this email. </div> <br>
   <div>Thank you, <br>The AICopywriter Team</br></div>`;
 
