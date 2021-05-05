@@ -142,10 +142,6 @@ const strategyVerify = (authType) => async (accessToken, refreshToken, profile, 
       done(null, user);
     } else {
       const userInfo = strategyValuesByAuthType(authType, profile);
-      const emailExist = await User.findOne({ email: userInfo.email });
-      if (emailExist) {
-        throw new ApiError(httpStatus.CONFLICT, 'email already register');
-      }
       const newUser = await User.create({
         userId: profile.id,
         isVerified: true,
