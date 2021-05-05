@@ -24,7 +24,7 @@ const verifyAccount = catchAsync(async (req, res) => {
   await interestService.createUserInterest(userId);
   await userService.updateUserById(user, userId, { isVerified: true, bookmarks: {} });
   await userService.deleteunVerifiedUserByEmail(email);
-  res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'Your account is verified!' });
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'Your account is verified, please sign in' });
 });
 
 const login = catchAsync(async (req, res) => {
