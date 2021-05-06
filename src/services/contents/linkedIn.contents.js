@@ -27,7 +27,7 @@ Professional headline: Research Scientist, Ph.D. Candidate, Data Analytics, Biot
 Summary: I’m a research scientist working to better understand how neural activity motivates and shapes human behavior. My expertise includes project design and management, data analysis and interpretation, and the development and implementation of research tools. I enjoy generating new ideas and devising feasible solutions to broadly relevant problems. My colleagues would describe me as a driven, resourceful individual who maintains a positive, proactive attitude when faced with adversity. Currently, I’m seeking opportunities that will allow me to develop and promote technologies that benefit human health. Specific fields of interest include data analytics, biotechnology, and pharmaceuticals. Specialties: Research, Data Analytics, Biotech, Experiment experts.
 
 Name: Nafis Faysal
-PROFESSIONAL HEADLINE: Software Engineer, Product Manager, Lead Software Developer, Software Engineer Manager, Machine Learning Expert
+Professional headline: Software Engineer, Product Manager, Lead Software Developer, Software Engineer Manager, Machine Learning Expert
 Summary: I am a software engineer, product manager, and lead software developer focused on building quality products with modern and scalable technologies. I have a proven track record of engineering excellence in the areas of software development, product management, and technology management. I am skilled at hands-on development, team leadership, mentoring, and production level software engineering. I am a lifelong learner and accomplished engineer who is adept at translating business requirements into technical solutions.
 Name: ${removeSpaces(name)}
 Professional headline: ${removeSpaces(professionalHeadline)}

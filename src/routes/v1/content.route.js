@@ -130,4 +130,8 @@ router
   .route('/generate/fiverr-categories-headline')
   .post(auth('generateContent'), validate(contentValidation.fiverrCategoriesHeadline), contentController.generate);
 
+router
+  .route('/generate/cv-summary')
+  .post(auth('generateContent'), validate(contentValidation.CVSummary), contentController.generate);
+
 module.exports = router;

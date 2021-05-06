@@ -249,6 +249,16 @@ const fiverrCategoriesHeadline = {
   }),
 };
 
+const CVSummary = {
+  body: Joi.object().keys({
+    task: Joi.valid('cv-summary').required(),
+    yourJobTitle: Joi.string().required(),
+    employerName: Joi.string().required(),
+    keyAchievements: Joi.string().required(),
+    yearsOfExperience: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -291,4 +301,5 @@ module.exports = {
   linkedInSummary,
   catchyBusinessTaglines,
   fiverrCategoriesHeadline,
+  CVSummary,
 };

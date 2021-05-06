@@ -68,6 +68,8 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await generator.business.generateCatchyBusinessTaglines(req.user._id, req.body);
   } else if (task === 'fiverr-categories-headline') {
     generatedContent = await generator.fiverr.generateFiverrCategoriesHeadline(req.user._id, req.body);
+  } else if (task === 'cv-summary') {
+    generatedContent = await generator.cv.generateCVSummary(req.user._id, req.body);
   }
   res.status(httpStatus.OK).send(generatedContent);
 });
