@@ -33,7 +33,7 @@ const generate = catchAsync(async (req, res) => {
   } else if (task === 'facebook-ads-from-product-description') {
     generatedContent = await generator.facebook.facebookAdsFromProductDescription(req.user._id, req.body);
   } else if (task === 'instagram-ad-texts') {
-    generatedContent = await generator.facebook.facebookAdPrimaryTexts(req.user._id, req.body);
+    generatedContent = await generator.instagram.instagramAdTexts(req.user._id, req.body);
   } else if (task === 'linkedin-ad-texts') {
     generatedContent = await generator.linkedIn.linkedinAdTexts(req.user._id, req.body);
   } else if (task === 'ads-google-headlines') {

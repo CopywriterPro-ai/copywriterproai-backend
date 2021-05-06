@@ -8,7 +8,7 @@ Context: ${removeSpaces(context)}
 List of 5 Instagram Ad Text:
 -`;
 
-  const adTexts = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  const adTexts = await generateContentUsingGPT3('davinci-instruct-beta', 10, prompt, 0.8, 0.2, 0.1, ['\n\n']);
   return processListContents(userId, 'facebook-ad-primary-texts', prompt, adTexts);
 };
 
