@@ -28,6 +28,7 @@ const envVarsSchema = Joi.object()
     WEB_CLIENT_URL: Joi.string().required().description('frontend web url'),
     MAIL_VERIFY_TOKEN_SECRET: Joi.string().required().description('Mail verify token secret'),
     MAIL_VERIFY_TOKEN_EXPIRE: Joi.string().default('10m').description('Mail verify token expires'),
+    CORS_WHITELIST: Joi.string().default('*').description('Cors whitelist'),
   })
   .unknown();
 
@@ -90,5 +91,8 @@ module.exports = {
   },
   frontendUrl: {
     web: envVars.WEB_CLIENT_URL,
+  },
+  cors: {
+    whitelist: envVars.CORS_WHITELIST.split(','),
   },
 };
