@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const moment = require('moment-timezone');
 
 const { Schema } = mongoose;
 const { toJSON, paginate } = require('./plugins');
@@ -114,9 +115,22 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.virtual('isUserEligibleForFreeTrial').get(function () {
+  const currentDate = new Date();
+  const subs = this.subscription;
+  const sevenDays = moment(this.createdAt).add('7', 'days');
+  if (subs === 'Freemium' && moment(sevenDays).isBefore(currentDate)) {
+    return true;
+  }
+  return false;
+});
+
 /**
  * @typedef User
  */
+userSchema.set('toObject', { virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
