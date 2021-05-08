@@ -22,7 +22,7 @@ const googleOptions = {
 const facebookOptions = {
   clientID: facebookOauth.appId,
   clientSecret: facebookOauth.appSecret,
-  callbackURL: '/v1/auth/facebook/callback',
+  callbackURL: 'https://api.copywriterpro.ai/v1/auth/facebook/callback',
   profileFields: ['email', 'displayName', 'photos', 'first_name', 'last_name'],
 };
 
