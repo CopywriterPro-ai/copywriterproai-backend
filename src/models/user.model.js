@@ -125,6 +125,10 @@ userSchema.virtual('isUserEligibleForFreeTrial').get(function () {
   return false;
 });
 
+userSchema.virtual('getUserCurrentSubscription').get(function () {
+  return this.subscription;
+});
+
 /**
  * @typedef User
  */
