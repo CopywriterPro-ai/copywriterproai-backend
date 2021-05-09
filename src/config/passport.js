@@ -15,7 +15,7 @@ const jwtOptions = {
 const googleOptions = {
   clientID: googleOauth2.clientId,
   clientSecret: googleOauth2.secretId,
-  callbackURL: '/v1/auth/google/callback',
+  callbackURL: 'https://api.copywriterpro.ai/v1/auth/google/callback',
   userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
 };
 
