@@ -120,8 +120,9 @@ const instagramAdTexts = {
 const linkedinAdTexts = {
   body: Joi.object().keys({
     task: Joi.valid('linkedin-ad-texts').required(),
-    platformType: Joi.string().required(),
-    context: Joi.string().required(),
+    companyName: Joi.string().required(),
+    businessType: Joi.string().required(),
+    benefits: Joi.string().required(),
   }),
 };
 
@@ -129,7 +130,7 @@ const googleAdHeadlines = {
   body: Joi.object().keys({
     task: Joi.valid('ads-google-headlines').required(),
     name: Joi.string().required(),
-    platform: Joi.string().required(),
+    businessType: Joi.string().required(),
   }),
 };
 

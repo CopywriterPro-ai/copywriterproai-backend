@@ -7,23 +7,57 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const googleAdHeadlines = async (userId, { productName, platform }) => {
-  const prompt = `Google Ad Headline Examples:
-- Upwork™: Hire The Best - Trust Your Job To True Experts
-- Expert SEO Services UK | SEO Agency Of The Year 2019
-- Website hoting from £2.50 | Get 50% off all packages
-- Injury Lawyers 4U™ | Expert Legal Advice
-- Beds at Beds.co.ca | Biggest Ever Bed Sale
+const googleAdHeadlines = async (userId, { name, businessType }) => {
+  const prompt = `Write Google Ad Headline:
 
-Now Write 5 short Google Ad Headlines for Following like Examples.
+Name: Upwork
+Business Type: Freelancer Market Place
+Headline: Upwork™: Hire The Best - Trust Your Job To True Experts
 
-Name: ${productName}
-Platform: ${platform}
-List of 5 short Google Ad Headlines
--`;
+Name: SEO Guru LTD
+Business Type: SEO Services, Search Engine Optimization
+Headline: Expert SEO Services UK | SEO Agency Of The Year 2019
 
-  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 30, prompt, 0.9, 0.3, 0.2, ['\n\n']);
-  return processListContents(userId, 'ads-google-headlines', prompt, headlines);
+Name: Namecheap
+Business Type: Website hosting, cloud computing, data center
+Headline: Namecheap provide website hosting from £2.50 | Get 50% off all packages
+
+Name: Injury Lawyers 4U
+Business Type: Law Farms
+Headline: Injury Lawyers 4U™ | Expert Legal Advice
+
+Name: Beds.co.ca
+Business Type: Home Furniture
+Headline: Beds at Beds.co.ca | Biggest Ever Bed Sale
+
+Name: ${name}
+Business Type: ${businessType}
+Headline:`;
+
+  const openAPIInformationsList = [];
+  const googleAdHeadlinesList = [];
+
+  for (let i = 0; i < 5; i++) {
+    const adHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 30, prompt, 0.9, 0.3, 0.2, [
+      'Headline:',
+      '\n',
+    ]);
+    const { id, object, created, model, choices } = adHeadlines;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    googleAdHeadlinesList.push(cleanAllTexts(choices[0].text.split('\n')).join('. '));
+  }
+
+  const { _id, generatedContents } = await storeData(
+    userId,
+    'ads-google-headlines',
+    prompt,
+    openAPIInformationsList,
+    googleAdHeadlinesList
+  );
+  const userResponse = formatResponse(_id, 'ads-google-headlines', generatedContents);
+
+  return userResponse;
 };
 
 const googleAdDescriptions = async (userId, { businessName, productCategories, uniqueness, promotions, keywords }) => {

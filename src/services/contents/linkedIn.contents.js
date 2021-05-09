@@ -6,16 +6,63 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const linkedinAdTexts = async (userId, { platformType, context }) => {
-  const prompt = `Generate LinkedIn catchy Marketing text for following platform
+const linkedinAdTexts = async (userId, { companyName, businessType, benefits }) => {
+  const prompt = `Write LinkedIn ads Description upto 200 characters:
 
-Platform: ${removeSpaces(platformType)}
-Context: ${removeSpaces(context)}
-List of 5 Marketing text:
--`;
+Company Name: Tableau Software
+Business Type: Software, Information Technology
+Benefits: $1.3 million to help Community Solutions eliminate veteran and chronic homelessness in 50 U.S. communities
+Description: We're proud to announce we're committing over $1.3 million to help Community Solutions eliminate veteran and chronic homelessness in 50 U.S. communities! Learn more: https://lnkd.in/e2D8h-p
 
-  const adTexts = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.3, ['\n\n']);
-  return processListContents(userId, 'linkedin-ad-texts', prompt, adTexts);
+Company Name: JetBlue Airways
+Business Type: Airline, travel, airline tickets, flights
+Benefits: 20% off base airfare
+Description: Get a jump on upcoming business travel with up to 20% off base airfare to all U.S. cities. Only for Blue Inc. members, only when you book by 5/23 for travel 5/22 - 6/21/18.
+
+Company Name: Toptal
+Business Type: Freelancer platform, connecting businesses with software engineers, designers, finance experts, product managers, and project managers
+Benefits: remote company, remote work culture, flexibility workspace
+Description: The modern workforce demands greater flexibility and variety, so top-tier professionals are turning to agile work to advance their knowledge, expertise, and careers. Explore more here:
+
+Company Name: Visa
+Business Type: Financial services company
+Benefits: Supporting Female Entrepreneurs
+Description: We're celebrating the unprecedented numbers of women starting businesses around the world by launching a new competition, the Visa Everywhere Initiative: Women's Global Edition. Learn more and apply for the chance to win $100,000: https://vi.sa/2J4DGOA
+
+Company Name: DESIGN PICKLE
+Business Type: UI/UX, Graphic Design
+Benefits: Experienced UI/UX and Graphic Designer, professional UI/UX and Graphic Designer
+Description: Need Graphic Design Help? In just a few clicks, you can scale your creative output by hiring a Design Pickle Pro designer.\\n✓ Hand-Picked Ego-Free Professional Graphic Designers\\\\n✓ No Overhead Costs\\\\n✓ Always Available - No PTO, Emergencies, or Sick Days\\\\n✓ Same-Day Revisions\\\\n✓ Unlimited Graphic Design Help
+
+Company Name: ${companyName}
+Business Type: ${businessType}
+Benefits: ${benefits}
+Description:`;
+
+  const openAPIInformationsList = [];
+  const linkedinAdTextsList = [];
+
+  for (let i = 0; i < 5; i++) {
+    const adTexts = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.3, [
+      '\n',
+      'Description:',
+    ]);
+    const { id, object, created, model, choices } = adTexts;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    linkedinAdTextsList.push(choices[0].text.trim());
+  }
+  const { _id, generatedContents } = await storeData(
+    userId,
+    'linkedin-ad-texts',
+    prompt,
+    openAPIInformationsList,
+    linkedinAdTextsList
+  );
+
+  const userResponse = formatResponse(_id, 'linkedin-ad-texts', generatedContents);
+
+  return userResponse;
 };
 
 const generateLinkedInSummary = async (userId, { name, profession, skills }) => {
