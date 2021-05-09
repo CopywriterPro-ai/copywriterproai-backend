@@ -88,7 +88,9 @@ const facebookAdPrimaryTexts = {
 const facebookAdHeadlines = {
   body: Joi.object().keys({
     task: Joi.valid('ads-facebook-headlines').required(),
-    platformType: Joi.string().required(),
+    productName: Joi.string().required(),
+    businessType: Joi.string().required(),
+    customerBenefit: Joi.string().required(),
   }),
 };
 
