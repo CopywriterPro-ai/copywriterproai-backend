@@ -8,29 +8,35 @@ const paymentSchema = mongoose.Schema(
       trim: true,
       ref: 'User',
     },
-    customerId: {
+    email: {
       type: String,
     },
-    paymentsHistory: [
-      {
-        plan: {
-          type: String,
-          enum: ['Monthly', 'Annual'],
-          required: true,
-          trim: true,
-        },
-        amount: {
-          type: Number,
-          required: true,
-          trim: true,
-        },
-        paidAt: {
-          type: Date,
-          required: true,
-          trim: true,
-        },
-      },
-    ],
+    customerStripeId: {
+      type: String,
+    },
+    customerSubscriptionId: {
+      type: String,
+    },
+    // paymentsHistory: [
+    //   {
+    //     plan: {
+    //       type: String,
+    //       enum: ['Monthly', 'Annual'],
+    //       required: true,
+    //       trim: true,
+    //     },
+    //     amount: {
+    //       type: Number,
+    //       required: true,
+    //       trim: true,
+    //     },
+    //     paidAt: {
+    //       type: Date,
+    //       required: true,
+    //       trim: true,
+    //     },
+    //   },
+    // ],
   },
   {
     timestamps: true,

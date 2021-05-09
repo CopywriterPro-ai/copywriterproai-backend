@@ -1,22 +1,36 @@
 const Joi = require('joi');
 
-const getPurchaseInfo = {
-  query: Joi.object().keys({
-    sortBy: Joi.string(),
-    limit: Joi.number().integer(),
-    page: Joi.number().integer(),
+const createSubscription = {
+  body: Joi.object().keys({
+    customerId: Joi.string().required(),
+    priceId: Joi.string().required(),
   }),
 };
 
-const storePurchaseInfo = {
+const cancelSubscription = {
   body: Joi.object().keys({
-    plan: Joi.string().valid('Monthly', 'Annual').required(),
-    amount: Joi.number().required(),
-    paidAt: Joi.date().iso().required(),
+    subscriptionId: Joi.string().required(),
+  }),
+};
+
+const updateSubscription = {
+  body: Joi.object().keys({
+    subscriptionId: Joi.string().required(),
+    newPriceId: Joi.string().required(),
+  }),
+};
+
+const invoicePreview = {
+  body: Joi.object().keys({
+    subscriptionId: Joi.string().required(),
+    priceId: Joi.string().required(),
+    customerId: Joi.string().required(),
   }),
 };
 
 module.exports = {
-  getPurchaseInfo,
-  storePurchaseInfo,
+  createSubscription,
+  cancelSubscription,
+  updateSubscription,
+  invoicePreview,
 };
