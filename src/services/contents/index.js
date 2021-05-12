@@ -1,5 +1,6 @@
 module.exports.product = require('./product.contents');
 module.exports.writing = require('./writing.contents');
+module.exports.headline = require('./headline.contents');
 module.exports.google = require('./google.contents');
 module.exports.facebook = require('./facebook.contents');
 module.exports.linkedIn = require('./linkedIn.contents');

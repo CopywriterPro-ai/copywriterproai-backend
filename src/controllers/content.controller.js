@@ -22,6 +22,14 @@ const generate = catchAsync(async (req, res) => {
     generatedContent = await generator.product.makeProductDescriptionSEOFriendly(req.user._id, req.body);
   } else if (task === 'product-review') {
     generatedContent = await generator.product.productReview(req.user._id, req.body);
+  } else if (task === 'catchy-headline') {
+    generatedContent = await generator.headline.catchyHeadline(req.user._id, req.body);
+  } else if (task === 'attention-grabbing-headline') {
+    generatedContent = await generator.headline.attentionGrabbingHeadline(req.user._id, req.body);
+  } else if (task === 'newspaper-headline') {
+    generatedContent = await generator.headline.newspaperHeadline(req.user._id, req.body);
+  } else if (task === 'resume-headline') {
+    generatedContent = await generator.headline.resumeHeadline(req.user._id, req.body);
   } else if (task === 'campaign-facebook-post') {
     generatedContent = await generator.facebook.campaignPostFromBusinessType(req.user._id, task, req.body);
   } else if (task === 'ads-facebook-primary-texts') {
