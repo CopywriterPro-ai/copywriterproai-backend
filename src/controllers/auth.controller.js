@@ -6,7 +6,11 @@ const { authTypes } = require('../config/auths');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
-  await emailService.sendVerifyAccountEmailUsingToken({ id: user.id, email: user.email });
+  await emailService.sendVerifyAccountEmailUsingToken({
+    id: user.id,
+    email: user.email,
+    name: { firstName: user.firstName, lastName: user.lastName },
+  });
   res.status(httpStatus.CREATED).send({
     status: httpStatus.CREATED,
     message: 'Thank you for registration, please check your email for account verification link',
