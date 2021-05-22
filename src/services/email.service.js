@@ -35,11 +35,15 @@ const sendResetPasswordEmailUsingToken = async (to) => {
   const subject = 'Reset password';
   const token = tokenService.generateMailingToken({ type: mailTypes.ACCOUNT_VERIFY, email: to });
 
-  const html = `<div> Dear user, <div> <br>
-  <a href=${frontendUrl.web}/reset-password?token=${token}><button>Reset Password</button></a>
-  <div>To reset your password, you have to enter this verification token when prompted. <br>
-  If you did not request any password resets, then ignore this email. </div> <br>
-  <div>Thank you, <br>The AICopywriter Team</br></div>`;
+  const html = `<div> Dear user, <div>
+  <div>
+  Trouble signing in?<br>
+  Resetting your password is easy.<br>
+  Just press the button below and follow the instructions. We'll have you up and running in no time.<br>
+  <a href=${frontendUrl.web}/reset-password?token=${token}><button>Reset Password</button></a><br>
+  If you did not make this request then please ignore this email.</div>
+  </div>
+  <div>Thank you, <br>The CopywriterPro Team</br></div>`;
 
   await sendEmail(to, subject, html);
 };
@@ -60,14 +64,17 @@ const sendResetPasswordEmailUsingToken = async (to) => {
 //   await sendEmail(to, subject, text);
 // };
 
-const sendVerifyAccountEmailUsingToken = async ({ id, email: to }) => {
+const sendVerifyAccountEmailUsingToken = async ({ id, email: to, name }) => {
   const subject = 'Verify Copywriter Account Email';
   const token = tokenService.generateMailingToken({ sub: id, type: mailTypes.ACCOUNT_VERIFY, email: to });
 
-  const html = `<div> Dear user, <div> <br>
-  <a href=${frontendUrl.web}/account-verification?token=${token}><button>Verify</button></a>
-  <div>To reset your password, you have to enter this verification code when prompted: <b>s</b>. <br>
-  If you did not request any password resets, then ignore this email. </div> <br>
+  const html = `<div>Hi ${name.firstName}, <div> <br>
+  <div>
+  Thanks for getting started with our CopywriterPro.AI!<br>
+  We need a little more information to complete your registration, including a confirmation of your email address.<br>
+  Click below to confirm your email address:<br>
+  <a href=${frontendUrl.web}/account-verification?token=${token}><button>Verify Account</button></a><br>
+  If you have problems, please paste the above URL into your web browser.<br>
   <div>Thank you, <br>The AICopywriter Team</br></div>`;
 
   await sendEmail(to, subject, html);
