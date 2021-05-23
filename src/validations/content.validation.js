@@ -231,7 +231,6 @@ const productName = {
 const linkedInSummary = {
   body: Joi.object().keys({
     task: Joi.valid('linkedin-summary').required(),
-    name: Joi.string().required(),
     profession: Joi.string().required(),
     skills: Joi.string().required(),
   }),
