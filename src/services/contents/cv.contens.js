@@ -17,7 +17,7 @@ Summary:`;
   const openAPIInformationsList = [];
   const generateCVSummaryList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 3; i++) {
     const cvSummary = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 0.7, 0, 0, ['\n', 'Summary:']);
     const { id, object, created, model, choices } = cvSummary;
 
