@@ -255,7 +255,6 @@ const CVSummary = {
   body: Joi.object().keys({
     task: Joi.valid('cv-summary').required(),
     yourJobTitle: Joi.string().required(),
-    employerName: Joi.string().required(),
     keyAchievements: Joi.string().required(),
     yearsOfExperience: Joi.string().required(),
   }),
