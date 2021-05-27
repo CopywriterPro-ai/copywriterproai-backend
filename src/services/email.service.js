@@ -49,7 +49,7 @@ const sendResetPasswordEmailUsingToken = async (to) => {
 ">Reset Password</button></a><br><br><br>
   If you did not make this request then please ignore this email.</div>
   </div><br><br>
-  <div>Thank you, <br>The CopywriterPro Team</br></div>`;
+  <div>Thank you, <br>The CopywriterProAI Team</br></div>`;
 
   await sendEmail(to, subject, html);
 };
@@ -71,12 +71,12 @@ const sendResetPasswordEmailUsingToken = async (to) => {
 // };
 
 const sendVerifyAccountEmailUsingToken = async ({ id, email: to, name }) => {
-  const subject = 'Verify Copywriter Account Email';
+  const subject = 'Verify CopywriterProAI Account Email';
   const token = tokenService.generateMailingToken({ sub: id, type: mailTypes.ACCOUNT_VERIFY, email: to });
 
   const html = `<div>Hi ${name.firstName}, <div> <br><br><br>
   <div>
-  Thanks for getting started with our CopywriterPro.AI<br><br>
+  Thanks for getting started with our CopywriterPro.ai<br><br>
   We need a little more information to complete your registration, including a confirmation of your email address.<br>
   Click below to confirm your email address:<br><br>
   <a href=${frontendUrl.web}/account-verification?token=${token}><button style="
@@ -86,8 +86,9 @@ const sendVerifyAccountEmailUsingToken = async ({ id, email: to, name }) => {
   min-width: 100px;
   border-radius: 5px;
 ">Verify Account</button></a><br><br><br>
+  This link will be valid for 15 minutes.<br><br><br>
   If you have problems, please paste the above URL into your web browser.<br><br><br>
-  <div>Thank you, <br>The CopywriterPro Team</br></div>`;
+  <div>Thank you, <br>The CopywriterProAI Team</br></div>`;
 
   await sendEmail(to, subject, html);
 };
