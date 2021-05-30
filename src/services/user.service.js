@@ -175,6 +175,7 @@ const strategyVerify = (authType) => async (accessToken, refreshToken, profile, 
       const newUser = await User.create({
         userId: profile.id,
         isVerified: true,
+        bookmarks: {},
         authType,
         ...userInfo,
       });
