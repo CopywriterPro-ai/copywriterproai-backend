@@ -7,6 +7,7 @@ const cors = require('cors');
 const passport = require('passport');
 const httpStatus = require('http-status');
 const Sentry = require('@sentry/node');
+const Tracing = require('@sentry/tracing');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
 const corsOptions = require('./config/corsoptions');
@@ -19,7 +20,24 @@ const ApiError = require('./utils/ApiError');
 const app = express();
 
 // Sentry initial
-Sentry.init({ dsn: config.sentry.dns });
+Sentry.init({
+  dsn: config.sentry.dns,
+  integrations: [
+    // enable HTTP calls tracing
+    new Sentry.Integrations.Http({ tracing: true }),
+    // enable Express.js middleware tracing
+    new Tracing.Integrations.Express({
+      // to trace all requests to the default router
+      app,
+      // alternatively, you can specify the routes you want to trace:
+      // router: someRouter,
+    }),
+  ],
+
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 1.0,
+});
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
@@ -55,6 +73,7 @@ passport.use('facebook', facebookStrategy);
 // Sentry error request in production
 if (config.env === 'production') {
   app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.tracingHandler());
 }
 
 // limit repeated failed requests to auth endpoints
