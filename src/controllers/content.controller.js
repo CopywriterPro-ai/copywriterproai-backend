@@ -4,7 +4,7 @@ const generator = require('../services/contents');
 const { userService } = require('../services');
 
 const generate = catchAsync(async (req, res) => {
-  if (req.user.credits <= 0) {
+  if (req.user.credits === 0) {
     res.status(httpStatus.OK).send({ message: 'Upgrade our friendship today!' });
   } else {
     const { task } = req.body;
