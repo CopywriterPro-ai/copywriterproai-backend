@@ -122,6 +122,15 @@ const checkContentExistsOrNot = async ({ contentId, index }) => {
   }
 };
 
+const updateBookmarkedText = async (contentId, index, bookmarkedText) => {
+  const content = await Content.findById(contentId);
+  const previousText = content.generatedContents[index];
+  content.generatedContents[index] = bookmarkedText;
+  await content.markModified('generatedContents');
+  await content.save();
+  return previousText;
+};
+
 module.exports = {
   generateContentUsingGPT3,
   formatContents,
@@ -131,4 +140,5 @@ module.exports = {
   formatResponse,
   processListContents,
   checkContentExistsOrNot,
+  updateBookmarkedText,
 };

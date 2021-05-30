@@ -57,10 +57,10 @@ const userSchema = new Schema(
       enum: ['active', 'blocked'],
       default: 'active',
     },
-    wordsLeft: {
+    credits: {
       type: Number,
       trim: true,
-      default: 1000,
+      default: 100,
     },
     subscription: {
       type: String,

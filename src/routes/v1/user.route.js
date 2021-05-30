@@ -22,7 +22,8 @@ router
   .patch(auth('updateUserInfo'), validate(userValidation.updateUserInfo), userController.updateUser);
 
 router
-  .route('/:userId/update/bookmarks')
+  .route('/:userId/bookmarks')
+  .get(auth('getBookmarks'), validate(userValidation.getUserBookmarks), userController.getUserBookmarks)
   .patch(auth('updateUserInfo'), validate(userValidation.updateUserBookmarks), userController.updateUserBookmarks);
 
 module.exports = router;
