@@ -29,6 +29,7 @@ const envVarsSchema = Joi.object()
     MAIL_VERIFY_TOKEN_SECRET: Joi.string().required().description('Mail verify token secret'),
     MAIL_VERIFY_TOKEN_EXPIRE: Joi.string().default('10m').description('Mail verify token expires'),
     CORS_WHITELIST: Joi.string().default('*').description('Cors whitelist'),
+    SENTRY_DNS_URL: Joi.string().uri().required().description('sentry dns url'),
   })
   .unknown();
 
@@ -94,5 +95,8 @@ module.exports = {
   },
   cors: {
     whitelist: envVars.CORS_WHITELIST.split(','),
+  },
+  sentry: {
+    dns: envVars.SENTRY_DNS_URL,
   },
 };
