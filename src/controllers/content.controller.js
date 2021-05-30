@@ -85,7 +85,7 @@ const generate = catchAsync(async (req, res) => {
     }
 
     userService.updateUserById(req.user, req.user._id, { credits: req.user.credits - 1 });
-    res.status(httpStatus.OK).send(generatedContent);
+    res.status(httpStatus.PAYMENT_REQUIRED).send(generatedContent);
   }
 });
 
