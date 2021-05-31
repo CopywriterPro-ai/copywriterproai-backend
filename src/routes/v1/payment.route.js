@@ -27,5 +27,8 @@ router.post(
   validate(paymentValidation.updateSubscription),
   paymentController.updateSubscription
 );
+router.post('/payment-webhook', (req, res) => {
+  res.send('Hello Webhook');
+});
 
 module.exports = router;
