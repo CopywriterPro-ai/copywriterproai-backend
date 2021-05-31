@@ -1,6 +1,10 @@
 const httpStatus = require('http-status');
+const Stripe = require('stripe');
 const catchAsync = require('../utils/catchAsync');
 const paymentService = require('../services/payment.service');
+const config = require('../config/config');
+
+const stripe = new Stripe(config.stripe.stripeSecretKey);
 
 const createCustomer = catchAsync(async (req, res) => {
   const customer = await paymentService.stripeCustomer({ user: req.user });
@@ -36,4 +40,30 @@ const invoicePreview = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ status: httpStatus.OK, invoice });
 });
 
-module.exports = { createCustomer, createSubscription, priceList, cancelSubscription, updateSubscription, invoicePreview };
+const paymentWebhook = catchAsync(async (req, res) => {
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, req.header('Stripe-Signature'), config.stripe.webHookSecretKey);
+  } catch (err) {
+    return res
+      .status(httpStatus.BAD_REQUEST)
+      .send({ status: httpStatus.BAD_REQUEST, message: 'Webhook signature verification failed.' });
+  }
+
+  const dataObject = event.data.object;
+
+  console.log(dataObject);
+
+  res.status(httpStatus.OK);
+});
+
+module.exports = {
+  createCustomer,
+  createSubscription,
+  priceList,
+  cancelSubscription,
+  updateSubscription,
+  invoicePreview,
+  paymentWebhook,
+};
