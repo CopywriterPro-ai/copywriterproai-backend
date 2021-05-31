@@ -1,18 +1,16 @@
 const { generateContentUsingGPT3, storeData, formatResponse } = require('../content.service');
 
-const generateCVSummary = async (userId, { yourJobTitle, yearsOfExperience, employerName, keyAchievements }) => {
+const generateCVSummary = async (userId, { yourJobTitle, yearsOfExperience, keyAchievements }) => {
   const prompt = `
 Writer resume summary:
 
 Job Title: Data Analytics
 Years Of Experience: 6
-Employer Name: CickUp Inc
 Key Achievements: reduced operating costs by over 20%, saved upwards of USD 500,000 a year
-Summary: Disciplined and insightful Data Analytics with 6 years of experience analyzing business processes. Eager to leverage big data interpreting and visualizing skills at CickUp to drive growth and boost sales results. In current role, identified a major bottleneck, reduced operating costs by over 20%, and saved upwards of USD 500,000 a year.
+Summary: Disciplined and insightful Data Analytics with 6 years of experience analyzing business processes. Eager to leverage big data interpreting and visualizing skills to drive growth and boost sales results. In current role, identified a major bottleneck, reduced operating costs by over 20%, and saved upwards of USD 500,000 a year.
 
 Job Title: ${yourJobTitle}
 Years Of Experience: ${yearsOfExperience}
-Employer Name: ${employerName}
 Key Achievements: ${keyAchievements}
 Summary:`;
 

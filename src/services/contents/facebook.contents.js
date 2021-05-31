@@ -1,4 +1,10 @@
-const { generateContentUsingGPT3, removeSpaces, processListContents } = require('../content.service');
+const {
+  generateContentUsingGPT3,
+  removeSpaces,
+  processListContents,
+  storeData,
+  formatResponse,
+} = require('../content.service');
 
 const campaignPostFromBusinessType = async (userId, task, { platformType }) => {
   const prompt = `Write a Facebook Ad Primary text from the given context.
@@ -12,7 +18,7 @@ List of 5 Primary text:
 };
 
 const facebookAdPrimaryTexts = async (userId, { platformType, companyName, benefits }) => {
-  const prompt = `Write Facebook Ad Primary text for following platform
+  const prompt = `Write long Facebook Ads description using more than 130 word:
 
 Company Name: DoorDash
 Business Type: Online food ordering
@@ -37,49 +43,91 @@ Description: So your business is up and running! Now what? Grow with a Marketing
 Business Name: ${platformType}
 Business Type: ${companyName}
 Customers Benefit: ${benefits}
-Description:
-List of 5 Primary texts:
--`;
+Description:`;
 
-  const primaryTexts = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, 'ads-facebook-primary-texts', prompt, primaryTexts);
+  const openAPIInformationsList = [];
+  const facebookAdPrimaryTextsList = [];
+
+  for (let i = 0; i < 5; i++) {
+    const description = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, [
+      'Description:',
+      '\n',
+    ]);
+    const { id, object, created, model, choices } = description;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    facebookAdPrimaryTextsList.push(choices[0].text.trim());
+  }
+  const { _id, generatedContents } = await storeData(
+    userId,
+    'ads-facebook-primary-texts',
+    prompt,
+    openAPIInformationsList,
+    facebookAdPrimaryTextsList
+  );
+
+  const userResponse = formatResponse(_id, 'ads-facebook-primary-texts', generatedContents);
+
+  return userResponse;
 };
 
-const facebookAdHeadlines = async (userId, { platformType }) => {
-  // const prompt = `Catchy short Headlines for Facebook ad Samples:
-  // - Taste the grains. Build your body
-  // - Reignite your spark
-  // - Mapping Corona virus outbreak across the world
-  // - Feel & Finance Better
-  // - We ❤️ Pets. We 💣 Viruses
-  // - 30% Off First Subscription Order with Code X
-  // - Dentist Quality Night Guards
-  //
+const facebookAdHeadlines = async (userId, { productName, businessType, customerBenefit }) => {
+  const prompt = `Catchy short Headlines for Facebook ads:
 
-  const prompt = `Catchy short Headlines for Facebook ad Samples:
-  - Shop the latest engagement right trends. [website_link].
-  - A CRAZY comfortable sneaker concealed pitching an elegant, luxurious shoe!.
-  - Discover the new X Collection.
-  - ENTIRE SITE is an Additional 60% OFF during our Labour Day Blowout Sale! Enter Promo Code.
-  - Adorable baby one-piece Soft & Cute Limited time up to 80% OFF.
-  - You have a limited offer of up to 80%.
-  - Hair Extensions, the way way to add instant length and volume.
-  - Be the perfect host with Royal Albert Dinnerware!
-  - Update Your closet for WINTER! Get AESTHETIC clothing at an affordable price.
-  - X socks are so comfortable, you won’t want to wear any other socks.
-  - One Bag. Every Lifestyle.
-  - I can’t express how incredible this watch looks on the wrist.
-  - Staying Healthy has never been more important!
-  - You bring the idea. We will help take it from there.
+Product Name: Apple Watch Series 6
+Business Type: Smartwatch
+Customer Benefit: Mother's day sales
+Headline: You can't put a price on giving Mom more time to enjoy.\nGet an Apple Watch For your mom this Mother's Day.\nMom deserves the best this Mother's Day. Get 15% off any of our watches.\n
 
-Now write 5 catchy short Headline for following platform
+Product Name: Sneakers RT
+Business Type: Sneakers, Shoe
+Customer Benefit: comfortable sneaker, luxurious shoe
+Headline: A CRAZY comfortable Sneaker RT concealed pitching an elegant, luxurious shoe!.
 
-Platform: ${removeSpaces(platformType)}
-List of 5 catchy short Headline
--`;
+Product Name: ebazar.com
+Business Type: eCommerce, Online store
+Customer Benefit: 60% OFF during our Labour Day
+Headline: ENTIRE SITE is an Additional 60% OFF during our Labour Day Blowout Sale! Enter Promo Code.
 
-  const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, 'ads-facebook-headlines', prompt, headlines);
+Product Name: Baby's Clothing
+Business Type: Baby Product
+Customer Benefit: 80% OFF
+Headline: Adorable baby one-piece Soft & Cute Limited time up to 80% OFF.
+
+Product Name: Easy Travel Bag
+Business Type: Leather bag, travel bag
+Customer Benefit: One bag for everything
+Headline: One Bag. Every Lifestyle.
+
+Product Name: ${productName}
+Business Type: ${businessType}
+Customer Benefit: ${customerBenefit}
+Headline:`;
+
+  const openAPIInformationsList = [];
+  const facebookAdHeadlinesList = [];
+
+  for (let i = 0; i < 5; i++) {
+    const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.1, [
+      'Headline:',
+      '\n',
+    ]);
+    const { id, object, created, model, choices } = headlines;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    facebookAdHeadlinesList.push(choices[0].text.trim());
+  }
+  const { _id, generatedContents } = await storeData(
+    userId,
+    'ads-facebook-headlines',
+    prompt,
+    openAPIInformationsList,
+    facebookAdHeadlinesList
+  );
+
+  const userResponse = formatResponse(_id, 'ads-facebook-headlines', generatedContents);
+
+  return userResponse;
 };
 
 const facebookAdLinkDescription = async (userId, { platformType, companyName }) => {

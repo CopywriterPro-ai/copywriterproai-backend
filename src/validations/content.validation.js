@@ -116,7 +116,9 @@ const facebookAdPrimaryTexts = {
 const facebookAdHeadlines = {
   body: Joi.object().keys({
     task: Joi.valid('ads-facebook-headlines').required(),
-    platformType: Joi.string().required(),
+    productName: Joi.string().required(),
+    businessType: Joi.string().required(),
+    customerBenefit: Joi.string().required(),
   }),
 };
 
@@ -146,8 +148,9 @@ const instagramAdTexts = {
 const linkedinAdTexts = {
   body: Joi.object().keys({
     task: Joi.valid('linkedin-ad-texts').required(),
-    platformType: Joi.string().required(),
-    context: Joi.string().required(),
+    companyName: Joi.string().required(),
+    businessType: Joi.string().required(),
+    benefits: Joi.string().required(),
   }),
 };
 
@@ -155,7 +158,7 @@ const googleAdHeadlines = {
   body: Joi.object().keys({
     task: Joi.valid('ads-google-headlines').required(),
     name: Joi.string().required(),
-    platform: Joi.string().required(),
+    businessType: Joi.string().required(),
   }),
 };
 
@@ -256,7 +259,6 @@ const productName = {
 const linkedInSummary = {
   body: Joi.object().keys({
     task: Joi.valid('linkedin-summary').required(),
-    name: Joi.string().required(),
     profession: Joi.string().required(),
     skills: Joi.string().required(),
   }),
@@ -281,7 +283,6 @@ const CVSummary = {
   body: Joi.object().keys({
     task: Joi.valid('cv-summary').required(),
     yourJobTitle: Joi.string().required(),
-    employerName: Joi.string().required(),
     keyAchievements: Joi.string().required(),
     yearsOfExperience: Joi.string().required(),
   }),

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const moment = require('moment-timezone');
 
 const { Schema } = mongoose;
 const { toJSON, paginate } = require('./plugins');
@@ -29,12 +30,12 @@ const userSchema = new Schema(
     password: {
       type: String,
       trim: true,
-      minlength: 8,
-      validate(value) {
-        if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-          throw new Error('Password must contain at least one letter and one number');
-        }
-      },
+      // minlength: 8,
+      // validate(value) {
+      //   if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+      //     throw new Error('Password must contain at least one letter and one number');
+      //   }
+      // },
       private: true, // used by the toJSON plugin
     },
     email: {
@@ -114,9 +115,26 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.virtual('isUserEligibleForFreeTrial').get(function () {
+  const currentDate = new Date();
+  const subs = this.subscription;
+  const sevenDays = moment(this.createdAt).add('7', 'days');
+  if (subs === 'Freemium' && moment(sevenDays).isBefore(currentDate)) {
+    return true;
+  }
+  return false;
+});
+
+userSchema.virtual('getUserCurrentSubscription').get(function () {
+  return this.subscription;
+});
+
 /**
  * @typedef User
  */
+userSchema.set('toObject', { virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

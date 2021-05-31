@@ -6,11 +6,26 @@ const paymentController = require('../../controllers/payment.controller');
 
 const router = express.Router();
 
-router
-  .route('/')
-  // .get(auth('getPurchaseInfo'), validate(paymentValidation.getPurchaseInfo), paymentController.getPurchaseInfo)
-  .get(auth(), validate(paymentValidation.getPurchaseInfo), paymentController.getPurchaseInfo)
-  // .post(auth('managePurchase'), validate(paymentValidation.storePurchaseInfo), paymentController.storePurchaseInfo);
-  .post(auth(), paymentController.storePurchaseInfo);
+router.get('/product-prices', paymentController.priceList);
+router.post('/create-customer', auth(), paymentController.createCustomer);
+router.post(
+  '/create-subscription',
+  auth(),
+  validate(paymentValidation.createSubscription),
+  paymentController.createSubscription
+);
+router.get('/subscription-invoice', auth(), validate(paymentValidation.invoicePreview), paymentController.invoicePreview);
+router.post(
+  '/cancel-subscription',
+  auth(),
+  validate(paymentValidation.cancelSubscription),
+  paymentController.cancelSubscription
+);
+router.post(
+  '/update-subscription',
+  auth(),
+  validate(paymentValidation.updateSubscription),
+  paymentController.updateSubscription
+);
 
 module.exports = router;

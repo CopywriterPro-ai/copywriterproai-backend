@@ -6,50 +6,127 @@ const config = require('../config/config');
 
 const stripe = new Stripe(config.stripe.stripeSecretKey);
 
-const findCustomer = async (user) => {
-  const customer = await Payment.findOne({ user });
+const paymentUpdate = async ({ customerId, subscriptionId }) => {
+  const payment = await Payment.findOneAndUpdate(
+    { customerStripeId: customerId },
+    { customerSubscriptionId: subscriptionId },
+    { new: true }
+  );
+  return { payment };
+};
+
+const findCustomer = async (email) => {
+  const customer = await Payment.findOne({ email });
   return customer;
 };
 
 const createStripeCustomer = async ({ user }) => {
-  const stripeCustomer = await stripe.customers.create({
-    email: user.email,
+  try {
+    const stripeCustomer = await stripe.customers.create({
+      email: user.email,
+    });
+    const customer = await Payment.create({ user: user.id, email: user.email, customerStripeId: stripeCustomer.id });
+    return customer;
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Customer not created');
+  }
+};
+
+const PricesList = async () => {
+  const prices = await stripe.prices.list({
+    expand: ['data.product'],
+    active: true,
   });
-  const customer = await Payment.create({ user: user.id, customerId: stripeCustomer.id });
-  return customer;
+  return {
+    prices: prices.data,
+  };
 };
 
 const stripeCustomer = async ({ user }) => {
-  const customer = await findCustomer(user.id);
-  if (customer) {
-    return customer;
-  }
-  const newCustomer = await createStripeCustomer({ user });
-  return newCustomer;
-};
-
-const createSubscription = async ({ paymentMethodId, customerId, priceId }) => {
   try {
-    await stripe.paymentMethods.attach(paymentMethodId, {
-      customer: customerId,
-    });
+    const customer = await findCustomer(user.email);
+    if (customer) {
+      return customer;
+    }
+    const newCustomer = await createStripeCustomer({ user });
+    return newCustomer;
   } catch (error) {
-    throw new ApiError(httpStatus.PAYMENT_REQUIRED, error.message);
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Customer not found or create');
   }
-
-  await stripe.customers.update(customerId, {
-    invoice_settings: {
-      default_payment_method: paymentMethodId,
-    },
-  });
-
-  const subscription = await stripe.subscriptions.create({
-    customer: customerId,
-    items: [{ price: priceId }],
-    expand: ['latest_invoice.payment_intent'],
-  });
-
-  return subscription;
 };
 
-module.exports = { createStripeCustomer, stripeCustomer, createSubscription };
+const createSubscription = async ({ customerId, priceId }) => {
+  try {
+    const subscription = await stripe.subscriptions.create({
+      customer: customerId,
+      items: [
+        {
+          price: priceId,
+        },
+      ],
+      payment_behavior: 'default_incomplete',
+      expand: ['latest_invoice.payment_intent'],
+    });
+    return {
+      subscriptionId: subscription.id,
+      clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+    };
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not created');
+  }
+};
+
+const cancelSubscription = async ({ subscriptionId }) => {
+  try {
+    const deletedSubscription = await stripe.subscriptions.del(subscriptionId);
+
+    return { subscription: deletedSubscription };
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not cancelled');
+  }
+};
+
+const updateSubscription = async ({ subscriptionId, newPriceId }) => {
+  try {
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    const updatedSubscription = await stripe.subscriptions.update(subscriptionId, {
+      items: [
+        {
+          id: subscription.items.data[0].id,
+          price: newPriceId,
+        },
+      ],
+    });
+
+    return { subscription: updatedSubscription };
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not updated');
+  }
+};
+
+const invoicePreview = async ({ customerId, priceId, subscriptionId }) => {
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+
+  const invoice = await stripe.invoices.retrieveUpcoming({
+    customer: customerId,
+    subscription: subscriptionId,
+    subscription_items: [
+      {
+        id: subscription.items.data[0].id,
+        price: priceId,
+      },
+    ],
+  });
+
+  return { invoice };
+};
+
+module.exports = {
+  paymentUpdate,
+  stripeCustomer,
+  createSubscription,
+  PricesList,
+  cancelSubscription,
+  updateSubscription,
+  invoicePreview,
+};
