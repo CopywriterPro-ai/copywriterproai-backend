@@ -45,6 +45,7 @@ const paymentWebhook = catchAsync(async (req, res) => {
   let event;
 
   console.log('req.originalUrl', req.originalUrl);
+  console.log('req.headers', req.headers);
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, config.stripe.webHookSecretKey);
