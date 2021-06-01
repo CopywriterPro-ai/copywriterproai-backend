@@ -8,11 +8,13 @@ const {
 } = require('../content.service');
 
 const paraphrase = async (userId, { userText }) => {
+  const userPrompt = removeSpaces(userText);
+
   const prompt = `Original: He has tons of stuff to throw away.
 Paraphrase: He needs to get rid of a lot of junk.
 Original: Symptoms of influenza include fever and nasal congestion.
 Paraphrase: A stuffy nose and elevated temperature are signs you may have the flu.
-Original: ${removeSpaces(userText)}
+Original: ${userPrompt}
 Paraphrase:`;
 
   let paraphrasedContents;
@@ -31,7 +33,7 @@ Paraphrase:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'paraphrasing',
-    prompt,
+    userPrompt,
     { id, object, created, model },
     choices[0].text
   );
@@ -41,6 +43,8 @@ Paraphrase:`;
 };
 
 const blogOutline = async (userId, { numberOfPoints, blogAbout }) => {
+  const userPrompt = removeSpaces(blogAbout);
+
   const prompt = `Example -
 I: Introduction
 II: What Slack is doing to help DevOps
@@ -49,7 +53,7 @@ III: What Slack is doing for the future of DevOps
 IV: What they think of DevOps
 V: Conclusion
 
-Create an Outline in ${numberOfPoints} points like Example for a Blog about "${blogAbout}":
+Create an Outline in ${numberOfPoints} points like Example for a Blog about "${userPrompt}":
 
 I:`;
 
@@ -67,7 +71,7 @@ I:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'blog-outline',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     blogOutlinesList
   );
@@ -77,36 +81,42 @@ I:`;
 };
 
 const blogIdea = async (userId, { productName, productDescription }) => {
+  const userPrompt = `Name: ${removeSpaces(productName)}
+Description: ${removeSpaces(productDescription)}`;
+
   const prompt = `Generate 5 Blog ideas for following Product.
 
-Name: ${productName}
-Description: ${productDescription}
+${userPrompt}
 
 List of 5 Blog ideas
 -`;
 
   const blogIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.3, ['\n\n']);
-  return processListContents(userId, 'blog-idea', prompt, blogIdeas);
+  return processListContents(userId, 'blog-idea', userPrompt, blogIdeas);
 };
 
 const blogHeadline = async (userId, { productName, productDescription, blogAbout }) => {
+  const userPrompt = `Name: ${removeSpaces(productName)}
+Description: ${removeSpaces(productDescription)}
+About: ${removeSpaces(blogAbout)}`;
+
   const prompt = `Generate 5 Blog titles for following Product.
 
-Name: ${productName}
-Description: ${productDescription}
-About: ${blogAbout}
+${userPrompt}
 
 List of 5 Blog titles
 -`;
 
   const blogHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.9, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, 'blog-headline', prompt, blogHeadlines);
+  return processListContents(userId, 'blog-headline', userPrompt, blogHeadlines);
 };
 
 const blogIntro = async (userId, { title, about }) => {
+  const userPrompt = `Title: ${removeSpaces(title)}
+About: ${removeSpaces(about)}`;
+
   const prompt = `Write a Blog Intro for following that can hook the readers.
-Title: ${title}
-About: ${about}
+${userPrompt}
 Intro:`;
 
   const openAPIInformationsList = [];
@@ -120,7 +130,13 @@ Intro:`;
     blogIntrosList.push(choices[0].text.trim());
   }
 
-  const { _id, generatedContents } = await storeData(userId, 'blog-intro', prompt, openAPIInformationsList, blogIntrosList);
+  const { _id, generatedContents } = await storeData(
+    userId,
+    'blog-intro',
+    userPrompt,
+    openAPIInformationsList,
+    blogIntrosList
+  );
   const userResponse = formatResponse(_id, 'blog-intro', generatedContents);
 
   return userResponse;

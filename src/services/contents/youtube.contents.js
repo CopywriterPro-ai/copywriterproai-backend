@@ -1,3 +1,5 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-await-in-loop */
 const {
   generateContentUsingGPT3,
   removeSpaces,
@@ -7,6 +9,8 @@ const {
 } = require('../content.service');
 
 const youtubeVideoIdeas = async (userId, { topic }) => {
+  const userPrompt = `Topic: ${removeSpaces(topic)}`;
+
   const prompt = `Generate awesome YouTube video Title that Gets Views ${removeSpaces(topic)}.
 Topic: Insurance
 Title: Know About Insurance - Module 1.\nInsurance basic and Types.\nType of Life Insurance Explained.\nCar Insurance In Canada (For Immigrant).\nMajor Type of Insurance In the United States & The Purposes.
@@ -20,7 +24,7 @@ Title: 5 Best Free Video Editing Software For Windows & MacOs Laptop & Computer.
 Topic: Cars and driving skills
 Title: Close Calls - Good Deriving Skills or Luck?.\nAmazing Trucks & Card driving Skills - Fast Reaction Save Life - Awesome.\nThe most amazing cars and driving Skills.\nTop 10 Tips: New Drivers[must watch] | Learn driving.
 
-Topic: ${removeSpaces(topic)}
+${userPrompt}
 Title:`;
 
   const openAPIInformationsList = [];
@@ -36,7 +40,7 @@ Title:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'youtube-video-ideas',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     youtubeVideoIdeasList
   );
@@ -47,25 +51,29 @@ Title:`;
 };
 
 const youtubeVideoTitleFromDescription = async (userId, { description }) => {
+  const userPrompt = `Description: ${removeSpaces(description)}`;
+
   const prompt = `Write a Title that summarizes Description
 
-Description: ${removeSpaces(description)}
+${userPrompt}
 List of 5 Titles:
 
 -`;
 
   const titlesFromDescription = await generateContentUsingGPT3('davinci-instruct-beta', 25, prompt, 0.8, 0.3, 0.4, ['\n\n']);
-  return processListContents(userId, 'youtube-video-titles-from-description', prompt, titlesFromDescription);
+  return processListContents(userId, 'youtube-video-titles-from-description', userPrompt, titlesFromDescription);
 };
 
 const generateVideoTagsFromDescription = async (userId, { primaryText }) => {
+  const userPrompt = `PrimaryText: ${removeSpaces(primaryText)}`;
+
   const prompt = `Generate Keywords extracted from content for Optimization search engine, SEO meta tag, or youtube tags.
 
 PrimaryText: Codephilics build products that let you grow your business more effectively. We help you to leverage your dreams whether you are working on your dream project, have a successful startup, or part of a Fortune 500.
 Keywords: Startup, Product, Product Development, Product Management, Product Marketing, Product Strategy, Transformation, Idea,
 Product Launch, Product Management, Product Marketing, Product Strategy, Product Development, Product Launch, Project Management, Consulting,
 Digital Transformation, Innovation, Creativity.
-PrimaryText: ${removeSpaces(primaryText)}
+${userPrompt}
 Keywords:`;
 
   const openAPIInformationsList = [];
@@ -81,7 +89,7 @@ Keywords:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'youtube-video-tags-from-description',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     videoTagsFromDescriptionList
   );
@@ -92,13 +100,15 @@ Keywords:`;
 };
 
 const generateChannelTagsFromDescription = async (userId, { primaryText }) => {
+  const userPrompt = `PrimaryText: ${removeSpaces(primaryText)}`;
+
   const prompt = `Generate Keywords extracted from content for Optimization search engine, SEO meta tag, or youtube tags.
 
 PrimaryText: Codephilics build products that let you grow your business more effectively. We help you to leverage your dreams whether you are working on your dream project, have a successful startup, or part of a Fortune 500.
 Keywords: Startup, Product, Product Development, Product Management, Product Marketing, Product Strategy, Transformation, Idea,
 Product Launch, Product Management, Product Marketing, Product Strategy, Product Development, Product Launch, Project Management, Consulting,
 Digital Transformation, Innovation, Creativity.
-PrimaryText: ${removeSpaces(primaryText)}
+${userPrompt}
 Keywords:`;
 
   const openAPIInformationsList = [];
@@ -117,7 +127,7 @@ Keywords:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'youtube-channel-tags-from-description',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     channelTagsFromDescriptionList
   );

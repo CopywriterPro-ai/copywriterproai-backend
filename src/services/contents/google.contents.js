@@ -5,9 +5,13 @@ const {
   storeData,
   processListContents,
   formatResponse,
+  removeSpaces,
 } = require('../content.service');
 
 const googleAdHeadlines = async (userId, { name, businessType }) => {
+  const userPrompt = `Name: ${removeSpaces(name)}
+Business Type: ${removeSpaces(businessType)}`;
+
   const prompt = `Write Google Ad Headline:
 
 Name: Upwork
@@ -30,8 +34,7 @@ Name: Beds.co.ca
 Business Type: Home Furniture
 Headline: Beds at Beds.co.ca | Biggest Ever Bed Sale
 
-Name: ${name}
-Business Type: ${businessType}
+${userPrompt}
 Headline:`;
 
   const openAPIInformationsList = [];
@@ -51,7 +54,7 @@ Headline:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'ads-google-headlines',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     googleAdHeadlinesList
   );
@@ -61,34 +64,36 @@ Headline:`;
 };
 
 const googleAdDescriptions = async (userId, { businessName, productCategories, uniqueness, promotions, keywords }) => {
+  const userPrompt = `Business Name: ${removeSpaces(businessName)}
+Product Categories: ${removeSpaces(productCategories)}
+What makes you unique: ${removeSpaces(uniqueness)}
+Promotions: ${removeSpaces(promotions)}
+Your business Keyword: ${removeSpaces(keywords)}`;
+
   const prompt = `Write benefits Audience will get from following Platform
 
-Business Name: airyclub.com\n
-Product Categories: Watches, Home Decor, Luggage & Bags & Wallets, Electronics, Electronics Industry & Business Home & Kitchen Watches Office & School Supplies.\n
-What makes you unique: Cheap Products at Low Wholesale Prices\n
-Promotions: Save Up to 80%\n
-Your business Keyword: Marketplace, eCommerce, online store\n
-Description: Electronics for £ 1 or Less Save Up to 80% www.airyclub.com 20000+ Products. Find Cheap Products at Low Wholesale Prices, Shop Now! Secure. Highly Committed. Free Shipping. Efficient & Fast Service. Save Up to 90% Fast Delivery. Easy Communication. Types: Watches, Home Decor, Luggage & Bags & Wallets, Electronics, Electronics Industry & Business Home & Kitchen Watches Office & School Supplies.\n
+Business Name: airyclub.com
+Product Categories: Watches, Home Decor, Luggage & Bags & Wallets, Electronics, Electronics Industry & Business Home & Kitchen Watches Office & School Supplies.
+What makes you unique: Cheap Products at Low Wholesale Prices
+Promotions: Save Up to 80%
+Your business Keyword: Marketplace, eCommerce, online store
+Description: Electronics for £ 1 or Less Save Up to 80% www.airyclub.com 20000+ Products. Find Cheap Products at Low Wholesale Prices, Shop Now! Secure. Highly Committed. Free Shipping. Efficient & Fast Service. Save Up to 90% Fast Delivery. Easy Communication. Types: Watches, Home Decor, Luggage & Bags & Wallets, Electronics, Electronics Industry & Business Home & Kitchen Watches Office & School Supplies.
 
-Business Name: denvertreeringdigital.com\n
-Product Categories: Web Design & Development, Search Engine Optimizing, Search Engine Marketing\n
-What makes you unique: Friendly Team, 24/7 live support, Quality\n
-Promotions: Save Up to 10%\n
-Your business Keyword: Web Design & Development, Search Engine Optimizing, Search Engine Marketing\n
-Description: User-Friendly Lead Generation Designed in Denvertreeringdigital.com Tree Ring Digital designs high-performance websites unique to your business. Web Design & Development. Search Engine Optimizing. Website Maintenance. GeoFencing Services. Reputation Marketing Website Design SEO Services. Search Engine Marketing\n
+Business Name: denvertreeringdigital.com
+Product Categories: Web Design & Development, Search Engine Optimizing, Search Engine Marketing
+What makes you unique: Friendly Team, 24/7 live support, Quality
+Promotions: Save Up to 10%
+Your business Keyword: Web Design & Development, Search Engine Optimizing, Search Engine Marketing
+Description: User-Friendly Lead Generation Designed in Denvertreeringdigital.com Tree Ring Digital designs high-performance websites unique to your business. Web Design & Development. Search Engine Optimizing. Website Maintenance. GeoFencing Services. Reputation Marketing Website Design SEO Services. Search Engine Marketing
 
-Business Name: rentalcars.com\n
-Product Categories: Car Rental service\n
-What makes you unique: 5 star rating,Best Price Guaranteed, Free Cancellations, Unbeatable Prices\n
-Promotions: 5% off over 400 USD\n
-Your business Keyword: Online Car Rental, travel car\n
-Description: Car Rental in New York State From Only £4 Day rentalcars.com, Secure Your Car Rental Today. Best Price Guaranteed. Free Cancellations. Unbeatable Prices. We Speak Your Language. No Credit Card Fees. Includes Free Amendments. Types: Economy, Mini. Mini - from £4.00 day - 4 passengers.\n
+Business Name: rentalcars.com
+Product Categories: Car Rental service
+What makes you unique: 5 star rating,Best Price Guaranteed, Free Cancellations, Unbeatable Prices
+Promotions: 5% off over 400 USD
+Your business Keyword: Online Car Rental, travel car
+Description: Car Rental in New York State From Only £4 Day rentalcars.com, Secure Your Car Rental Today. Best Price Guaranteed. Free Cancellations. Unbeatable Prices. We Speak Your Language. No Credit Card Fees. Includes Free Amendments. Types: Economy, Mini. Mini - from £4.00 day - 4 passengers.
 
-Business Name: ${businessName}\n
-Product Categories: ${productCategories}\n
-What makes you unique: ${uniqueness}\n
-Promotions: ${promotions}\n
-Your business Keyword: ${keywords}\n
+${userPrompt}
 Description:`;
 
   const openAPIInformationsList = [];
@@ -108,7 +113,7 @@ Description:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'ads-google-descriptions',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     googleAdDescriptionsList
   );

@@ -1,6 +1,8 @@
-const { generateContentUsingGPT3, processListContents } = require('../content.service');
+const { generateContentUsingGPT3, processListContents, removeSpaces } = require('../content.service');
 
 const catchyHeadline = async (userId, { content }) => {
+  const userPrompt = `Content: ${removeSpaces(content)}`;
+
   const prompt = `Samples List -
 
 - 7 Free Apps That Make Vacation Planning a Breeze
@@ -12,16 +14,18 @@ const catchyHeadline = async (userId, { content }) => {
 - Millionaire Day Trader Reveals How to Cash In
 
 Generate Catchy Headlines for following online content like above Samples - 
-Online Content: ${content}
+Online ${userPrompt}
 
 List of 5 Catchy Headlines
 -`;
 
   const catchyHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
-  return processListContents(userId, 'catchy-headline', prompt, catchyHeadlines);
+  return processListContents(userId, 'catchy-headline', userPrompt, catchyHeadlines);
 };
 
 const attentionGrabbingHeadline = async (userId, { content }) => {
+  const userPrompt = `Content: ${removeSpaces(content)}`;
+
   const prompt = `Samples List -
 
 - Can Twitter Predict the Future? Pentagon Says Maybe
@@ -34,16 +38,18 @@ const attentionGrabbingHeadline = async (userId, { content }) => {
 - You'll Never Get Hired if You Say This in a Job Interview
 
 Generate Attention Grabbing Headlines for following online content like above Samples - 
-Online Content: ${content}
+Online ${userPrompt}
 
 List of 5 Attention Grabbing Headlines
 -`;
 
   const attentionGrabbingHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
-  return processListContents(userId, 'attention-grabbing-headline', prompt, attentionGrabbingHeadlines);
+  return processListContents(userId, 'attention-grabbing-headline', userPrompt, attentionGrabbingHeadlines);
 };
 
 const newspaperHeadline = async (userId, { content }) => {
+  const userPrompt = `News: ${removeSpaces(content)}`;
+
   const prompt = `Samples List -
 
 - Is Zoom Fatigue a Real Thing?
@@ -56,16 +62,18 @@ const newspaperHeadline = async (userId, { content }) => {
 - Is Takeout the Latest Fine Dining Trend?
 
 Generate Newspaper Headlines for following News like above Samples -
-News: ${content}
+${userPrompt}
 
 List of 5 Newspaper Headlines
 -`;
 
   const newspaperHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
-  return processListContents(userId, 'newspaper-headline', prompt, newspaperHeadlines);
+  return processListContents(userId, 'newspaper-headline', userPrompt, newspaperHeadlines);
 };
 
 const resumeHeadline = async (userId, { profession }) => {
+  const userPrompt = `Profession: ${removeSpaces(profession)}`;
+
   const prompt = `Samples List -
 
 - Detail-Oriented Administrative Professional
@@ -77,13 +85,13 @@ const resumeHeadline = async (userId, { profession }) => {
 - Results-Oriented Regional Manager
 - Award-Winning Writer and Editor
 
-Generate Resume Headlines for following ${profession} position like above Samples - 
+Generate Resume Headlines for following ${removeSpaces(profession)} position like above Samples - 
 
 List of 5 Resume Headlines
 -`;
 
   const resumeHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
-  return processListContents(userId, 'resume-headline', prompt, resumeHeadlines);
+  return processListContents(userId, 'resume-headline', userPrompt, resumeHeadlines);
 };
 
 module.exports = {

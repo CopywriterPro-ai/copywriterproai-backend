@@ -1,9 +1,12 @@
+/* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
 const emailSubjectsFromBody = async (userId, { emailBody }) => {
+  const userPrompt = `Email Body: ${removeSpaces(emailBody)}`;
+
   const prompt = `Write email subject based on email body to increase email opening by less than 50 words.
 
-emailBody: ${removeSpaces(emailBody)}
+${userPrompt}
 Subject:`;
 
   const openAPIInformationsList = [];
@@ -22,7 +25,7 @@ Subject:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'email-subject-from-body',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     emailSubjectsFromBodyList
   );

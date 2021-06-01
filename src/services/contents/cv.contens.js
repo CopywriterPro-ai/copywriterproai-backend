@@ -1,6 +1,11 @@
-const { generateContentUsingGPT3, storeData, formatResponse } = require('../content.service');
+const { generateContentUsingGPT3, storeData, formatResponse, removeSpaces } = require('../content.service');
 
-const generateCVSummary = async (userId, { yourJobTitle, yearsOfExperience, keyAchievements }) => {
+const generateCVSummary = async (userId, { yourJobTitle, yearsOfExperience, employerName, keyAchievements }) => {
+  const userPrompt = `Job Title: ${removeSpaces(yourJobTitle)}
+Years Of Experience: ${removeSpaces(yearsOfExperience)}
+Employer Name: ${removeSpaces(employerName)}
+Key Achievements: ${removeSpaces(keyAchievements)}`;
+
   const prompt = `
 Writer resume summary:
 
@@ -9,9 +14,7 @@ Years Of Experience: 6
 Key Achievements: reduced operating costs by over 20%, saved upwards of USD 500,000 a year
 Summary: Disciplined and insightful Data Analytics with 6 years of experience analyzing business processes. Eager to leverage big data interpreting and visualizing skills to drive growth and boost sales results. In current role, identified a major bottleneck, reduced operating costs by over 20%, and saved upwards of USD 500,000 a year.
 
-Job Title: ${yourJobTitle}
-Years Of Experience: ${yearsOfExperience}
-Key Achievements: ${keyAchievements}
+${userPrompt}
 Summary:`;
 
   const openAPIInformationsList = [];
@@ -27,7 +30,7 @@ Summary:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'cv-summary',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     generateCVSummaryList
   );
