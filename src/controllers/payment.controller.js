@@ -53,7 +53,9 @@ const paymentWebhook = catchAsync(async (req, res) => {
 
   const dataObject = event.data.object;
 
-  res.status(httpStatus.OK).send({ dataObject });
+  console.log('dataObject', dataObject);
+
+  res.status(httpStatus.OK);
 });
 
 module.exports = {
