@@ -41,13 +41,13 @@ const invoicePreview = catchAsync(async (req, res) => {
 });
 
 const paymentWebhook = catchAsync(async (req, res) => {
+  const sig = req.headers['stripe-signature'];
   let event;
-  const stripeSignature = req.headers['stripe-signature'];
 
-  console.log('Hello Webhoook');
+  console.log('req.originalUrl', req.originalUrl);
 
   try {
-    event = stripe.webhooks.constructEvent(req.body, stripeSignature, config.stripe.webHookSecretKey);
+    event = stripe.webhooks.constructEvent(req.body, sig, config.stripe.webHookSecretKey);
   } catch (err) {
     console.log('Webhook Error', err);
     return res
@@ -59,7 +59,7 @@ const paymentWebhook = catchAsync(async (req, res) => {
 
   console.log('dataObject', dataObject);
 
-  res.status(httpStatus.OK);
+  res.json({ received: true });
 });
 
 module.exports = {
