@@ -42,11 +42,12 @@ const invoicePreview = catchAsync(async (req, res) => {
 
 const paymentWebhook = catchAsync(async (req, res) => {
   let event;
+  const stripeSignature = req.headers['stripe-signature'];
 
   console.log('Hello Webhoook');
 
   try {
-    event = stripe.webhooks.constructEvent(req.body, req.header('Stripe-Signature'), config.stripe.webHookSecretKey);
+    event = stripe.webhooks.constructEvent(req.body, stripeSignature, config.stripe.webHookSecretKey);
   } catch (err) {
     console.log('Webhook Error', err);
     return res

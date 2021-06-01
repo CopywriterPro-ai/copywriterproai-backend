@@ -1,5 +1,4 @@
 const express = require('express');
-const { raw } = require('body-parser');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const paymentValidation = require('../../validations/payment.validation');
@@ -28,6 +27,6 @@ router.post(
   validate(paymentValidation.updateSubscription),
   paymentController.updateSubscription
 );
-router.post('/payment-webhook', raw({ type: 'application/json' }), paymentController.paymentWebhook);
+router.post('/payment-webhook', express.raw({ type: 'application/json' }), paymentController.paymentWebhook);
 
 module.exports = router;
