@@ -20,6 +20,11 @@ const getUser = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getUserBookmarks = catchAsync(async (req, res) => {
+  const bookmarks = await userService.getBookmarks(req.params.userId);
+  res.send(bookmarks);
+});
+
 const deleteUser = catchAsync(async (req, res) => {
   await userService.deleteUserById(req.params.userId);
   res.status(httpStatus.NO_CONTENT).send();
@@ -42,6 +47,7 @@ module.exports = {
   createUser,
   getUsers,
   getUser,
+  getUserBookmarks,
   deleteUser,
   updateUser,
   updateUserBookmarks,

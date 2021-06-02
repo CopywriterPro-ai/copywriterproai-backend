@@ -1,6 +1,11 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
 const generateCatchyBusinessTaglines = async (userId, { companyName, businessType }) => {
+  const userPrompt = `Company Name: ${removeSpaces(companyName)}
+Business Type: ${removeSpaces(businessType)}`;
+
   const prompt = `Writer Catchy Business Taglines.
 
 Company Name: Mastercard
@@ -31,8 +36,7 @@ Company Name: The New York Times
 Business Type: daily newspaper, worldwide news
 Taglines: All the News That's Fit to Print
 
-Company Name: ${removeSpaces(companyName)}
-Business Type: ${removeSpaces(businessType)}
+${userPrompt}
 Taglines:`;
 
   const openAPIInformationsList = [];
@@ -51,7 +55,7 @@ Taglines:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'catchy-business-taglines',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     catchyBusinessTaglinesList
   );

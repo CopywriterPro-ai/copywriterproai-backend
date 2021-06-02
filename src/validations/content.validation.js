@@ -69,6 +69,34 @@ const productReview = {
   }),
 };
 
+const catchyHeadline = {
+  body: Joi.object().keys({
+    task: Joi.valid('catchy-headline').required(),
+    content: Joi.string().required(),
+  }),
+};
+
+const attentionGrabbingHeadline = {
+  body: Joi.object().keys({
+    task: Joi.valid('attention-grabbing-headline').required(),
+    content: Joi.string().required(),
+  }),
+};
+
+const newspaperHeadline = {
+  body: Joi.object().keys({
+    task: Joi.valid('newspaper-headline').required(),
+    content: Joi.string().required(),
+  }),
+};
+
+const resumeHeadline = {
+  body: Joi.object().keys({
+    task: Joi.valid('resume-headline').required(),
+    profession: Joi.string().required(),
+  }),
+};
+
 const campaignPostIdeaFromBusinessType = {
   body: Joi.object().keys({
     task: Joi.valid('campaign-facebook-post', 'twitter-campaign-post').required(),
@@ -279,6 +307,10 @@ module.exports = {
   productDescription,
   makeProductDescriptionSEOFriendly,
   productReview,
+  catchyHeadline,
+  attentionGrabbingHeadline,
+  newspaperHeadline,
+  resumeHeadline,
   campaignPostIdeaFromBusinessType,
   facebookAdPrimaryTexts,
   facebookAdHeadlines,

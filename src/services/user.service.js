@@ -1,5 +1,9 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const { User, Content } = require('../models');
+const { updateBookmarkedText } = require('./content.service');
 const ApiError = require('../utils/ApiError');
 const { authTypes } = require('../config/auths');
 
@@ -58,6 +62,27 @@ const getUser = async (identity) => {
 };
 
 /**
+ * Get bookmarks  of a user
+ * @param {string} userId
+ * @returns {Promise<User>}
+ */
+const getBookmarks = async (userId) => {
+  const user = await checkUserExistsOrNot(userId);
+  const { bookmarks } = user;
+  const contents = [];
+  for (const id in bookmarks) {
+    const content = await Content.findById(id);
+    const generatedContents = [];
+    user.bookmarks[id].forEach((index) => generatedContents.push(content.generatedContents[index]));
+    contents.push({
+      userText: content.prompt,
+      generatedContents,
+    });
+  }
+  return contents;
+};
+
+/**
  * Update user by id
  * @param {ObjectId} userId
  * @param {Object} updateBody
@@ -72,11 +97,16 @@ const updateUserById = async (user, userId, updateBody) => {
   return user;
 };
 
-const updateBookmarks = async (user, { contentId, index }) => {
+const updateBookmarks = async (user, { contentId, index, bookmarkedText }) => {
   const { bookmarks } = user;
+
+  const content = await updateBookmarkedText(contentId, index, bookmarkedText);
+
   if ([contentId] in bookmarks) {
     if (bookmarks[contentId].includes(index)) {
-      throw new ApiError(httpStatus.CONFLICT, `Already bookmarked!`);
+      if (content === bookmarkedText) {
+        throw new ApiError(httpStatus.CONFLICT, `Already bookmarked!`);
+      }
     } else {
       bookmarks[contentId].push(index);
     }
@@ -85,7 +115,7 @@ const updateBookmarks = async (user, { contentId, index }) => {
   }
   await user.markModified('bookmarks');
   await user.save();
-  return user;
+  return getBookmarks(user._id);
 };
 
 /**
@@ -145,6 +175,7 @@ const strategyVerify = (authType) => async (accessToken, refreshToken, profile, 
       const newUser = await User.create({
         userId: profile.id,
         isVerified: true,
+        bookmarks: {},
         authType,
         ...userInfo,
       });
@@ -160,6 +191,7 @@ module.exports = {
   queryUsers,
   getUserById,
   getUser,
+  getBookmarks,
   checkUserExistsOrNot,
   updateUserById,
   updateBookmarks,
