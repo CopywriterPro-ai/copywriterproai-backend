@@ -14,6 +14,7 @@ const envVarsSchema = Joi.object()
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
     OPENAI_API_KEY: Joi.string().required().description('OpenAI secret key'),
     STRIPE_SECRET_KEY: Joi.string().required().description('Stripe secret key'),
+    STRIPE_WEBHOOK_SECRET_KEY: Joi.string().description('Stripe webhook secret key'),
     SMTP_HOST: Joi.string().description('server that will send the emails'),
     SMTP_PORT: Joi.number().description('port to connect to the email server'),
     SMTP_USERNAME: Joi.string().description('username for email server'),
@@ -74,6 +75,7 @@ module.exports = {
   },
   stripe: {
     stripeSecretKey: envVars.STRIPE_SECRET_KEY,
+    webHookSecretKey: envVars.STRIPE_WEBHOOK_SECRET_KEY,
   },
   verifyMail: {
     jwtSecret: envVars.MAIL_VERIFY_TOKEN_SECRET,

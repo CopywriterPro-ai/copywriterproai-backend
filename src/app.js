@@ -70,6 +70,15 @@ passport.use('jwt', jwtStrategy);
 passport.use('google', googleStrategy);
 passport.use('facebook', facebookStrategy);
 
+// Use JSON parser for parsing payloads as JSON on all non-webhook routes.
+app.use((req, res, next) => {
+  if (req.originalUrl === '/v1/payments/payment-webhook') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
+
 // Sentry error request in production
 if (config.env === 'production') {
   app.use(Sentry.Handlers.requestHandler());

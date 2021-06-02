@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-use-before-define */
 const OpenAI = require('openai-api');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
@@ -8,21 +10,70 @@ const { openAIAPIKey } = config.openAI;
 const openai = new OpenAI(openAIAPIKey);
 
 const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop) => {
-  const gptResponse = await openai.complete({
-    engine,
-    prompt,
-    maxTokens,
-    temperature,
+  let filterLabel = await filterContents(prompt);
+  if (filterLabel === '2') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Input contains unsafe contents!');
+  }
+
+  let gptResponse;
+  while(1) {
+    gptResponse = await openai.complete({
+      engine,
+      prompt,
+      maxTokens,
+      temperature,
+      topP: 1,
+      presencePenalty,
+      frequencyPenalty,
+      bestOf: 1,
+      n: 1,
+      stream: false,
+      stop,
+    });
+
+    filterLabel = await filterContents(gptResponse.data.choices[0].text);
+    if (filterLabel !== '2') break;
+  }
+  return gptResponse.data;
+};
+
+const filterContents = async (content) => {
+  const response = await openai.complete({
+    engine: 'content-filter-alpha-c4',
+    prompt: `${content}\n--\nLabel:`,
+    max_tokens: 1,
+    temperature: 0,
     topP: 1,
-    presencePenalty,
-    frequencyPenalty,
-    bestOf: 1,
-    n: 1,
-    stream: false,
-    stop,
+    presence_penalty: 0,
+    frequency_penalty: 0,
+    logprobs: 10,
   });
 
-  return gptResponse.data;
+  let outputLabel = response.data.choices[0].text;
+
+  const toxicThreshold = -0.355;
+
+  if (outputLabel === '2') {
+    const logprobs = response.data.choices[0].logprobs.top_logprobs[0];
+
+    if (logprobs['2'] < toxicThreshold) {
+      const logprob0 = logprobs['0'];
+      const logprob1 = logprobs['1'];
+
+      if (logprob0 && logprob1) {
+        outputLabel = logprob0 >= logprob1 ? '0' : '1';
+      } else if (logprob0) {
+        outputLabel = '0';
+      } else if (logprob1) {
+        outputLabel = '1';
+      }
+    }
+  }
+  if (!['0', '1', '2'].includes(outputLabel)) {
+    outputLabel = '2';
+  }
+
+  return outputLabel;
 };
 
 const formatContents = async (userId, documentType, prompt, apiInfos, choices) => {
@@ -71,6 +122,15 @@ const checkContentExistsOrNot = async ({ contentId, index }) => {
   }
 };
 
+const updateBookmarkedText = async (contentId, index, bookmarkedText) => {
+  const content = await Content.findById(contentId);
+  const previousText = content.generatedContents[index];
+  content.generatedContents[index] = bookmarkedText;
+  await content.markModified('generatedContents');
+  await content.save();
+  return previousText;
+};
+
 module.exports = {
   generateContentUsingGPT3,
   formatContents,
@@ -80,4 +140,5 @@ module.exports = {
   formatResponse,
   processListContents,
   checkContentExistsOrNot,
+  updateBookmarkedText,
 };

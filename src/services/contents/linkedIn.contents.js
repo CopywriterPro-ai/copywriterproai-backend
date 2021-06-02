@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const {
   generateContentUsingGPT3,
   removeSpaces,
@@ -7,6 +8,10 @@ const {
 } = require('../content.service');
 
 const linkedinAdTexts = async (userId, { companyName, businessType, benefits }) => {
+  const userPrompt = `Company Name: ${removeSpaces(companyName)}
+Business Type: ${removeSpaces(businessType)}
+Benefits: ${removeSpaces(benefits)}`;
+
   const prompt = `Write LinkedIn ads Description upto 200 characters:
 
 Company Name: Tableau Software
@@ -34,9 +39,7 @@ Business Type: UI/UX, Graphic Design
 Benefits: Experienced UI/UX and Graphic Designer, professional UI/UX and Graphic Designer
 Description: Need Graphic Design Help? In just a few clicks, you can scale your creative output by hiring a Design Pickle Pro designer.\\n✓ Hand-Picked Ego-Free Professional Graphic Designers\\\\n✓ No Overhead Costs\\\\n✓ Always Available - No PTO, Emergencies, or Sick Days\\\\n✓ Same-Day Revisions\\\\n✓ Unlimited Graphic Design Help
 
-Company Name: ${companyName}
-Business Type: ${businessType}
-Benefits: ${benefits}
+${userPrompt}
 Description:`;
 
   const openAPIInformationsList = [];
@@ -55,7 +58,7 @@ Description:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'linkedin-ad-texts',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     linkedinAdTextsList
   );
@@ -66,6 +69,9 @@ Description:`;
 };
 
 const generateLinkedInSummary = async (userId, { profession, skills }) => {
+  const userPrompt = `Profession: ${removeSpaces(profession)}
+Skills: ${removeSpaces(skills)}`;
+
   const professionalHeadline = `${profession} + ', +${skills}`;
   const prompt = `Generate LinkedIn profile summary according to Harvard career experts
 
@@ -93,7 +99,7 @@ Summary:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'linkedin-summary',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     generateLinkedInSummaryList
   );

@@ -39,6 +39,22 @@ router
   .post(auth('generateContent'), validate(contentValidation.productReview), contentController.generate);
 
 router
+  .route('/generate/catchy-headline')
+  .post(auth('generateContent'), validate(contentValidation.catchyHeadline), contentController.generate);
+
+router
+  .route('/generate/attention-grabbing-headline')
+  .post(auth('generateContent'), validate(contentValidation.attentionGrabbingHeadline), contentController.generate);
+
+router
+  .route('/generate/newspaper-headline')
+  .post(auth('generateContent'), validate(contentValidation.newspaperHeadline), contentController.generate);
+
+router
+  .route('/generate/resume-headline')
+  .post(auth('generateContent'), validate(contentValidation.resumeHeadline), contentController.generate);
+
+router
   .route('/generate/campaign-post-idea')
   .post(auth('generateContent'), validate(contentValidation.campaignPostIdeaFromBusinessType), contentController.generate);
 

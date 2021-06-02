@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const {
   generateContentUsingGPT3,
   removeSpaces,
@@ -7,17 +8,23 @@ const {
 } = require('../content.service');
 
 const campaignPostFromBusinessType = async (userId, task, { platformType }) => {
+  const userPrompt = `Platform: ${removeSpaces(platformType)}`;
+
   const prompt = `Write a Facebook Ad Primary text from the given context.
 
-Platform: ${removeSpaces(platformType)}
+${userPrompt}
 List of 5 Primary text:
 -`;
 
   const campaignPostIdea = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, task, prompt, campaignPostIdea);
+  return processListContents(userId, task, userPrompt, campaignPostIdea);
 };
 
 const facebookAdPrimaryTexts = async (userId, { platformType, companyName, benefits }) => {
+  const userPrompt = `Company Name: ${removeSpaces(platformType)}
+Business Type: ${removeSpaces(companyName)}
+Customers Benefit: ${removeSpaces(benefits)}`;
+
   const prompt = `Write long Facebook Ads description using more than 130 word:
 
 Company Name: DoorDash
@@ -40,9 +47,7 @@ Business Type: Marketing Automation Platform
 Customers Benefit: Send emails to targeted audiences, re-engage subscribers, interface is simple and customizable
 Description: So your business is up and running! Now what? Grow with a Marketing CRM that gets smarter as you go. That's what.
 
-Business Name: ${platformType}
-Business Type: ${companyName}
-Customers Benefit: ${benefits}
+${userPrompt}
 Description:`;
 
   const openAPIInformationsList = [];
@@ -61,7 +66,7 @@ Description:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'ads-facebook-primary-texts',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     facebookAdPrimaryTextsList
   );
@@ -72,6 +77,10 @@ Description:`;
 };
 
 const facebookAdHeadlines = async (userId, { productName, businessType, customerBenefit }) => {
+  const userPrompt = `Product Name: ${removeSpaces(productName)}
+Business Type: ${removeSpaces(businessType)}
+Customer Benefit: ${removeSpaces(customerBenefit)}`;
+
   const prompt = `Catchy short Headlines for Facebook ads:
 
 Product Name: Apple Watch Series 6
@@ -99,9 +108,7 @@ Business Type: Leather bag, travel bag
 Customer Benefit: One bag for everything
 Headline: One Bag. Every Lifestyle.
 
-Product Name: ${productName}
-Business Type: ${businessType}
-Customer Benefit: ${customerBenefit}
+${userPrompt}
 Headline:`;
 
   const openAPIInformationsList = [];
@@ -120,7 +127,7 @@ Headline:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'ads-facebook-headlines',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     facebookAdHeadlinesList
   );
@@ -131,6 +138,9 @@ Headline:`;
 };
 
 const facebookAdLinkDescription = async (userId, { platformType, companyName }) => {
+  const userPrompt = `Company Name: ${removeSpaces(companyName)}
+Business Type: ${removeSpaces(platformType)}`;
+
   const prompt = `Write 5 Link Description for the following Platform and Ad headline.
 
 Company Name: DoorDash
@@ -151,27 +161,28 @@ Description: So your business is up and running! Now what? Grow with a Marketing
 
 Now write 5 long catchy Description for following platform
 
-Company Name: ${removeSpaces(companyName)}
-Business Type: ${removeSpaces(platformType)}
+${userPrompt}
 Description:
-List of 5 catchy long Description using 150 words
+List of 5 catchy link Description using 150 words
 `;
 
   const linkDescriptions = await generateContentUsingGPT3('davinci-instruct-beta', 300, prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, 'ads-facebook-link-descriptions', prompt, linkDescriptions);
+  return processListContents(userId, 'ads-facebook-link-descriptions', userPrompt, linkDescriptions);
 };
 
 const facebookAdsFromProductDescription = async (userId, { product }) => {
+  const userPrompt = `Product: ${removeSpaces(product)}`;
+
   const prompt = `Write Facebook Ad for following Product
 
-Product: ${removeSpaces(product)}
+${userPrompt}
 List of 5 Ads:
 -`;
 
   const adsFromProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 150, prompt, 0.8, 0.2, 0.4, [
     '\n\n',
   ]);
-  return processListContents(userId, 'facebook-ads-from-product-description', prompt, adsFromProductDescription);
+  return processListContents(userId, 'facebook-ads-from-product-description', userPrompt, adsFromProductDescription);
 };
 
 module.exports = {

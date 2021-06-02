@@ -27,5 +27,6 @@ router.post(
   validate(paymentValidation.updateSubscription),
   paymentController.updateSubscription
 );
+router.post('/payment-webhook', express.raw({ type: 'application/json' }), paymentController.paymentWebhook);
 
 module.exports = router;

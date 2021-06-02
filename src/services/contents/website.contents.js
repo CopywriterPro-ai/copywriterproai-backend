@@ -1,13 +1,16 @@
+/* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
 const generateWebsiteShortDescription = async (userId, { typeOfIndustry, businessName }) => {
+  const userPrompt = `Industry: ${removeSpaces(typeOfIndustry)}
+BusinessName: ${removeSpaces(businessName)}`;
+
   const prompt = `Generate website short descriptions between 100 to 120 words.
 
 Industry: Software Firm
 BusinessName: Codephilics
 Description: Codephilics build products that let you grow your business more effectively. We help you to leverage your dreams whether you are working on your dream project, have a successful startup, or part of a Fortune 500.
-Industry: ${typeOfIndustry}
-BusinessName: ${businessName}
+${userPrompt}
 Description:`;
 
   const openAPIInformationsList = [];
@@ -26,7 +29,7 @@ Description:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'website-short-description',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     websiteShortDescriptionList
   );
@@ -37,13 +40,15 @@ Description:`;
 };
 
 const generateKeywordsFromText = async (userId, { primaryText }) => {
+  const userPrompt = `Primary Text: ${removeSpaces(primaryText)}`;
+
   const prompt = `Generate Keywords extracted from content for Optimization search engine, SEO meta tag, or youtube tags.
 
-PrimaryText: Codephilics build products that let you grow your business more effectively. We help you to leverage your dreams whether you are working on your dream project, have a successful startup, or part of a Fortune 500.
+Primary Text: Codephilics build products that let you grow your business more effectively. We help you to leverage your dreams whether you are working on your dream project, have a successful startup, or part of a Fortune 500.
 Keywords: Startup, Product, Product Development, Product Management, Product Marketing, Product Strategy, Transformation, Idea,
 Product Launch, Product Management, Product Marketing, Product Strategy, Product Development, Product Launch, Project Management, Consulting,
 Digital Transformation, Innovation, Creativity
-PrimaryText: ${primaryText}
+${userPrompt}
 Keywords:`;
 
   const openAPIInformationsList = [];
@@ -59,7 +64,7 @@ Keywords:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'website-keywords-from-text',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     KeywordsFromTextList
   );
@@ -70,6 +75,11 @@ Keywords:`;
 };
 
 const generateSEOFriendlyBlogIdeas = async (userId, { content, desiredOutcome, industry, targetAudience }) => {
+  const userPrompt = `Content: ${removeSpaces(content)}
+Desired outcome: ${removeSpaces(desiredOutcome)}
+Industry: ${removeSpaces(industry)}
+Target audience: ${removeSpaces(targetAudience)}`;
+
   const prompt = `I want to generate headlines for my blog post
 
 Content: Online marketing
@@ -83,10 +93,7 @@ Desired outcome: More sales
 Industry: Information technology
 Target audience: CEO, CTO
 Headlines: How Successful CEOs Build Software Agencies.\n9 Reasons Why Software Agencies Fail.\nTips for CEOs to Ensure Their Software Agency Survives.
-Content: ${removeSpaces(content)}
-Desired outcome: ${removeSpaces(desiredOutcome)}
-Industry: ${removeSpaces(industry)}
-Target audience: ${removeSpaces(targetAudience)}
+${userPrompt}
 Headlines:`;
 
   const openAPIInformationsList = [];
@@ -102,7 +109,7 @@ Headlines:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'website-seo-friendly-blog-ideas',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     seoFriendlyBlogIdeasList
   );
@@ -113,6 +120,8 @@ Headlines:`;
 };
 
 const generateLandingPageHeadline = async (userId, { businessType }) => {
+  const userPrompt = `Product: ${removeSpaces(businessType)}`;
+
   const prompt = `Generate High-Converting Landing page headline that will makes user to pay for the service
 
 Product: Website hosting platform which fast, secure.
@@ -123,7 +132,7 @@ Headlines: Let's start taking your business to new heights.\nGrow your business 
 Make an impact with your marketing strategy.\nIt's time to take your business to the next level.\nLet's start taking your business to new heights.
 Product: A fintech company that replaces bank
 Headlines: Banking made simple.\nThe new way to bank.\nA fresh banking experience for today's customer.\nAn easy way to get all the benefits of a bank, without any of the hassles.
-Product: ${businessType}
+${userPrompt}
 Headlines:`;
 
   const openAPIInformationsList = [];
@@ -142,7 +151,7 @@ Headlines:`;
   const { _id, generatedContents } = await storeData(
     userId,
     'website-landing-page-headline',
-    prompt,
+    userPrompt,
     openAPIInformationsList,
     landingPageHeadlineList
   );
