@@ -47,8 +47,14 @@ if (config.env !== 'test') {
 // set security HTTP headers
 app.use(helmet());
 
-// parse json request body
-app.use(express.json());
+// Use JSON parser for parsing payloads as JSON on all non-webhook routes.
+app.use((req, res, next) => {
+  if (req.originalUrl === '/v1/payments/payment-webhook') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
@@ -69,15 +75,6 @@ app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
 passport.use('google', googleStrategy);
 passport.use('facebook', facebookStrategy);
-
-// Use JSON parser for parsing payloads as JSON on all non-webhook routes.
-app.use((req, res, next) => {
-  if (req.originalUrl === '/v1/payments/payment-webhook') {
-    next();
-  } else {
-    express.json()(req, res, next);
-  }
-});
 
 // Sentry error request in production
 if (config.env === 'production') {
