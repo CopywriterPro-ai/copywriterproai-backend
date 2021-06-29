@@ -69,7 +69,7 @@ Description:`;
   const roductDescriptionSEOFriendlyList = [];
 
   for (let i = 0; i < 3; i++) {
-    const generatedProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.7, 0.2, 0.3, [
+    const generatedProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 300, prompt, 0.7, 0.2, 0.3, [
       '\n',
       'Description:',
     ]);
