@@ -105,7 +105,10 @@ const updateBookmarks = async (user, { contentId, index, bookmarkedText }) => {
   if ([contentId] in bookmarks) {
     if (bookmarks[contentId].includes(index)) {
       if (content === bookmarkedText) {
-        throw new ApiError(httpStatus.CONFLICT, `Already bookmarked!`);
+        bookmarks[contentId] = bookmarks[contentId].filter((ind) => ind !== index);
+        if (!bookmarks[contentId].length) {
+          delete bookmarks[contentId];
+        }
       }
     } else {
       bookmarks[contentId].push(index);
@@ -113,6 +116,7 @@ const updateBookmarks = async (user, { contentId, index, bookmarkedText }) => {
   } else {
     bookmarks[contentId] = [index];
   }
+ 
   await user.markModified('bookmarks');
   await user.save();
   return getBookmarks(user._id);
