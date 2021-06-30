@@ -68,6 +68,11 @@ const userSchema = new Schema(
       enum: ['Freemium', 'Premium - Monthly', 'Premium - Annual'],
       default: 'Freemium',
     },
+    favouriteTools: {
+      type: Array,
+      required: true,
+      default: [],
+    },
     bookmarks: {
       type: mongoose.Schema.Types.Mixed,
     },

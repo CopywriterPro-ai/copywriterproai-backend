@@ -122,6 +122,16 @@ const updateBookmarks = async (user, { contentId, index, bookmarkedText }) => {
   return getBookmarks(user._id);
 };
 
+const updateFavouriteTools = async (user, tool) => {
+  if (user.favouriteTools.includes(tool)) {
+    user.favouriteTools = user.favouriteTools.filter((t) => t !== tool);
+  } else {
+    user.favouriteTools.push(tool);
+  }
+  await user.save();
+  return user.favouriteTools;
+};
+
 /**
  * Delete user by id
  * @param {ObjectId} userId
@@ -199,6 +209,7 @@ module.exports = {
   checkUserExistsOrNot,
   updateUserById,
   updateBookmarks,
+  updateFavouriteTools,
   deleteUserById,
   deleteunVerifiedUserByEmail,
   registeredEmail,

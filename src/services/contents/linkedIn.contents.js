@@ -46,7 +46,7 @@ Description:`;
   const linkedinAdTextsList = [];
 
   for (let i = 0; i < 5; i++) {
-    const adTexts = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.3, [
+    const adTexts = await generateContentUsingGPT3('davinci', 100, prompt, 0.8, 0.2, 0.3, [
       '\n',
       'Description:',
     ]);

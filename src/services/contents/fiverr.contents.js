@@ -1,8 +1,8 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const generateFiverrCategoriesHeadline = async (userId, { categorieName }) => {
-  const userPrompt = `Categories Name: ${removeSpaces(categorieName)}`;
+const generateFiverrCategoriesHeadline = async (userId, { categoriesName }) => {
+  const userPrompt = `Categories Name: ${removeSpaces(categoriesName)}`;
 
   const prompt = `Writer Catchy Headline for Fiverr based on example
 

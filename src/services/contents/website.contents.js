@@ -1,8 +1,8 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const generateWebsiteShortDescription = async (userId, { typeOfIndustry, businessName }) => {
-  const userPrompt = `Industry: ${removeSpaces(typeOfIndustry)}
+const generateWebsiteShortDescription = async (userId, { industryType, businessName }) => {
+  const userPrompt = `Industry: ${removeSpaces(industryType)}
 BusinessName: ${removeSpaces(businessName)}`;
 
   const prompt = `Generate website short descriptions between 100 to 120 words.

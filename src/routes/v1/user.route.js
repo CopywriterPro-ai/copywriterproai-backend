@@ -13,7 +13,7 @@ router
 
 router
   .route('/:userId')
-  .get(auth('getUser'), validate(userValidation.getUser), userController.getUser)
+  .get(auth('getUserInfo'), validate(userValidation.getUser), userController.getUser)
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
@@ -23,7 +23,12 @@ router
 
 router
   .route('/:userId/bookmarks')
-  .get(auth('getBookmarks'), validate(userValidation.getUserBookmarks), userController.getUserBookmarks)
+  .get(auth('getUserInfo'), validate(userValidation.getUserBookmarks), userController.getUserBookmarks)
   .patch(auth('updateUserInfo'), validate(userValidation.updateUserBookmarks), userController.updateUserBookmarks);
+
+router
+  .route('/:userId/favourite-tools')
+  .get(auth('getUserInfo'), validate(userValidation.getUserFavouriteTools), userController.getUserFavouriteTools)
+  .patch(auth('updateUserInfo'), validate(userValidation.updateUserFavouriteTools), userController.updateUserFavouriteTools);
 
 module.exports = router;

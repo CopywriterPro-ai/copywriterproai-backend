@@ -43,6 +43,17 @@ const updateUserBookmarks = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(updatedUserInfo);
 });
 
+const getUserFavouriteTools = catchAsync(async (req, res) => {
+  const user = await userService.checkUserExistsOrNot(req.params.userId);
+  res.send(user.favouriteTools);
+});
+
+const updateUserFavouriteTools = catchAsync(async (req, res) => {
+  const user = await userService.checkUserExistsOrNot(req.params.userId);
+  const updatedUserInfo = await userService.updateFavouriteTools(user, req.body.tool);
+  res.status(httpStatus.OK).send(updatedUserInfo);
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -51,4 +62,6 @@ module.exports = {
   deleteUser,
   updateUser,
   updateUserBookmarks,
+  getUserFavouriteTools,
+  updateUserFavouriteTools,
 };

@@ -191,7 +191,7 @@ const imageIdeasFromAdText = {
   body: Joi.object().keys({
     task: Joi.valid('image-idea-from-ad-text').required(),
     product: Joi.string().required(),
-    adsText: Joi.string().required(),
+    adText: Joi.string().required(),
   }),
 };
 

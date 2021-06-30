@@ -20,9 +20,9 @@ List of 5 Primary text:
   return processListContents(userId, task, userPrompt, campaignPostIdea);
 };
 
-const facebookAdPrimaryTexts = async (userId, { platformType, companyName, benefits }) => {
-  const userPrompt = `Company Name: ${removeSpaces(platformType)}
-Business Type: ${removeSpaces(companyName)}
+const facebookAdPrimaryTexts = async (userId, { businessType, companyName, benefits }) => {
+  const userPrompt = `Company Name: ${removeSpaces(companyName)}
+Business Type: ${removeSpaces(businessType)}
 Customers Benefit: ${removeSpaces(benefits)}`;
 
   const prompt = `Write long Facebook Ads description using more than 130 word:
@@ -153,7 +153,7 @@ Description: Need Graphic Design Help? In just a few clicks, you can scale your 
 
 Company Name: Bolt
 Business Type: Ride-hailing
-Ad Creative Description: Get £15 off your first trip with the Bolt app. Enter promo code HEYLONDON in your app and enjoy the discount.
+Description: Get £15 off your first trip with the Bolt app. Enter promo code HEYLONDON in your app and enjoy the discount.
 
 Company Name: Mailchimp
 Business Type: Marketing Automation Platform
