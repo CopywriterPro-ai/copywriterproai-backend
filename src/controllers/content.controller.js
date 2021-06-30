@@ -5,7 +5,7 @@ const { userService } = require('../services');
 
 const generate = catchAsync(async (req, res) => {
   if (req.user.credits === 0) {
-    res.status(httpStatus.OK).send({ message: 'Upgrade our friendship today!' });
+    res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
   } else {
     const { task } = req.body;
     let generatedContent;
@@ -85,7 +85,7 @@ const generate = catchAsync(async (req, res) => {
     }
 
     userService.updateUserById(req.user, req.user._id, { credits: req.user.credits - 1 });
-    res.status(httpStatus.PAYMENT_REQUIRED).send(generatedContent);
+    res.status(httpStatus.OK).send(generatedContent);
   }
 });
 

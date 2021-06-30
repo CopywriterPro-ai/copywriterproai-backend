@@ -115,7 +115,7 @@ const blogIntro = async (userId, { title, about }) => {
   const userPrompt = `Title: ${removeSpaces(title)}
 About: ${removeSpaces(about)}`;
 
-  const prompt = `Write a Blog Intro for following that can hook the readers.
+  const prompt = `Write a long Blog Intro for following that can hook the readers.
 ${userPrompt}
 Intro:`;
 
