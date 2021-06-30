@@ -1,6 +1,16 @@
 const Joi = require('joi');
 const { password, objectId } = require('./custom.validation');
 
+const path = require('path')
+const fs = require('fs');
+let data;
+try {
+  data = fs.readFileSync(path.join(__dirname, '/services.txt'), 'utf8')
+  data = data.split('\r\n');
+} catch (err) {
+  console.error(err);
+}
+
 const createUser = {
   body: Joi.object().keys({
     email: Joi.string().email().required(),
@@ -26,6 +36,12 @@ const getUser = {
 };
 
 const getUserBookmarks = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
+};
+
+const getUserFavouriteTools = {
   params: Joi.object().keys({
     userId: Joi.required().custom(objectId),
   }),
@@ -66,12 +82,23 @@ const updateUserBookmarks = {
   }),
 };
 
+const updateUserFavouriteTools = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    tool: Joi.string().valid(...data),
+  }),
+};
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
   getUserBookmarks,
+  getUserFavouriteTools,
   updateUser,
   updateUserInfo,
   updateUserBookmarks,
+  updateUserFavouriteTools,
 };

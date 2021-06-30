@@ -1,8 +1,11 @@
 const nodemailer = require('nodemailer');
+const fs = require('fs');
 const { email, env, frontendUrl } = require('../config/config');
 const logger = require('../config/logger');
 const tokenService = require('./token.service');
 const { mailTypes } = require('../config/mailtype');
+
+const supportMail = 'sbcmuhiminul@gmail.com';
 
 const transport = nodemailer.createTransport(email.smtp);
 /* istanbul ignore next */
@@ -22,6 +25,22 @@ if (env !== 'test') {
  */
 const sendEmail = async (to, subject, html) => {
   const msg = { from: email.from, to, subject, html };
+  await transport.sendMail(msg);
+};
+
+const sendEmailWithAttachment = async (to, subject, html, filename, image) => {
+  const msg = {
+    from: email.from,
+    to,
+    subject,
+    html,
+    attachments: [
+      {
+        filename,
+        content: image.buffer,
+      },
+    ],
+  };
   await transport.sendMail(msg);
 };
 
@@ -93,9 +112,32 @@ const sendVerifyAccountEmailUsingToken = async ({ id, email: to, name }) => {
   await sendEmail(to, subject, html);
 };
 
+const featureRequest = async (subject, { email, feature }) => {
+  const html = `<div> <b>From: </b>${email} </div><br>
+  <div><b>${feature}</b></div>`;
+
+  await sendEmail(supportMail, subject, html);
+};
+
+const bugReport = async (subject, { email, report }, image) => {
+  const html = `<div> <b>From: </b>${email} </div><br>
+  <div><b>${report}</b></div>`;
+  await sendEmailWithAttachment(supportMail, subject, html, image.originalname, image);
+};
+
+const userMessage = async (subject, { email, message }) => {
+  const html = `<div> <b>From: </b>${email} </div><br>
+  <div><b>${message}</b></div>`;
+
+  await sendEmail(supportMail, subject, html);
+};
+
 module.exports = {
   transport,
   sendEmail,
   sendResetPasswordEmailUsingToken,
   sendVerifyAccountEmailUsingToken,
+  featureRequest,
+  bugReport,
+  userMessage,
 };

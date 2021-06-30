@@ -10,10 +10,10 @@ const { openAIAPIKey } = config.openAI;
 const openai = new OpenAI(openAIAPIKey);
 
 const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop) => {
-  let filterLabel = await filterContents(prompt);
-  if (filterLabel === '2') {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Input contains unsafe contents!');
-  }
+  // let filterLabel = await filterContents(prompt);
+  // if (filterLabel === '2') {
+  //   throw new ApiError(httpStatus.BAD_REQUEST, 'Input contains unsafe contents!');
+  // }
 
   let gptResponse;
   while(1) {
@@ -30,9 +30,8 @@ const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, 
       stream: false,
       stop,
     });
-
-    filterLabel = await filterContents(gptResponse.data.choices[0].text);
-    if (filterLabel !== '2') break;
+    // filterLabel = await filterContents(gptResponse.data.choices[0].text);
+    // if (filterLabel !== '2') break;
   }
   return gptResponse.data;
 };
