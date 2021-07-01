@@ -66,20 +66,33 @@ const getUser = async (identity) => {
  * @param {string} userId
  * @returns {Promise<User>}
  */
-const getBookmarks = async (userId) => {
+const getBookmarks = async (userId, { page, limit }) => {
+  const start = (page - 1) * limit;
+  const end = start + limit;
+
   const user = await checkUserExistsOrNot(userId);
   const { bookmarks } = user;
+  const contentIds = Object.keys(bookmarks).slice(start, end);
+  const totalPages = Math.ceil(Object.keys(bookmarks).length/limit);
   const contents = [];
-  for (const id in bookmarks) {
+
+  for (const id of contentIds) {
     const content = await Content.findById(id);
     const generatedContents = [];
     user.bookmarks[id].forEach((index) => generatedContents.push(content.generatedContents[index]));
     contents.push({
-      userText: content.prompt,
-      generatedContents,
+      tool: content.documentType,
+      input: content.prompt,
+      output: generatedContents,
     });
   }
-  return contents;
+
+  const userBookmarks = {
+    contents,
+    totalPages,
+  };
+
+  return userBookmarks;
 };
 
 /**

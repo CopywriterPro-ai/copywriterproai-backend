@@ -21,7 +21,8 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const getUserBookmarks = catchAsync(async (req, res) => {
-  const bookmarks = await userService.getBookmarks(req.params.userId);
+  const options = pick(req.query, ['page', 'limit']);
+  const bookmarks = await userService.getBookmarks(req.params.userId, req.query);
   res.send(bookmarks);
 });
 

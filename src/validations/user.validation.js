@@ -39,6 +39,10 @@ const getUserBookmarks = {
   params: Joi.object().keys({
     userId: Joi.required().custom(objectId),
   }),
+  query: Joi.object().keys({
+    page: Joi.number().integer(),
+    limit: Joi.number().integer(),
+  }),
 };
 
 const getUserFavouriteTools = {
