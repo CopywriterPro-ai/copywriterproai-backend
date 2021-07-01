@@ -15,24 +15,40 @@ const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, 
   //   throw new ApiError(httpStatus.BAD_REQUEST, 'Input contains unsafe contents!');
   // }
 
-  let gptResponse;
-  while(1) {
-    gptResponse = await openai.complete({
-      engine,
-      prompt,
-      maxTokens,
-      temperature,
-      topP: 1,
-      presencePenalty,
-      frequencyPenalty,
-      bestOf: 1,
-      n: 1,
-      stream: false,
-      stop,
-    });
-    // filterLabel = await filterContents(gptResponse.data.choices[0].text);
-    // if (filterLabel !== '2') break;
-  }
+  // let gptResponse;
+  // while(1) {
+  //   gptResponse = await openai.complete({
+  //     engine,
+  //     prompt,
+  //     maxTokens,
+  //     temperature,
+  //     topP: 1,
+  //     presencePenalty,
+  //     frequencyPenalty,
+  //     bestOf: 1,
+  //     n: 1,
+  //     stream: false,
+  //     stop,
+  //   });
+  // filterLabel = await filterContents(gptResponse.data.choices[0].text);
+  // if (filterLabel !== '2') break;
+  // }
+  // return gptResponse.data;
+
+  const gptResponse = await openai.complete({
+    engine,
+    prompt,
+    maxTokens,
+    temperature,
+    topP: 1,
+    presencePenalty,
+    frequencyPenalty,
+    bestOf: 1,
+    n: 1,
+    stream: false,
+    stop,
+  });
+
   return gptResponse.data;
 };
 
