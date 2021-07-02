@@ -66,7 +66,7 @@ const getUser = async (identity) => {
  * @param {string} userId
  * @returns {Promise<User>}
  */
-const getBookmarks = async (userId, { page, limit }) => {
+const getBookmarks = async (userId, { page = 1, limit = 10 }) => {
   const start = (page - 1) * limit;
   const end = start + limit;
 
@@ -129,10 +129,9 @@ const updateBookmarks = async (user, { contentId, index, bookmarkedText }) => {
   } else {
     bookmarks[contentId] = [index];
   }
- 
+
   await user.markModified('bookmarks');
   await user.save();
-  return getBookmarks(user._id);
 };
 
 const updateFavouriteTools = async (user, tool) => {

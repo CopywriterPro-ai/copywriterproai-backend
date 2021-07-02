@@ -40,8 +40,8 @@ const updateUser = catchAsync(async (req, res) => {
 const updateUserBookmarks = catchAsync(async (req, res) => {
   const user = await userService.checkUserExistsOrNot(req.params.userId);
   await contentService.checkContentExistsOrNot(req.body);
-  const updatedUserInfo = await userService.updateBookmarks(user, req.body);
-  res.status(httpStatus.OK).send(updatedUserInfo);
+  await userService.updateBookmarks(user, req.body);
+  res.status(httpStatus.OK).send({ message: 'Bookmarks Updated!' });
 });
 
 const getUserFavouriteTools = catchAsync(async (req, res) => {
