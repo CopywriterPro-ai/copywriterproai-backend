@@ -298,6 +298,15 @@ const CVSummary = {
 //   }),
 // };
 
+const amazonProductListings = {
+  body: Joi.object().keys({
+    task: Joi.valid('amazon-product-listings').required(),
+    productName: Joi.string().required(),
+    productCategories: Joi.string().required(),
+    productFeatures: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   paraphrase,
   blogOutline,
@@ -335,4 +344,5 @@ module.exports = {
   catchyBusinessTaglines,
   fiverrCategoriesHeadline,
   CVSummary,
+  amazonProductListings,
 };

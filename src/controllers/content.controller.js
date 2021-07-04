@@ -82,6 +82,8 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.fiverr.generateFiverrCategoriesHeadline(req.user._id, req.body);
     } else if (task === 'cv-summary') {
       generatedContent = await generator.cv.generateCVSummary(req.user._id, req.body);
+    } else if (task === 'amazon-product-listings') {
+      generatedContent = await generator.amazon.generateAmazonProductListings(req.user._id, req.body);
     }
 
     userService.updateUserById(req.user, req.user._id, { credits: req.user.credits - 1 });

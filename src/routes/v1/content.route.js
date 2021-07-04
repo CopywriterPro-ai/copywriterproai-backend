@@ -150,4 +150,8 @@ router
   .route('/generate/cv-summary')
   .post(auth('generateContent'), validate(contentValidation.CVSummary), contentController.generate);
 
+router
+  .route('/generate/amazon-product-listings')
+  .post(auth('generateContent'), validate(contentValidation.amazonProductListings), contentController.generate);
+
 module.exports = router;
