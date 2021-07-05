@@ -73,7 +73,7 @@ const getBookmarks = async (userId, { page = 1, limit = 10 }) => {
   const user = await checkUserExistsOrNot(userId);
   const { bookmarks } = user;
   const contentIds = Object.keys(bookmarks).slice(start, end);
-  const totalPages = Math.ceil(Object.keys(bookmarks).length/limit);
+  const totalPages = Math.ceil(Object.keys(bookmarks).length / limit);
   const contents = [];
 
   for (const id of contentIds) {
