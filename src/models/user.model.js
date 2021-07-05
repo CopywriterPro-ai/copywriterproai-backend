@@ -75,10 +75,12 @@ const userSchema = new Schema(
     },
     bookmarks: {
       type: mongoose.Schema.Types.Mixed,
+      default: {},
     },
   },
   {
     timestamps: true,
+    minimize: false,
   }
 );
 
