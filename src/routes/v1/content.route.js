@@ -154,4 +154,16 @@ router
   .route('/generate/amazon-product-listings')
   .post(auth('generateContent'), validate(contentValidation.amazonProductListings), contentController.generate);
 
+router
+  .route('/generate/problem-agitate-solution')
+  .post(auth('generateContent'), validate(contentValidation.problemAgitateSolution), contentController.generate);
+
+router
+  .route('/generate/problem-agitate-solution-outcome')
+  .post(auth('generateContent'), validate(contentValidation.problemAgitateSolutionOutcome), contentController.generate);
+
+router
+  .route('/generate/attention-interest-desire-attraction')
+  .post(auth('generateContent'), validate(contentValidation.attentionInterestDesireAttraction), contentController.generate);
+
 module.exports = router;

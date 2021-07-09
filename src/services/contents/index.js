@@ -13,3 +13,4 @@ module.exports.business = require('./business.contents');
 module.exports.fiverr = require('./fiverr.contents');
 module.exports.cv = require('./cv.contens');
 module.exports.amazon = require('./amazon.contents');
+module.exports.sales = require('./sales.contents');

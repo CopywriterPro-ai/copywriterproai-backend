@@ -84,6 +84,12 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.cv.generateCVSummary(req.user._id, req.body);
     } else if (task === 'amazon-product-listings') {
       generatedContent = await generator.amazon.generateAmazonProductListings(req.user._id, req.body);
+    } else if (task === 'problem-agitate-solution') {
+      generatedContent = await generator.sales.problemAgitateSolution(req.user._id, req.body);
+    } else if (task === 'problem-agitate-solution-outcome') {
+      generatedContent = await generator.sales.problemAgitateSolutionOutcome(req.user._id, req.body);
+    } else if (task === 'attention-interest-desire-attraction') {
+      generatedContent = await generator.sales.attentionInterestDesireAttraction(req.user._id, req.body);
     }
 
     userService.updateUserById(req.user, req.user._id, { credits: req.user.credits - 1 });

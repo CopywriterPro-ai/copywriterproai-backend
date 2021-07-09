@@ -288,6 +288,30 @@ const CVSummary = {
   }),
 };
 
+const problemAgitateSolution = {
+  body: Joi.object().keys({
+    task: Joi.valid('problem-agitate-solution').required(),
+    productName: Joi.string().required(),
+    productDescription: Joi.string().required(),
+  }),
+};
+
+const problemAgitateSolutionOutcome = {
+  body: Joi.object().keys({
+    task: Joi.valid('problem-agitate-solution-outcome').required(),
+    productName: Joi.string().required(),
+    productDescription: Joi.string().required(),
+  }),
+};
+
+const attentionInterestDesireAttraction = {
+  body: Joi.object().keys({
+    task: Joi.valid('attention-interest-desire-attraction').required(),
+    productName: Joi.string().required(),
+    productDescription: Joi.string().required(),
+  }),
+};
+
 // const generate = {
 //   body: Joi.object().keys({
 //     originalContent: Joi.string().required(),
@@ -345,4 +369,7 @@ module.exports = {
   fiverrCategoriesHeadline,
   CVSummary,
   amazonProductListings,
+  problemAgitateSolution,
+  problemAgitateSolutionOutcome,
+  attentionInterestDesireAttraction,
 };
