@@ -1,11 +1,10 @@
 const nodemailer = require('nodemailer');
-const fs = require('fs');
 const { email, env, frontendUrl } = require('../config/config');
 const logger = require('../config/logger');
 const tokenService = require('./token.service');
 const { mailTypes } = require('../config/mailtype');
 
-const supportMail = 'support@copywriterpro.ai';
+const supportMail = 'sabuj@copywriterpro.ai';
 
 const transport = nodemailer.createTransport(email.smtp);
 /* istanbul ignore next */
@@ -54,21 +53,23 @@ const sendResetPasswordEmailUsingToken = async (to) => {
   const subject = 'Reset password';
   const token = tokenService.generateMailingToken({ type: mailTypes.ACCOUNT_VERIFY, email: to });
 
-  const html = `<div> Dear user, <div><br><br><br>
+  const html = `<div> Dear user, <div><br>
   <div>
   Trouble signing in?<br><br>
-  Resetting your password is easy.<br>
+  Resetting your password is easy.<br><br>
   Just press the button below and follow the instructions. We'll have you up and running in no time.<br><br>
   <a href=${frontendUrl.web}/reset-password?token=${token}><button style="
   border: none;
-  background: #607d8b;
+  background: #0A7EFA;
+  cursor: pointer;
+  padding: 8px;
   color: white;
   min-width: 100px;
   border-radius: 5px;
-">Reset Password</button></a><br><br><br>
+">Reset Password</button></a><br><br>
   If you did not make this request then please ignore this email.</div>
   </div><br><br>
-  <div>Thank you, <br>The CopywriterProAI Team</br></div>`;
+  <div>Thank you, <br>CopywriterProAI Team</br></div>`;
 
   await sendEmail(to, subject, html);
 };
@@ -93,21 +94,22 @@ const sendVerifyAccountEmailUsingToken = async ({ id, email: to, name }) => {
   const subject = 'Verify CopywriterProAI Account Email';
   const token = tokenService.generateMailingToken({ sub: id, type: mailTypes.ACCOUNT_VERIFY, email: to });
 
-  const html = `<div>Hi ${name.firstName}, <div> <br><br><br>
+  const html = `<div>Hi ${name.firstName}, <div> <br>
   <div>
-  Thanks for getting started with our CopywriterPro.ai<br><br>
-  We need a little more information to complete your registration, including a confirmation of your email address.<br>
-  Click below to confirm your email address:<br><br>
+  Thank you so much for being our CopywriterPro.ai early adopters. We can't thank you enough for supporting us on this exciting journey. <br><br>
+  We need a little more information to complete your registration, including a confirmation of your email address. Click below to confirm your email address:<br><br>
   <a href=${frontendUrl.web}/account-verification?token=${token}><button style="
   border: none;
-  background: #607d8b;
+  background: #0A7EFA;
+  cursor: pointer;
+  padding: 8px;
   color: white;
   min-width: 100px;
   border-radius: 5px;
-">Verify Account</button></a><br><br><br>
-  This link will be valid for 15 minutes.<br><br><br>
-  If you have problems, please paste the above URL into your web browser.<br><br><br>
-  <div>Thank you, <br>The CopywriterProAI Team</br></div>`;
+">Verify Account</button></a><br><br>
+  This link will be valid for 15 minutes.<br><br>
+  If you have problems, please paste the above URL into your web browser.<br><br>
+  <div>Thank you, <br>CopywriterProAI Team</br></div>`;
 
   await sendEmail(to, subject, html);
 };
