@@ -331,6 +331,14 @@ const amazonProductListings = {
   }),
 };
 
+const recipe = {
+  body: Joi.object().keys({
+    task: Joi.valid('generate-recipe').required(),
+    recipeName: Joi.string().required(),
+    ingredients: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   paraphrase,
   blogOutline,
@@ -372,4 +380,5 @@ module.exports = {
   problemAgitateSolution,
   problemAgitateSolutionOutcome,
   attentionInterestDesireAttraction,
+  recipe,
 };

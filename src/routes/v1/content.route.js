@@ -166,4 +166,8 @@ router
   .route('/generate/attention-interest-desire-attraction')
   .post(auth('generateContent'), validate(contentValidation.attentionInterestDesireAttraction), contentController.generate);
 
+router
+  .route('/generate/generate-recipe')
+  .post(auth('generateContent'), validate(contentValidation.recipe), contentController.generate);
+
 module.exports = router;

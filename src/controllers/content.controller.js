@@ -90,6 +90,8 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.sales.problemAgitateSolutionOutcome(req.user._id, req.body);
     } else if (task === 'attention-interest-desire-attraction') {
       generatedContent = await generator.sales.attentionInterestDesireAttraction(req.user._id, req.body);
+    } else if (task === 'generate-recipe') {
+      generatedContent = await generator.recipe.generateRecipe(req.user._id, req.body);
     }
 
     userService.updateUserById(req.user, req.user._id, { credits: req.user.credits - 1 });
