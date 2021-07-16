@@ -99,7 +99,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   return userResponse;
 };
 
-const attentionInterestDesireAttraction = async (userId, { productName, productDescription }) => {
+const attentionInterestDesireAction = async (userId, { productName, productDescription }) => {
   const cleanedProductName = removeSpaces(productName);
   const cleanedProductDescription = removeSpaces(productDescription);
 
@@ -120,7 +120,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
 # Attention:`;
 
   const openAPIInformationsList = [];
-  const attentionInterestDesireAttractionList = [];
+  const attentionInterestDesireActionList = [];
 
   for (let i = 0; i < 3; i++) {
     const aidaSalesCopy = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 1, 0, 0, [
@@ -130,17 +130,17 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
     const { id, object, created, model, choices } = aidaSalesCopy;
 
     openAPIInformationsList.push({ id, object, created, model });
-    attentionInterestDesireAttractionList.push(`# Attention: ${choices[0].text.trim()}`);
+    attentionInterestDesireActionList.push(`# Attention: ${choices[0].text.trim()}`);
   }
   const { _id, generatedContents } = await storeData(
     userId,
-    'attention-interest-desire-attraction',
+    'attention-interest-desire-action',
     userPrompt,
     openAPIInformationsList,
-    attentionInterestDesireAttractionList
+    attentionInterestDesireActionList
   );
 
-  const userResponse = formatResponse(_id, 'attention-interest-desire-attraction', generatedContents);
+  const userResponse = formatResponse(_id, 'attention-interest-desire-action', generatedContents);
 
   return userResponse;
 };
@@ -148,5 +148,5 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
 module.exports = {
   problemAgitateSolution,
   problemAgitateSolutionOutcome,
-  attentionInterestDesireAttraction,
+  attentionInterestDesireAction,
 };
