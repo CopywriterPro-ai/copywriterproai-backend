@@ -127,7 +127,7 @@ const formatResponse = (id, task, generatedTexts) => {
 const processListContents = async (userId, task, prompt, { id, object, created, model, choices }) => {
   const contents = cleanAllTexts(choices[0].text.split('\n'));
   const { _id, generatedContents } = await storeData(userId, task, prompt, { id, object, created, model }, contents);
-  return formatResponse(_id, task, generatedContents);
+  return formatResponse(_id, task, generatedContents.slice(0, 5));
 };
 
 const checkContentExistsOrNot = async ({ contentId, index }) => {

@@ -103,6 +103,18 @@ router
   .post(auth('generateContent'), validate(contentValidation.imageIdeasFromAdText), contentController.generate);
 
 router
+  .route('/generate/email-marketing-campaign-subject')
+  .post(auth('generateContent'), validate(contentValidation.emailMarketingCampaignSubject), contentController.generate);
+
+router
+  .route('/generate/email-marketing-campaign-body')
+  .post(auth('generateContent'), validate(contentValidation.emailMarketingCampaignBody), contentController.generate);
+
+router
+  .route('/generate/email-body')
+  .post(auth('generateContent'), validate(contentValidation.emailBody), contentController.generate);
+
+router
   .route('/generate/email-subject-from-body')
   .post(auth('generateContent'), validate(contentValidation.generatedSubjectFromBody), contentController.generate);
 
@@ -163,8 +175,8 @@ router
   .post(auth('generateContent'), validate(contentValidation.problemAgitateSolutionOutcome), contentController.generate);
 
 router
-  .route('/generate/attention-interest-desire-attraction')
-  .post(auth('generateContent'), validate(contentValidation.attentionInterestDesireAttraction), contentController.generate);
+  .route('/generate/attention-interest-desire-action')
+  .post(auth('generateContent'), validate(contentValidation.attentionInterestDesireAction), contentController.generate);
 
 router
   .route('/generate/generate-recipe')

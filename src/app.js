@@ -4,6 +4,7 @@ const xss = require('xss-clean');
 const mongoSanitize = require('express-mongo-sanitize');
 const compression = require('compression');
 const cors = require('cors');
+const timeout = require('connect-timeout');
 const passport = require('passport');
 const httpStatus = require('http-status');
 const Sentry = require('@sentry/node');
@@ -55,6 +56,9 @@ app.use((req, res, next) => {
     express.json()(req, res, next);
   }
 });
+
+// request timeout
+app.use(timeout('60s'))
 
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));

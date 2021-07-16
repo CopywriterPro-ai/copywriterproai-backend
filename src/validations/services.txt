@@ -22,6 +22,9 @@ ads-google-descriptions
 youtube-video-titles-from-description
 youtube-video-ideas
 image-idea-from-ad-text
+email-marketing-campaign-subject
+email-marketing-campaign-body
+email-body
 email-subject-from-body
 website-short-description
 website-keywords-from-text
@@ -37,4 +40,5 @@ cv-summary
 amazon-product-listings
 problem-agitate-solution
 problem-agitate-solution-outcome
-attention-interest-desire-attraction
+attention-interest-desire-action
+generate-recipe

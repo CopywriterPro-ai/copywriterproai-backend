@@ -195,6 +195,47 @@ const imageIdeasFromAdText = {
   }),
 };
 
+const emailMarketingCampaignSubject = {
+  body: Joi.object().keys({
+    task: Joi.valid('email-marketing-campaign-subject').required(),
+    productDescription: Joi.string().required(),
+  }),
+};
+
+const emailMarketingCampaignBody = {
+  body: Joi.object().keys({
+    task: Joi.valid('email-marketing-campaign-body').required(),
+    productDescription: Joi.string().required(),
+    about: Joi.string().required(),
+    subjectLine: Joi.string().required(),
+  }),
+};
+
+const emailBody = {
+  body: Joi.object().keys({
+    task: Joi.valid('email-body').required(),
+    about: Joi.string().required(),
+    to: Joi.string().required(),
+    tone: Joi.string().valid(
+      'Formal',
+      'Informal',
+      'Friendly',
+      'Neutral',
+      'Confident',
+      'Curious',
+      'Surprised',
+      'Happy',
+      'Angry',
+      'Sad',
+      'Concerned',
+      'Encouraging',
+      'Regretful',
+      'Optimistic',
+      'Excited'
+    ),
+  }),
+};
+
 const generatedSubjectFromBody = {
   body: Joi.object().keys({
     task: Joi.valid('email-subject-from-body').required(),
@@ -304,9 +345,9 @@ const problemAgitateSolutionOutcome = {
   }),
 };
 
-const attentionInterestDesireAttraction = {
+const attentionInterestDesireAction = {
   body: Joi.object().keys({
-    task: Joi.valid('attention-interest-desire-attraction').required(),
+    task: Joi.valid('attention-interest-desire-action').required(),
     productName: Joi.string().required(),
     productDescription: Joi.string().required(),
   }),
@@ -364,6 +405,9 @@ module.exports = {
   youtubeVideoTitleFromDescription,
   youtubeVideoIdeas,
   imageIdeasFromAdText,
+  emailMarketingCampaignSubject,
+  emailMarketingCampaignBody,
+  emailBody,
   generatedSubjectFromBody,
   websiteShortDescription,
   keywordsFromText,
@@ -379,6 +423,6 @@ module.exports = {
   amazonProductListings,
   problemAgitateSolution,
   problemAgitateSolutionOutcome,
-  attentionInterestDesireAttraction,
+  attentionInterestDesireAction,
   recipe,
 };
