@@ -4,8 +4,11 @@ const config = require('../config/config');
 const logger = require('../config/logger');
 const ApiError = require('../utils/ApiError');
 
+const handleCastError = () => new ApiError(httpStatus.NOT_FOUND, 'Not found');
+
 const errorConverter = (err, req, res, next) => {
   let error = err;
+  if (error.name === 'CastError') error = handleCastError();
   if (!(error instanceof ApiError)) {
     const statusCode =
       error.statusCode || error instanceof mongoose.Error ? httpStatus.BAD_REQUEST : httpStatus.INTERNAL_SERVER_ERROR;

@@ -5,6 +5,7 @@ const contentRoute = require('./content.route');
 const paymentRoute = require('./payment.route');
 const interestRoute = require('./interest.route');
 const supportRoute = require('./support.route');
+const toolRoute = require('./tool.route');
 
 const router = express.Router();
 
@@ -32,6 +33,10 @@ const defaultRoutes = [
   {
     path: '/support',
     route: supportRoute,
+  },
+  {
+    path: '/tools',
+    route: toolRoute,
   },
 ];
 
