@@ -1,8 +1,9 @@
 const Joi = require('joi');
+const path = require('path');
+const fs = require('fs');
+
 const { password, objectId } = require('./custom.validation');
 
-const path = require('path')
-const fs = require('fs');
 let data;
 try {
   data = fs.readFileSync(path.join(__dirname, '/services.txt'), 'utf8');

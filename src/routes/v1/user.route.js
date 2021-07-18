@@ -31,4 +31,6 @@ router
   .get(auth('getUserInfo'), validate(userValidation.getUserFavouriteTools), userController.getUserFavouriteTools)
   .patch(auth('updateUserInfo'), validate(userValidation.updateUserFavouriteTools), userController.updateUserFavouriteTools);
 
+router.route('/:userId/copycounter').patch(auth('updateUserInfo'), userController.updateUserCopyCounter);
+
 module.exports = router;
