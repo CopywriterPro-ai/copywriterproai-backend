@@ -58,8 +58,12 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.youtube.youtubeVideoIdeas(req.user._id, req.body);
     } else if (task === 'image-idea-from-ad-text') {
       generatedContent = await generator.commonTask.imageIdeasFromAdText(req.user._id, req.body);
-    } else if (task === 'email-subject-from-body') {
-      generatedContent = await generator.email.emailSubjectsFromBody(req.user._id, req.body);
+    } else if (task === 'email-marketing-campaign-subject') {
+      generatedContent = await generator.email.emailMarketingCampaignSubject(req.user._id, req.body);
+    } else if (task === 'email-marketing-campaign-body') {
+      generatedContent = await generator.email.emailMarketingCampaignBody(req.user._id, req.body);
+    } else if (task === 'email-body') {
+      generatedContent = await generator.email.emailBody(req.user._id, req.body);
     } else if (task === 'website-short-description') {
       generatedContent = await generator.website.generateWebsiteShortDescription(req.user._id, req.body);
     } else if (task === 'website-keywords-from-text') {
@@ -88,8 +92,10 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.sales.problemAgitateSolution(req.user._id, req.body);
     } else if (task === 'problem-agitate-solution-outcome') {
       generatedContent = await generator.sales.problemAgitateSolutionOutcome(req.user._id, req.body);
-    } else if (task === 'attention-interest-desire-attraction') {
-      generatedContent = await generator.sales.attentionInterestDesireAttraction(req.user._id, req.body);
+    } else if (task === 'attention-interest-desire-action') {
+      generatedContent = await generator.sales.attentionInterestDesireAction(req.user._id, req.body);
+    } else if (task === 'generate-recipe') {
+      generatedContent = await generator.recipe.generateRecipe(req.user._id, req.body);
     }
 
     userService.updateUserById(req.user, req.user._id, { credits: req.user.credits - 1 });
