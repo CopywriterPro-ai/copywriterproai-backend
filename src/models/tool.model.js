@@ -14,8 +14,7 @@ const toolCategorySchema = mongoose.Schema({
     type: String,
   },
   icon: {
-    code: String,
-    color: String,
+    src: String,
   },
 });
 

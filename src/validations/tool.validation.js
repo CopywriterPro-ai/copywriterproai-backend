@@ -23,8 +23,7 @@ const toolCategory = {
     key: Joi.string().required(),
     description: Joi.string().optional(),
     icon: Joi.object().keys({
-      code: Joi.string().required(),
-      color: Joi.string().required(),
+      src: Joi.string().required(),
     }),
   }),
 };
