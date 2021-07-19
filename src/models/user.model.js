@@ -77,6 +77,10 @@ const userSchema = new Schema(
       type: mongoose.Schema.Types.Mixed,
       default: {},
     },
+    copycounter: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

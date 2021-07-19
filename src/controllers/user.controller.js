@@ -55,6 +55,12 @@ const updateUserFavouriteTools = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(updatedUserInfo);
 });
 
+const updateUserCopyCounter = catchAsync(async (req, res) => {
+  const user = await userService.checkUserExistsOrNot(req.params.userId);
+  const copyCounter = await userService.updateUserCopyCounter(user);
+  res.status(httpStatus.OK).send(copyCounter);
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -65,4 +71,5 @@ module.exports = {
   updateUserBookmarks,
   getUserFavouriteTools,
   updateUserFavouriteTools,
+  updateUserCopyCounter,
 };

@@ -212,6 +212,11 @@ const strategyVerify = (authType) => async (accessToken, refreshToken, profile, 
   }
 };
 
+const updateUserCopyCounter = async (user) => {
+  const update = await User.findOneAndUpdate({ _id: user._id }, { $inc: { copycounter: 1 } }, { new: true });
+  return update;
+};
+
 module.exports = {
   createUser,
   queryUsers,
@@ -226,4 +231,5 @@ module.exports = {
   deleteunVerifiedUserByEmail,
   registeredEmail,
   strategyVerify,
+  updateUserCopyCounter,
 };
