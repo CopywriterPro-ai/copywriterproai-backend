@@ -1,16 +1,5 @@
 const Joi = require('joi');
-const path = require('path');
-const fs = require('fs');
-
 const { password, objectId } = require('./custom.validation');
-
-let data;
-try {
-  data = fs.readFileSync(path.join(__dirname, '/services.txt'), 'utf8');
-  data = data.split('\n');
-} catch (err) {
-  console.error(err);
-}
 
 const createUser = {
   body: Joi.object().keys({
@@ -92,7 +81,7 @@ const updateUserFavouriteTools = {
     userId: Joi.required().custom(objectId),
   }),
   body: Joi.object().keys({
-    tool: Joi.string().valid(...data),
+    tool: Joi.string().required(),
   }),
 };
 
