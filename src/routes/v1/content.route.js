@@ -11,8 +11,28 @@ router
   .post(auth('generateContent'), validate(contentValidation.paraphrase), contentController.generate);
 
 router
-  .route('/generate/blog-outline')
-  .post(auth('generateContent'), validate(contentValidation.blogOutline), contentController.generate);
+  .route('/generate/expander')
+  .post(auth('generateContent'), validate(contentValidation.expand), contentController.generate);
+
+router
+  .route('/generate/simplifier')
+  .post(auth('generateContent'), validate(contentValidation.simplify), contentController.generate);
+
+router
+  .route('/generate/summarizer')
+  .post(auth('generateContent'), validate(contentValidation.summarize), contentController.generate);
+
+router
+  .route('/generate/notes-from-passage')
+  .post(auth('generateContent'), validate(contentValidation.notesFromPassage), contentController.generate);
+
+router
+  .route('/generate/grammar-fixer')
+  .post(auth('generateContent'), validate(contentValidation.grammarFixer), contentController.generate);
+
+router
+  .route('/generate/change-tone')
+  .post(auth('generateContent'), validate(contentValidation.changeTone), contentController.generate);
 
 router
   .route('/generate/blog-idea')
@@ -23,8 +43,16 @@ router
   .post(auth('generateContent'), validate(contentValidation.blogHeadline), contentController.generate);
 
 router
+  .route('/generate/blog-outline')
+  .post(auth('generateContent'), validate(contentValidation.blogOutline), contentController.generate);
+
+router
   .route('/generate/blog-intro')
   .post(auth('generateContent'), validate(contentValidation.blogIntro), contentController.generate);
+
+router
+  .route('/generate/blog-topic')
+  .post(auth('generateContent'), validate(contentValidation.blogTopic), contentController.generate);
 
 router
   .route('/generate/product-description')
