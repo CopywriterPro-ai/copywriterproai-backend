@@ -4,15 +4,69 @@ const paraphrase = {
   body: Joi.object().keys({
     task: Joi.valid('paraphrasing').required(),
     userText: Joi.string().required(),
-    wordLimit: Joi.number().integer(),
   }),
 };
 
-const blogOutline = {
+const simplify = {
   body: Joi.object().keys({
-    task: Joi.valid('blog-outline').required(),
-    numberOfPoints: Joi.number().required(),
-    blogAbout: Joi.string().required(),
+    task: Joi.valid('simplifier').required(),
+    userText: Joi.string().required(),
+  }),
+};
+
+const summarize = {
+  body: Joi.object().keys({
+    task: Joi.valid('summarizer').required(),
+    userText: Joi.string().required(),
+  }),
+};
+
+const expand = {
+  body: Joi.object().keys({
+    task: Joi.valid('expander').required(),
+    userText: Joi.string().required(),
+  }),
+};
+
+const notesFromPassage = {
+  body: Joi.object().keys({
+    task: Joi.valid('notes-from-passage').required(),
+    userText: Joi.string().required(),
+  }),
+};
+
+const grammarFixer = {
+  body: Joi.object().keys({
+    task: Joi.valid('grammar-fixer').required(),
+    userText: Joi.string().required(),
+  }),
+};
+
+const changeTone = {
+  body: Joi.object().keys({
+    task: Joi.valid('change-tone').required(),
+    userText: Joi.string().required(),
+    tone: Joi.string()
+      .required()
+      .valid(
+        'Formal',
+        'Friendly',
+        'Neutral',
+        'Confident',
+        'Curious',
+        'Surprised',
+        'Happy',
+        'Angry',
+        'Sad',
+        'Concerned',
+        'Encouraging',
+        'Regretful',
+        'Optimistic',
+        'Excited',
+        'Witty',
+        'Persuasive',
+        'Empathetic'
+      ),
   }),
 };
 
@@ -27,8 +81,14 @@ const blogIdea = {
 const blogHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('blog-headline').required(),
-    productName: Joi.string().required(),
-    productDescription: Joi.string().required(),
+    blogAbout: Joi.string().required(),
+  }),
+};
+
+const blogOutline = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-outline').required(),
+    numberOfPoints: Joi.number().required(),
     blogAbout: Joi.string().required(),
   }),
 };
@@ -38,6 +98,14 @@ const blogIntro = {
     task: Joi.valid('blog-intro').required(),
     title: Joi.string().required(),
     about: Joi.string().required(),
+  }),
+};
+
+const blogTopic = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-topic').required(),
+    about: Joi.string().required(),
+    topic: Joi.string().required(),
   }),
 };
 
@@ -216,23 +284,27 @@ const emailBody = {
     task: Joi.valid('email-body').required(),
     about: Joi.string().required(),
     to: Joi.string().required(),
-    tone: Joi.string().valid(
-      'Formal',
-      'Informal',
-      'Friendly',
-      'Neutral',
-      'Confident',
-      'Curious',
-      'Surprised',
-      'Happy',
-      'Angry',
-      'Sad',
-      'Concerned',
-      'Encouraging',
-      'Regretful',
-      'Optimistic',
-      'Excited'
-    ),
+    tone: Joi.string()
+      .required()
+      .valid(
+        'Formal',
+        'Friendly',
+        'Neutral',
+        'Confident',
+        'Curious',
+        'Surprised',
+        'Happy',
+        'Angry',
+        'Sad',
+        'Concerned',
+        'Encouraging',
+        'Regretful',
+        'Optimistic',
+        'Excited',
+        'Witty',
+        'Persuasive',
+        'Empathetic'
+      ),
   }),
 };
 
@@ -382,10 +454,17 @@ const recipe = {
 
 module.exports = {
   paraphrase,
-  blogOutline,
+  expand,
+  simplify,
+  summarize,
+  notesFromPassage,
+  grammarFixer,
+  changeTone,
   blogIdea,
   blogHeadline,
+  blogOutline,
   blogIntro,
+  blogTopic,
   productDescription,
   makeProductDescriptionSEOFriendly,
   productReview,

@@ -1,7 +1,8 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const generateWebsiteShortDescription = async (userId, { industryType, businessName }) => {
+const websiteShortDescription = async (userId, { industryType, businessName }) => {
   const userPrompt = `Industry: ${removeSpaces(industryType)}
 BusinessName: ${removeSpaces(businessName)}`;
 
@@ -39,7 +40,7 @@ Description:`;
   return userResponse;
 };
 
-const generateKeywordsFromText = async (userId, { primaryText }) => {
+const keywordsFromText = async (userId, { primaryText }) => {
   const userPrompt = `Primary Text: ${removeSpaces(primaryText)}`;
 
   const prompt = `Generate Keywords extracted from content for Optimization search engine, SEO meta tag, or youtube tags.
@@ -74,7 +75,7 @@ Keywords:`;
   return userResponse;
 };
 
-const generateSEOFriendlyBlogIdeas = async (userId, { content, desiredOutcome, industry, targetAudience }) => {
+const SEOFriendlyBlogIdeas = async (userId, { content, desiredOutcome, industry, targetAudience }) => {
   const userPrompt = `Content: ${removeSpaces(content)}
 Desired outcome: ${removeSpaces(desiredOutcome)}
 Industry: ${removeSpaces(industry)}
@@ -119,7 +120,7 @@ Headlines:`;
   return userResponse;
 };
 
-const generateLandingPageHeadline = async (userId, { businessType }) => {
+const landingPageHeadline = async (userId, { businessType }) => {
   const userPrompt = `Product: ${removeSpaces(businessType)}`;
 
   const prompt = `Generate High-Converting Landing page headline that will makes user to pay for the service
@@ -162,8 +163,8 @@ Headlines:`;
 };
 
 module.exports = {
-  generateWebsiteShortDescription,
-  generateKeywordsFromText,
-  generateSEOFriendlyBlogIdeas,
-  generateLandingPageHeadline,
+  websiteShortDescription,
+  keywordsFromText,
+  SEOFriendlyBlogIdeas,
+  landingPageHeadline,
 };

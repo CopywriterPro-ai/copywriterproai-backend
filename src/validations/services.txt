@@ -1,8 +1,11 @@
 paraphrasing
-blog-outline
+simplifier
+summarizer
 blog-idea
 blog-headline
+blog-outline
 blog-intro
+blog-topic
 product-description
 seo-friendly-product-description
 product-review
@@ -42,3 +45,5 @@ problem-agitate-solution
 problem-agitate-solution-outcome
 attention-interest-desire-action
 generate-recipe
+notes-from-passage
+grammar-fixer

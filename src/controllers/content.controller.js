@@ -12,14 +12,28 @@ const generate = catchAsync(async (req, res) => {
 
     if (task === 'paraphrasing') {
       generatedContent = await generator.writing.paraphrase(req.user._id, req.body);
-    } else if (task === 'blog-outline') {
-      generatedContent = await generator.writing.blogOutline(req.user._id, req.body);
+    } else if (task === 'expander') {
+      generatedContent = await generator.writing.expander(req.user._id, req.body);
+    } else if (task === 'simplifier') {
+      generatedContent = await generator.writing.simplify(req.user._id, req.body);
+    } else if (task === 'summarizer') {
+      generatedContent = await generator.writing.summarize(req.user._id, req.body);
+    } else if (task === 'notes-from-passage') {
+      generatedContent = await generator.writing.notesFromPassage(req.user._id, req.body);
+    } else if (task === 'grammar-fixer') {
+      generatedContent = await generator.writing.grammarFixer(req.user._id, req.body);
+    } else if (task === 'change-tone') {
+      generatedContent = await generator.writing.changeTone(req.user._id, req.body);
     } else if (task === 'blog-idea') {
-      generatedContent = await generator.writing.blogIdea(req.user._id, req.body);
+      generatedContent = await generator.blog.blogIdea(req.user._id, req.body);
     } else if (task === 'blog-headline') {
-      generatedContent = await generator.writing.blogHeadline(req.user._id, req.body);
+      generatedContent = await generator.blog.blogHeadline(req.user._id, req.body);
+    } else if (task === 'blog-outline') {
+      generatedContent = await generator.blog.blogOutline(req.user._id, req.body);
     } else if (task === 'blog-intro') {
-      generatedContent = await generator.writing.blogIntro(req.user._id, req.body);
+      generatedContent = await generator.blog.blogIntro(req.user._id, req.body);
+    } else if (task === 'blog-topic') {
+      generatedContent = await generator.blog.blogTopic(req.user._id, req.body);
     } else if (task === 'product-description') {
       generatedContent = await generator.product.productDescription(req.user._id, req.body);
     } else if (task === 'seo-friendly-product-description') {
@@ -65,17 +79,17 @@ const generate = catchAsync(async (req, res) => {
     } else if (task === 'email-body') {
       generatedContent = await generator.email.emailBody(req.user._id, req.body);
     } else if (task === 'website-short-description') {
-      generatedContent = await generator.website.generateWebsiteShortDescription(req.user._id, req.body);
+      generatedContent = await generator.website.websiteShortDescription(req.user._id, req.body);
     } else if (task === 'website-keywords-from-text') {
-      generatedContent = await generator.website.generateKeywordsFromText(req.user._id, req.body);
+      generatedContent = await generator.website.keywordsFromText(req.user._id, req.body);
     } else if (task === 'youtube-video-tags-from-description') {
       generatedContent = await generator.youtube.generateVideoTagsFromDescription(req.user._id, req.body);
     } else if (task === 'youtube-channel-tags-from-description') {
       generatedContent = await generator.youtube.generateChannelTagsFromDescription(req.user._id, req.body);
     } else if (task === 'website-seo-friendly-blog-ideas') {
-      generatedContent = await generator.website.generateSEOFriendlyBlogIdeas(req.user._id, req.body);
+      generatedContent = await generator.website.SEOFriendlyBlogIdeas(req.user._id, req.body);
     } else if (task === 'website-landing-page-headline') {
-      generatedContent = await generator.website.generateLandingPageHeadline(req.user._id, req.body);
+      generatedContent = await generator.website.landingPageHeadline(req.user._id, req.body);
     } else if (task === 'product-name') {
       generatedContent = await generator.product.generateProductName(req.user._id, req.body);
     } else if (task === 'linkedin-summary') {

@@ -15,3 +15,4 @@ module.exports.cv = require('./cv.contens');
 module.exports.amazon = require('./amazon.contents');
 module.exports.sales = require('./sales.contents');
 module.exports.recipe = require('./cooking.contents');
+module.exports.blog = require('./blog.contents');

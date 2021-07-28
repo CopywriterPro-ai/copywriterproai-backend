@@ -35,19 +35,26 @@ const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, 
   // }
   // return gptResponse.data;
 
-  const gptResponse = await openai.complete({
-    engine,
-    prompt,
-    maxTokens,
-    temperature,
-    topP: 1,
-    presencePenalty,
-    frequencyPenalty,
-    bestOf: 1,
-    n: 1,
-    stream: false,
-    stop,
-  });
+  let gptResponse;
+
+  while(1) {
+    gptResponse = await openai.complete({
+      engine,
+      prompt,
+      maxTokens,
+      temperature,
+      topP: 1,
+      presencePenalty,
+      frequencyPenalty,
+      bestOf: 1,
+      n: 1,
+      stream: false,
+      stop,
+    });
+    if (gptResponse.data.choices && gptResponse.data.choices[0].text.trim() !== '') {
+      break;
+    }
+  }
 
   return gptResponse.data;
 };
