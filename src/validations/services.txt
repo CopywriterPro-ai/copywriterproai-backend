@@ -1,6 +1,7 @@
 paraphrasing
 simplifier
 summarizer
+expander
 blog-idea
 blog-headline
 blog-outline
@@ -47,3 +48,4 @@ attention-interest-desire-action
 generate-recipe
 notes-from-passage
 grammar-fixer
+change-tone

@@ -6,7 +6,6 @@ const {
   processListContents,
   storeData,
   formatResponse,
-  cleanAllTexts,
 } = require('../content.service');
 
 const blogIdea = async (userId, { productName, productDescription }) => {
@@ -74,9 +73,15 @@ Blog Outline (${numberOfPoints + 1} points):
     ]);
     const { id, object, created, model, choices } = blogOutlines;
     openAPIInformationsList.push({ id, object, created, model });
-    const cleanedBlogOutline = choices[0].text.split('\n').slice(0, numberOfPoints).join('\n');
+    choices[0].text = `1. ${choices[0].text}`;
 
-    blogOutlinesList.push(`1. ${cleanedBlogOutline}`);
+    const cleanedBlogOutline = choices[0].text
+      .split('\n')
+      .map((text) => text.substr(text.indexOf('. ') + 2, text.length))
+      .slice(0, numberOfPoints)
+      .join('\n');
+
+    blogOutlinesList.push(cleanedBlogOutline);
   }
 
   const { _id, generatedContents } = await storeData(
