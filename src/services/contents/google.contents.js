@@ -8,7 +8,7 @@ const {
   removeSpaces,
 } = require('../content.service');
 
-const googleAdHeadlines = async (userId, { name, businessType }) => {
+const googleAdHeadlines = async (userId, userEmail, { name, businessType }) => {
   const userPrompt = `Name: ${removeSpaces(name)}
 Business Type: ${removeSpaces(businessType)}`;
 
@@ -53,6 +53,7 @@ Headline:`;
 
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'ads-google-headlines',
     userPrompt,
     openAPIInformationsList,
@@ -63,7 +64,7 @@ Headline:`;
   return userResponse;
 };
 
-const googleAdDescriptions = async (userId, { businessName, productCategories, uniqueness, promotions, keywords }) => {
+const googleAdDescriptions = async (userId, userEmail, { businessName, productCategories, uniqueness, promotions, keywords }) => {
   const userPrompt = `Business Name: ${removeSpaces(businessName)}
 Product Categories: ${removeSpaces(productCategories)}
 What makes you unique: ${removeSpaces(uniqueness)}
@@ -112,6 +113,7 @@ Description:`;
 
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'ads-google-descriptions',
     userPrompt,
     openAPIInformationsList,

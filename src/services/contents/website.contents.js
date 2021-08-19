@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const websiteShortDescription = async (userId, { industryType, businessName }) => {
+const websiteShortDescription = async (userId, userEmail, { industryType, businessName }) => {
   const userPrompt = `Industry: ${removeSpaces(industryType)}
 BusinessName: ${removeSpaces(businessName)}`;
 
@@ -29,6 +29,7 @@ Description:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'website-short-description',
     userPrompt,
     openAPIInformationsList,
@@ -40,7 +41,7 @@ Description:`;
   return userResponse;
 };
 
-const keywordsFromText = async (userId, { primaryText }) => {
+const keywordsFromText = async (userId, userEmail, { primaryText }) => {
   const userPrompt = `Primary Text: ${removeSpaces(primaryText)}`;
 
   const prompt = `Generate Keywords extracted from content for Optimization search engine, SEO meta tag, or youtube tags.
@@ -64,6 +65,7 @@ Keywords:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'website-keywords-from-text',
     userPrompt,
     openAPIInformationsList,
@@ -75,7 +77,7 @@ Keywords:`;
   return userResponse;
 };
 
-const SEOFriendlyBlogIdeas = async (userId, { content, desiredOutcome, industry, targetAudience }) => {
+const SEOFriendlyBlogIdeas = async (userId, userEmail, { content, desiredOutcome, industry, targetAudience }) => {
   const userPrompt = `Content: ${removeSpaces(content)}
 Desired outcome: ${removeSpaces(desiredOutcome)}
 Industry: ${removeSpaces(industry)}
@@ -109,6 +111,7 @@ Headlines:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'website-seo-friendly-blog-ideas',
     userPrompt,
     openAPIInformationsList,
@@ -120,7 +123,7 @@ Headlines:`;
   return userResponse;
 };
 
-const landingPageHeadline = async (userId, { businessType }) => {
+const landingPageHeadline = async (userId, userEmail, { businessType }) => {
   const userPrompt = `Product: ${removeSpaces(businessType)}`;
 
   const prompt = `Generate High-Converting Landing page headline that will makes user to pay for the service
@@ -151,6 +154,7 @@ Headlines:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'website-landing-page-headline',
     userPrompt,
     openAPIInformationsList,

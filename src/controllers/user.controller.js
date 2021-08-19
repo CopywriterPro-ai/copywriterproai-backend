@@ -21,8 +21,7 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const getUserBookmarks = catchAsync(async (req, res) => {
-  const options = pick(req.query, ['page', 'limit']);
-  const bookmarks = await userService.getBookmarks(req.params.userId, req.query);
+  const bookmarks = await userService.getBookmarks(req.user.email, req.query);
   res.send(bookmarks);
 });
 
@@ -38,10 +37,13 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const updateUserBookmarks = catchAsync(async (req, res) => {
-  const user = await userService.checkUserExistsOrNot(req.params.userId);
-  await contentService.checkContentExistsOrNot(req.body);
-  await userService.updateBookmarks(user, req.body);
+  await userService.updateBookmarks(req.user.email, req.body);
   res.status(httpStatus.OK).send({ message: 'Bookmarks Updated!' });
+});
+
+const updateUserContent = catchAsync(async (req, res) => {
+  await contentService.updateBookmarkedText(req.user.email, req.body);
+  res.status(httpStatus.OK).send({ message: 'Content Updated!' });
 });
 
 const getUserFavouriteTools = catchAsync(async (req, res) => {
@@ -70,6 +72,7 @@ module.exports = {
   updateUser,
   updateUserBookmarks,
   getUserFavouriteTools,
+  updateUserContent,
   updateUserFavouriteTools,
   updateUserCopyCounter,
 };

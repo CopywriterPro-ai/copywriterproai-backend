@@ -2,12 +2,12 @@ const httpStatus = require('http-status');
 const { Blog } = require('../models');
 const ApiError = require('../utils/ApiError');
 
-const getBlog = async (_id, userId) => {
-  return Blog.findOne({ _id, userId });
+const getBlog = async (_id, userEmail) => {
+  return Blog.findOne({ _id, userEmail });
 };
 
-const checkBlogExistsOrNot = async (id, userId) => {
-  const blog = await getBlog(id, userId);
+const checkBlogExistsOrNot = async (id, userEmail) => {
+  const blog = await getBlog(id, userEmail);
   if (!blog) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Blog not found');
   }
@@ -19,8 +19,8 @@ const queryBlogs = async (filter, options) => {
   return blogs;
 };
 
-const createBlog = async (userId, { blogAbout, headline, blogPost }) => {
-  const blog = await Blog.create({ userId, blogAbout, headline, blogPost });
+const createBlog = async (userId, userEmail, { blogAbout, headline, blogPost }) => {
+  const blog = await Blog.create({ userId, userEmail, blogAbout, headline, blogPost });
   return blog;
 };
 
@@ -30,8 +30,8 @@ const updateBlog = async (blog, updatedBlog) => {
   return blog;
 };
 
-const deleteBlogById = async (blogId, userId) => {
-  const blog = await getBlog(blogId, userId);
+const deleteBlogById = async (blogId, userEmail) => {
+  const blog = await getBlog(blogId, userEmail);
   if (!blog) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Blog not found');
   }

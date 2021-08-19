@@ -30,6 +30,7 @@ const getUserBookmarks = {
     userId: Joi.required().custom(objectId),
   }),
   query: Joi.object().keys({
+    sortBy: Joi.string(),
     page: Joi.number().integer(),
     limit: Joi.number().integer(),
   }),
@@ -72,6 +73,16 @@ const updateUserBookmarks = {
   body: Joi.object().keys({
     contentId: Joi.string().custom(objectId).required(),
     index: Joi.number().required(),
+  }),
+};
+
+const updateUserContent = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    contentId: Joi.string().custom(objectId).required(),
+    index: Joi.number().required(),
     bookmarkedText: Joi.string().required(),
   }),
 };
@@ -94,5 +105,6 @@ module.exports = {
   updateUser,
   updateUserInfo,
   updateUserBookmarks,
+  updateUserContent,
   updateUserFavouriteTools,
 };

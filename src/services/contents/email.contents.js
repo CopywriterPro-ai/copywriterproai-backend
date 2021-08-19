@@ -8,7 +8,7 @@ const {
   processListContents,
 } = require('../content.service');
 
-const emailMarketingCampaignSubject = async (userId, { productDescription }) => {
+const emailMarketingCampaignSubject = async (userId, userEmail, { productDescription }) => {
   const userPrompt = `Product Description: ${removeSpaces(productDescription)}`;
 
   const prompt = `Examples of Marketing Email's persuasive Subject lines that can get click -
@@ -41,10 +41,10 @@ List of 6 Email Subject Lines -
 -`;
 
   const marketingEmailSubject = await generateContentUsingGPT3('davinci', 100, prompt, 1, 0, 0, ['\n\n']);
-  return processListContents(userId, 'email-marketing-campaign-subject', userPrompt, marketingEmailSubject);
+  return processListContents(userId, userEmail, 'email-marketing-campaign-subject', userPrompt, marketingEmailSubject);
 };
 
-const emailMarketingCampaignBody = async (userId, { productDescription, about, subjectLine }) => {
+const emailMarketingCampaignBody = async (userId, userEmail, { productDescription, about, subjectLine }) => {
   const userPrompt = `Product Description: ${removeSpaces(productDescription)}
 About: ${removeSpaces(about)}
 Subject: ${removeSpaces(subjectLine)}`;
@@ -73,6 +73,7 @@ Small Email Marketing Campaign:
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'email-marketing-campaign-body',
     userPrompt,
     openAPIInformationsList,
@@ -84,7 +85,7 @@ Small Email Marketing Campaign:
   return userResponse;
 };
 
-const emailBody = async (userId, { about, to, tone }) => {
+const emailBody = async (userId, userEmail, { about, to, tone }) => {
   const userPrompt = `About: ${removeSpaces(about)}
 To: ${removeSpaces(to)}
 Tone: ${removeSpaces(tone)}`;
@@ -111,6 +112,7 @@ Subject:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'email-body',
     userPrompt,
     openAPIInformationsList,
@@ -122,7 +124,7 @@ Subject:`;
   return userResponse;
 };
 
-const emailSubjectsFromBody = async (userId, { emailBody }) => {
+const emailSubjectsFromBody = async (userId, userEmail, { emailBody }) => {
   const userPrompt = `Email Body: ${removeSpaces(emailBody)}`;
 
   const prompt = `Write email subject based on email body to increase email opening by less than 50 words.
@@ -145,6 +147,7 @@ Subject:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'email-subject-from-body',
     userPrompt,
     openAPIInformationsList,

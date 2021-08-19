@@ -1,6 +1,6 @@
 const { generateContentUsingGPT3, storeData, formatResponse, removeSpaces } = require('../content.service');
 
-const generateCVSummary = async (userId, { yourJobTitle, yearsOfExperience, keyAchievements }) => {
+const generateCVSummary = async (userId, userEmail, { yourJobTitle, yearsOfExperience, keyAchievements }) => {
   const userPrompt = `Job Title: ${removeSpaces(yourJobTitle)}
 Years Of Experience: ${removeSpaces(yearsOfExperience)}
 Key Achievements: ${removeSpaces(keyAchievements)}`;
@@ -28,6 +28,7 @@ Summary:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'cv-summary',
     userPrompt,
     openAPIInformationsList,

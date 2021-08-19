@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const problemAgitateSolution = async (userId, { productName, productDescription }) => {
+const problemAgitateSolution = async (userId, userEmail, { productName, productDescription }) => {
   const cleanedProductName = removeSpaces(productName);
   const cleanedProductDescription = removeSpaces(productDescription);
 
@@ -39,6 +39,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'problem-agitate-solution',
     userPrompt,
     openAPIInformationsList,
@@ -50,7 +51,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   return userResponse;
 };
 
-const problemAgitateSolutionOutcome = async (userId, { productName, productDescription }) => {
+const problemAgitateSolutionOutcome = async (userId, userEmail, { productName, productDescription }) => {
   const cleanedProductName = removeSpaces(productName);
   const cleanedProductDescription = removeSpaces(productDescription);
 
@@ -88,6 +89,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'problem-agitate-solution-outcome',
     userPrompt,
     openAPIInformationsList,
@@ -99,7 +101,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   return userResponse;
 };
 
-const attentionInterestDesireAction = async (userId, { productName, productDescription }) => {
+const attentionInterestDesireAction = async (userId, userEmail, { productName, productDescription }) => {
   const cleanedProductName = removeSpaces(productName);
   const cleanedProductDescription = removeSpaces(productDescription);
 
@@ -134,6 +136,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'attention-interest-desire-action',
     userPrompt,
     openAPIInformationsList,

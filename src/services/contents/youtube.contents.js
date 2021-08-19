@@ -8,7 +8,7 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const youtubeVideoIdeas = async (userId, { topic }) => {
+const youtubeVideoIdeas = async (userId, userEmail, { topic }) => {
   const userPrompt = `Topic: ${removeSpaces(topic)}`;
 
   const prompt = `Generate awesome YouTube video Title that Gets Views ${removeSpaces(topic)}.
@@ -38,7 +38,7 @@ Title:`;
     youtubeVideoIdeasList.push(choices[0].text.trim());
   }
   const { _id, generatedContents } = await storeData(
-    userId,
+    userId, userEmail,
     'youtube-video-ideas',
     userPrompt,
     openAPIInformationsList,
@@ -50,7 +50,7 @@ Title:`;
   return userResponse;
 };
 
-const youtubeVideoTitleFromDescription = async (userId, { description }) => {
+const youtubeVideoTitleFromDescription = async (userId, userEmail, { description }) => {
   const userPrompt = `Description: ${removeSpaces(description)}`;
 
   const prompt = `Write a Title that summarizes Description
@@ -61,10 +61,10 @@ List of 5 Titles:
 -`;
 
   const titlesFromDescription = await generateContentUsingGPT3('davinci-instruct-beta', 25, prompt, 0.8, 0.3, 0.4, ['\n\n']);
-  return processListContents(userId, 'youtube-video-titles-from-description', userPrompt, titlesFromDescription);
+  return processListContents(userId, userEmail, 'youtube-video-titles-from-description', userPrompt, titlesFromDescription);
 };
 
-const generateVideoTagsFromDescription = async (userId, { primaryText }) => {
+const generateVideoTagsFromDescription = async (userId, userEmail, { primaryText }) => {
   const userPrompt = `PrimaryText: ${removeSpaces(primaryText)}`;
 
   const prompt = `Generate Keywords extracted from content for Optimization search engine, SEO meta tag, or youtube tags.
@@ -88,6 +88,7 @@ Keywords:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'youtube-video-tags-from-description',
     userPrompt,
     openAPIInformationsList,
@@ -99,7 +100,7 @@ Keywords:`;
   return userResponse;
 };
 
-const generateChannelTagsFromDescription = async (userId, { primaryText }) => {
+const generateChannelTagsFromDescription = async (userId, userEmail, { primaryText }) => {
   const userPrompt = `PrimaryText: ${removeSpaces(primaryText)}`;
 
   const prompt = `Generate Keywords extracted from content for Optimization search engine, SEO meta tag, or youtube tags.
@@ -126,6 +127,7 @@ Keywords:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'youtube-channel-tags-from-description',
     userPrompt,
     openAPIInformationsList,
