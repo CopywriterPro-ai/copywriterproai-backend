@@ -14,8 +14,12 @@ const getUserInterestsById = async (id) => {
   return Interest.findById(id);
 };
 
-const checkDocumentExistsOrNot = async (id) => {
-  const userInterest = await getUserInterestsById(id);
+const getUserInterestsByEmail = async (userEmail) => {
+  return Interest.findOne({ userEmail });
+};
+
+const checkDocumentExistsOrNot = async (userEmail) => {
+  const userInterest = await getUserInterestsByEmail(userEmail);
   if (!userInterest) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
   }
