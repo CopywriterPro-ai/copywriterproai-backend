@@ -14,6 +14,13 @@ router.post(
   validate(paymentValidation.createSubscription),
   paymentController.createSubscription
 );
+router.post(
+  '/create-checkout-session',
+  auth(),
+  validate(paymentValidation.createCheckoutSession),
+  paymentController.createCheckoutSessions
+);
+router.get('/checkout-session', auth(), validate(paymentValidation.checkoutSession), paymentController.checkoutSessions);
 router.get('/subscription-invoice', auth(), validate(paymentValidation.invoicePreview), paymentController.invoicePreview);
 router.post(
   '/cancel-subscription',

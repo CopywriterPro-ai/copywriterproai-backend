@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Stripe = require('stripe');
+const chalk = require('chalk');
 const catchAsync = require('../utils/catchAsync');
 const paymentService = require('../services/payment.service');
 const config = require('../config/config');
@@ -9,6 +10,19 @@ const stripe = new Stripe(config.stripe.stripeSecretKey);
 const createCustomer = catchAsync(async (req, res) => {
   const customer = await paymentService.stripeCustomer({ user: req.user });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, customer });
+});
+
+const createCheckoutSessions = catchAsync(async (req, res) => {
+  const customerEmail = req.user.email;
+  const { customerId, priceId } = req.body;
+  const { session } = await paymentService.createCheckoutSessions({ customerEmail, customerId, priceId });
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, session });
+});
+
+const checkoutSessions = catchAsync(async (req, res) => {
+  const { sessionId } = req.query;
+  const { session } = await paymentService.checkoutSession({ sessionId });
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, session });
 });
 
 const createSubscription = catchAsync(async (req, res) => {
@@ -52,17 +66,33 @@ const paymentWebhook = catchAsync(async (req, res) => {
       .send({ status: httpStatus.BAD_REQUEST, message: 'Webhook signature verification failed.' });
   }
 
-  const dataObject = event.data.object;
+  switch (event.type) {
+    // case 'payment_intent.succeeded': {
+    //   const paymentIntent = event.data.object;
+    //   // handlePaymentIntentSucceeded(paymentIntent);
+    //   console.log(paymentIntent);
+    //   break;
+    // }
 
-  // Switch Operation Here
+    case 'payment_intent.payment_failed': {
+      const paymentIntent = event.data.object;
+      // handlePaymentIntentFailed(paymentIntent);
+      console.log(paymentIntent);
+      break;
+    }
 
-  console.log('dataObject', dataObject);
+    default:
+      console.log(`Unhandled event type "${chalk.white.bgGreen(event.type)}"`);
+      break;
+  }
 
   res.json({ received: true });
 });
 
 module.exports = {
   createCustomer,
+  createCheckoutSessions,
+  checkoutSessions,
   createSubscription,
   priceList,
   cancelSubscription,
