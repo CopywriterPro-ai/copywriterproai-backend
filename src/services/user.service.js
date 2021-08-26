@@ -133,8 +133,8 @@ const updateBookmarks = async (userEmail, { contentId, index }) => {
   await content.save();
 };
 
-const updateCredits = async (email, credits) => {
-  await User.updateMany({ email }, { credits });
+const updateCredits = async (email, updatedData) => {
+  await User.updateMany({ email }, updatedData);
 };
 
 const updateFavouriteTools = async (user, tool) => {

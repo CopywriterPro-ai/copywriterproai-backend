@@ -1,16 +1,24 @@
 const httpStatus = require('http-status');
+const moment = require('moment-timezone');
 const catchAsync = require('../utils/catchAsync');
 const generator = require('../services/contents');
 const { userService } = require('../services');
+const { subscription } = require('../config/plan');
 
 const generate = catchAsync(async (req, res) => {
-  if (req.user.credits === 0) {
+  const { _id, email, credits, dailyCreaditUsage, freeTrial, getUserCurrentSubscription } = req.user;
+
+  if (credits === 0) {
     res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
+  } else if (getUserCurrentSubscription === subscription.FREEMIUM && freeTrial.eligible === false) {
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial expired, Upgrade our friendship today!' });
+  } else if (freeTrial.eligible === true && freeTrial.dailyLimitExceeded === true) {
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial daily limit exceeded' });
   } else {
     const { task } = req.body;
-    const { _id, email } = req.user;
 
     let generatedContent;
+    let calDailyCreaditUsage;
 
     if (task === 'paraphrasing') {
       generatedContent = await generator.writing.paraphrase(_id, email, req.body);
@@ -114,7 +122,17 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.recipe.generateRecipe(_id, email, req.body);
     }
 
-    userService.updateCredits(req.user.email, req.user.credits - 1);
+    const todayDate = moment().startOf('day').format();
+    const { date, usage } = dailyCreaditUsage;
+    const isSameDay = moment(date).isSame(todayDate);
+
+    if (isSameDay) {
+      calDailyCreaditUsage = { date, usage: usage + 1 };
+    } else {
+      calDailyCreaditUsage = { date: todayDate, usage: 1 };
+    }
+
+    userService.updateCredits(email, { credits: credits - 1, dailyCreaditUsage: calDailyCreaditUsage });
     res.status(httpStatus.OK).send(generatedContent);
   }
 });

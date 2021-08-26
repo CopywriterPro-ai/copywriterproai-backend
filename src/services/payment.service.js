@@ -6,6 +6,15 @@ const config = require('../config/config');
 
 const stripe = new Stripe(config.stripe.stripeSecretKey);
 
+const getInvoice = async (invoiceId) => {
+  try {
+    const invoice = await stripe.invoices.retrieve(invoiceId);
+    return { invoice };
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invoice request failed');
+  }
+};
+
 const paymentUpdate = async ({ customerId, subscriptionId }) => {
   const payment = await Payment.findOneAndUpdate(
     { customerStripeId: customerId },
@@ -152,6 +161,17 @@ const invoicePreview = async ({ customerId, priceId, subscriptionId }) => {
   return { invoice };
 };
 
+const handlePaymentIntentSucceeded = async (paymentIntent) => {
+  if (paymentIntent.status === 'succeeded') {
+    const { invoice } = await getInvoice(paymentIntent.invoice);
+    console.log(JSON.stringify(invoice));
+  }
+};
+
+const handlePaymentIntentFailed = async (paymentIntent) => {
+  console.log(paymentIntent);
+};
+
 module.exports = {
   paymentUpdate,
   stripeCustomer,
@@ -162,4 +182,7 @@ module.exports = {
   cancelSubscription,
   updateSubscription,
   invoicePreview,
+  getInvoice,
+  handlePaymentIntentSucceeded,
+  handlePaymentIntentFailed,
 };

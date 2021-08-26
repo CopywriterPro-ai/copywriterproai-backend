@@ -67,22 +67,20 @@ const paymentWebhook = catchAsync(async (req, res) => {
   }
 
   switch (event.type) {
-    // case 'payment_intent.succeeded': {
-    //   const paymentIntent = event.data.object;
-    //   // handlePaymentIntentSucceeded(paymentIntent);
-    //   console.log(paymentIntent);
-    //   break;
-    // }
+    case 'payment_intent.succeeded': {
+      const paymentIntent = event.data.object;
+      paymentService.handlePaymentIntentSucceeded(paymentIntent);
+      break;
+    }
 
     case 'payment_intent.payment_failed': {
       const paymentIntent = event.data.object;
-      // handlePaymentIntentFailed(paymentIntent);
-      console.log(paymentIntent);
+      paymentService.handlePaymentIntentFailed(paymentIntent);
       break;
     }
 
     default:
-      console.log(`Unhandled event type "${chalk.white.bgGreen(event.type)}"`);
+      console.log(`Unhandled event type ${chalk.black.bgWhite(event.type)}`);
       break;
   }
 
