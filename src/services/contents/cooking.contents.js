@@ -1,6 +1,7 @@
+/* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, storeData, formatResponse } = require('../content.service');
 
-const generateRecipe = async (userId, { recipeName, ingredients }) => {
+const generateRecipe = async (userId, userEmail, { recipeName, ingredients }) => {
   const userPrompt = `
 Recipe Name: ${recipeName}
 Ingredients: ${ingredients}`;
@@ -26,6 +27,7 @@ Directions:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'generate-recipe',
     userPrompt,
     openAPIInformationsList,

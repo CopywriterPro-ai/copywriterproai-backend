@@ -1,6 +1,7 @@
+/* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const generateAmazonProductListings = async (userId, { productName, productCategories, productFeatures }) => {
+const generateAmazonProductListings = async (userId, userEmail, { productName, productCategories, productFeatures }) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Product Categories: ${removeSpaces(productCategories)}
 productFeatures: ${removeSpaces(productFeatures)}`;
@@ -34,6 +35,7 @@ Description:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'amazon-product-listings',
     userPrompt,
     openAPIInformationsList,

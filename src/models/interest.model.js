@@ -8,6 +8,12 @@ const interestSchema = mongoose.Schema(
       trim: true,
       ref: 'User',
     },
+    userEmail: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
     interests: {
       type: mongoose.Schema.Types.Mixed,
     },

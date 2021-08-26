@@ -7,7 +7,7 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const linkedinAdTexts = async (userId, { companyName, businessType, benefits }) => {
+const linkedinAdTexts = async (userId, userEmail, { companyName, businessType, benefits }) => {
   const userPrompt = `Company Name: ${removeSpaces(companyName)}
 Business Type: ${removeSpaces(businessType)}
 Benefits: ${removeSpaces(benefits)}`;
@@ -46,10 +46,7 @@ Description:`;
   const linkedinAdTextsList = [];
 
   for (let i = 0; i < 5; i++) {
-    const adTexts = await generateContentUsingGPT3('davinci', 100, prompt, 0.8, 0.2, 0.3, [
-      '\n',
-      'Description:',
-    ]);
+    const adTexts = await generateContentUsingGPT3('davinci', 100, prompt, 0.8, 0.2, 0.3, ['\n', 'Description:']);
     const { id, object, created, model, choices } = adTexts;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -57,6 +54,7 @@ Description:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'linkedin-ad-texts',
     userPrompt,
     openAPIInformationsList,
@@ -68,7 +66,7 @@ Description:`;
   return userResponse;
 };
 
-const generateLinkedInSummary = async (userId, { profession, skills }) => {
+const generateLinkedInSummary = async (userId, userEmail, { profession, skills }) => {
   const userPrompt = `Profession: ${removeSpaces(profession)}
 Skills: ${removeSpaces(skills)}`;
 
@@ -98,6 +96,7 @@ Summary:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'linkedin-summary',
     userPrompt,
     openAPIInformationsList,

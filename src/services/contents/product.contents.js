@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const productDescription = async (userId, { productName, productType }) => {
+const productDescription = async (userId, userEmail, { productName, productType }) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Product Type: ${removeSpaces(productType)}`;
 
@@ -33,6 +33,7 @@ Short Description:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'product-description',
     userPrompt,
     openAPIInformationsList,
@@ -46,6 +47,7 @@ Short Description:`;
 
 const makeProductDescriptionSEOFriendly = async (
   userId,
+  userEmail,
   { productName, productType, targetAudience, productBenefits, productFeatures }
 ) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
@@ -81,6 +83,7 @@ Description:`;
 
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'seo-friendly-product-description',
     userPrompt,
     openAPIInformationsList,
@@ -91,7 +94,7 @@ Description:`;
   return userResponse;
 };
 
-const productReview = async (userId, { product, rating, comment }) => {
+const productReview = async (userId, userEmail, { product, rating, comment }) => {
   const userPrompt = `Product: ${removeSpaces(product)}
 Rating: ${removeSpaces(rating)}
 Comment: ${removeSpaces(comment)}`;
@@ -112,6 +115,7 @@ Review:`;
   const { id, object, created, model, choices } = review;
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'product-review',
     userPrompt,
     { id, object, created, model },
@@ -122,7 +126,7 @@ Review:`;
   return userResponse;
 };
 
-const generateProductName = async (userId, { productDescription, keywords }) => {
+const generateProductName = async (userId, userEmail, { productDescription, keywords }) => {
   const userPrompt = `Product description: ${removeSpaces(productDescription)}
 Keywords: ${removeSpaces(keywords)}`;
 
@@ -151,6 +155,7 @@ Product names:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'product-name',
     userPrompt,
     openAPIInformationsList,

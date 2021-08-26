@@ -73,10 +73,6 @@ const userSchema = new Schema(
       required: true,
       default: [],
     },
-    bookmarks: {
-      type: mongoose.Schema.Types.Mixed,
-      default: {},
-    },
     copycounter: {
       type: Number,
       default: 0,

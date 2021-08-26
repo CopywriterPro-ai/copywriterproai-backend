@@ -7,7 +7,7 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const campaignPostFromBusinessType = async (userId, task, { platformType }) => {
+const campaignPostFromBusinessType = async (userId, userEmail, task, { platformType }) => {
   const userPrompt = `Platform: ${removeSpaces(platformType)}`;
 
   const prompt = `Write a Facebook Ad Primary text from the given context.
@@ -17,10 +17,10 @@ List of 5 Primary text:
 -`;
 
   const campaignPostIdea = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, task, userPrompt, campaignPostIdea);
+  return processListContents(userId, userEmail, task, userPrompt, campaignPostIdea);
 };
 
-const facebookAdPrimaryTexts = async (userId, { businessType, companyName, benefits }) => {
+const facebookAdPrimaryTexts = async (userId, userEmail, { businessType, companyName, benefits }) => {
   const userPrompt = `Company Name: ${removeSpaces(companyName)}
 Business Type: ${removeSpaces(businessType)}
 Customers Benefit: ${removeSpaces(benefits)}`;
@@ -65,6 +65,7 @@ Description:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'ads-facebook-primary-texts',
     userPrompt,
     openAPIInformationsList,
@@ -76,7 +77,7 @@ Description:`;
   return userResponse;
 };
 
-const facebookAdHeadlines = async (userId, { productName, businessType, customerBenefit }) => {
+const facebookAdHeadlines = async (userId, userEmail, { productName, businessType, customerBenefit }) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Business Type: ${removeSpaces(businessType)}
 Customer Benefit: ${removeSpaces(customerBenefit)}`;
@@ -126,6 +127,7 @@ Headline:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'ads-facebook-headlines',
     userPrompt,
     openAPIInformationsList,
@@ -137,7 +139,7 @@ Headline:`;
   return userResponse;
 };
 
-const facebookAdLinkDescription = async (userId, { platformType, companyName }) => {
+const facebookAdLinkDescription = async (userId, userEmail, { platformType, companyName }) => {
   const userPrompt = `Company Name: ${removeSpaces(companyName)}
 Business Type: ${removeSpaces(platformType)}`;
 
@@ -167,10 +169,10 @@ List of 5 catchy link Description using 150 words
 `;
 
   const linkDescriptions = await generateContentUsingGPT3('davinci-instruct-beta', 300, prompt, 0.8, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, 'ads-facebook-link-descriptions', userPrompt, linkDescriptions);
+  return processListContents(userId, userEmail, 'ads-facebook-link-descriptions', userPrompt, linkDescriptions);
 };
 
-const facebookAdsFromProductDescription = async (userId, { product }) => {
+const facebookAdsFromProductDescription = async (userId, userEmail, { product }) => {
   const userPrompt = `Product: ${removeSpaces(product)}`;
 
   const prompt = `Write Facebook Ad for following Product
@@ -182,7 +184,13 @@ List of 5 Ads:
   const adsFromProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 150, prompt, 0.8, 0.2, 0.4, [
     '\n\n',
   ]);
-  return processListContents(userId, 'facebook-ads-from-product-description', userPrompt, adsFromProductDescription);
+  return processListContents(
+    userId,
+    userEmail,
+    'facebook-ads-from-product-description',
+    userPrompt,
+    adsFromProductDescription
+  );
 };
 
 module.exports = {

@@ -8,36 +8,36 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const blogIdea = async (userId, { productName, productDescription }) => {
+const blogIdea = async (userId, userEmail, { productName, productDescription }) => {
   const userPrompt = `Name: ${removeSpaces(productName)}
-  Description: ${removeSpaces(productDescription)}`;
+Description: ${removeSpaces(productDescription)}`;
 
   const prompt = `Generate 5 Blog ideas for following Product.
-  
-  ${userPrompt}
-  
-  List of 5 Blog ideas
-  -`;
+
+${userPrompt}
+
+List of 5 Blog ideas
+-`;
 
   const blogIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.3, ['\n\n']);
-  return processListContents(userId, 'blog-idea', userPrompt, blogIdeas);
+  return processListContents(userId, userEmail, 'blog-idea', userPrompt, blogIdeas);
 };
 
-const blogHeadline = async (userId, { blogAbout }) => {
+const blogHeadline = async (userId, userEmail, { blogAbout }) => {
   const userPrompt = `Blog About: ${removeSpaces(blogAbout)}`;
 
   const prompt = `Generate "catchy and attention-grabbing" Blog titles that can persuade people and get more traffic for following Blog -
-  
-  ${userPrompt}
-  
-  List of 6 Blog titles:
-  -`;
+
+${userPrompt}
+
+List of 6 Blog titles:
+-`;
 
   const blogHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 1, 0.2, 0.1, ['\n\n']);
-  return processListContents(userId, 'blog-headline', userPrompt, blogHeadlines);
+  return processListContents(userId, userEmail, 'blog-headline', userPrompt, blogHeadlines);
 };
 
-const blogOutline = async (userId, { numberOfPoints, blogAbout }) => {
+const blogOutline = async (userId, userEmail, { numberOfPoints, blogAbout }) => {
   const userPrompt = `Blog About: ${removeSpaces(blogAbout)}`;
 
   const prompt = `Blog Outline Example -
@@ -86,6 +86,7 @@ Blog Outline (${numberOfPoints + 1} points):
 
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'blog-outline',
     userPrompt,
     openAPIInformationsList,
@@ -96,14 +97,14 @@ Blog Outline (${numberOfPoints + 1} points):
   return userResponse;
 };
 
-const blogIntro = async (userId, { title, about }) => {
+const blogIntro = async (userId, userEmail, { title, about }) => {
   const userPrompt = `Blog Title: ${removeSpaces(title)}
-  Blog About: ${removeSpaces(about)}`;
+Blog About: ${removeSpaces(about)}`;
 
   const prompt = `Write an attention-grabbing Blog Intro for following blog that can persuade and hook the readers.
-  
-  ${userPrompt}
-  Intro:`;
+
+${userPrompt}
+Intro:`;
 
   const openAPIInformationsList = [];
   const blogIntrosList = [];
@@ -117,6 +118,7 @@ const blogIntro = async (userId, { title, about }) => {
 
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'blog-intro',
     userPrompt,
     openAPIInformationsList,
@@ -127,18 +129,18 @@ const blogIntro = async (userId, { title, about }) => {
   return userResponse;
 };
 
-const blogTopic = async (userId, { about, topic }) => {
+const blogTopic = async (userId, userEmail, { about, topic }) => {
   const cleanedBlogAbout = removeSpaces(about);
   const cleanedBlogTopic = removeSpaces(topic);
 
   const userPrompt = `Blog About: ${cleanedBlogAbout}
-  Blog Topic: ${cleanedBlogTopic}`;
+Blog Topic: ${cleanedBlogTopic}`;
 
   const prompt = `Write about "${cleanedBlogTopic}" for a Blog About "${cleanedBlogAbout}"
-  
-  ${cleanedBlogTopic} (opening with '[' and ending with ']'):
-  [
-  `;
+
+${cleanedBlogTopic} (opening with '[' and ending with ']'):
+[
+`;
 
   const blogTopicWriting = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 0.7, 0.0, 0.0, [']']);
   const { id, object, created, model, choices } = blogTopicWriting;
@@ -146,7 +148,14 @@ const blogTopic = async (userId, { about, topic }) => {
   const openAPIInformations = { id, object, created, model };
   const blogTopicResult = choices[0].text.trim();
 
-  const { _id, generatedContents } = await storeData(userId, 'blog-topic', userPrompt, openAPIInformations, blogTopicResult);
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    'blog-topic',
+    userPrompt,
+    openAPIInformations,
+    blogTopicResult
+  );
   const userResponse = formatResponse(_id, 'blog-topic', generatedContents);
 
   return userResponse;

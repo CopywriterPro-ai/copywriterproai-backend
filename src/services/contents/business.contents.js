@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const generateCatchyBusinessTaglines = async (userId, { companyName, businessType }) => {
+const generateCatchyBusinessTaglines = async (userId, userEmail, { companyName, businessType }) => {
   const userPrompt = `Company Name: ${removeSpaces(companyName)}
 Business Type: ${removeSpaces(businessType)}`;
 
@@ -54,6 +54,7 @@ Taglines:`;
   }
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'catchy-business-taglines',
     userPrompt,
     openAPIInformationsList,

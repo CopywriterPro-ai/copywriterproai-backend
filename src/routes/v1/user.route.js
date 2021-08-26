@@ -27,6 +27,10 @@ router
   .patch(auth('updateUserInfo'), validate(userValidation.updateUserBookmarks), userController.updateUserBookmarks);
 
 router
+  .route('/:userId/contents')
+  .patch(auth('manageContent'), validate(userValidation.updateUserContent), userController.updateUserContent);
+
+router
   .route('/:userId/favourite-tools')
   .get(auth('getUserInfo'), validate(userValidation.getUserFavouriteTools), userController.getUserFavouriteTools)
   .patch(auth('updateUserInfo'), validate(userValidation.updateUserFavouriteTools), userController.updateUserFavouriteTools);

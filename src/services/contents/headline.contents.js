@@ -1,6 +1,6 @@
 const { generateContentUsingGPT3, processListContents, removeSpaces } = require('../content.service');
 
-const catchyHeadline = async (userId, { content }) => {
+const catchyHeadline = async (userId, userEmail, { content }) => {
   const userPrompt = `Content: ${removeSpaces(content)}`;
 
   const prompt = `Samples List -
@@ -20,10 +20,10 @@ List of 5 Catchy Headlines
 -`;
 
   const catchyHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
-  return processListContents(userId, 'catchy-headline', userPrompt, catchyHeadlines);
+  return processListContents(userId, userEmail, 'catchy-headline', userPrompt, catchyHeadlines);
 };
 
-const attentionGrabbingHeadline = async (userId, { content }) => {
+const attentionGrabbingHeadline = async (userId, userEmail, { content }) => {
   const userPrompt = `Content: ${removeSpaces(content)}`;
 
   const prompt = `Samples List -
@@ -44,10 +44,10 @@ List of 5 Attention Grabbing Headlines
 -`;
 
   const attentionGrabbingHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
-  return processListContents(userId, 'attention-grabbing-headline', userPrompt, attentionGrabbingHeadlines);
+  return processListContents(userId, userEmail, 'attention-grabbing-headline', userPrompt, attentionGrabbingHeadlines);
 };
 
-const newspaperHeadline = async (userId, { content }) => {
+const newspaperHeadline = async (userId, userEmail, { content }) => {
   const userPrompt = `News: ${removeSpaces(content)}`;
 
   const prompt = `Samples List -
@@ -68,10 +68,10 @@ List of 5 Newspaper Headlines
 -`;
 
   const newspaperHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
-  return processListContents(userId, 'newspaper-headline', userPrompt, newspaperHeadlines);
+  return processListContents(userId, userEmail, 'newspaper-headline', userPrompt, newspaperHeadlines);
 };
 
-const resumeHeadline = async (userId, { profession }) => {
+const resumeHeadline = async (userId, userEmail, { profession }) => {
   const userPrompt = `Profession: ${removeSpaces(profession)}`;
 
   const prompt = `Samples List -
@@ -91,7 +91,7 @@ List of 5 Resume Headlines
 -`;
 
   const resumeHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
-  return processListContents(userId, 'resume-headline', userPrompt, resumeHeadlines);
+  return processListContents(userId, userEmail, 'resume-headline', userPrompt, resumeHeadlines);
 };
 
 module.exports = {

@@ -37,7 +37,7 @@ const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, 
 
   let gptResponse;
 
-  while(1) {
+  while (1) {
     gptResponse = await openai.complete({
       engine,
       prompt,
@@ -98,9 +98,10 @@ const filterContents = async (content) => {
   return outputLabel;
 };
 
-const formatContents = async (userId, documentType, prompt, apiInfos, choices) => {
+const formatContents = async (userId, userEmail, documentType, prompt, apiInfos, choices) => {
   const contentInformation = {
     userId,
+    userEmail,
     prompt,
     documentType,
     openAPIInformation: apiInfos,
@@ -117,8 +118,8 @@ const cleanAllTexts = (contents) => {
   return contents.filter((text) => text.trim() !== '').map((text) => text.substr(text.indexOf('-') + 1, text.length).trim());
 };
 
-const storeData = async (userId, task, prompt, apiInfos, choices) => {
-  const formattedContents = await formatContents(userId, task, prompt, apiInfos, choices);
+const storeData = async (userId, userEmail, task, prompt, apiInfos, choices) => {
+  const formattedContents = await formatContents(userId, userEmail, task, prompt, apiInfos, choices);
   const content = await Content.create(formattedContents);
   return content;
 };
@@ -131,26 +132,32 @@ const formatResponse = (id, task, generatedTexts) => {
   };
 };
 
-const processListContents = async (userId, task, prompt, { id, object, created, model, choices }) => {
+const processListContents = async (userId, userEmail, task, prompt, { id, object, created, model, choices }) => {
   const contents = cleanAllTexts(choices[0].text.split('\n'));
-  const { _id, generatedContents } = await storeData(userId, task, prompt, { id, object, created, model }, contents);
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    task,
+    prompt,
+    { id, object, created, model },
+    contents
+  );
   return formatResponse(_id, task, generatedContents.slice(0, 5));
 };
 
-const checkContentExistsOrNot = async ({ contentId, index }) => {
-  const content = await Content.findById(contentId);
-  if (!content || index >= content.generatedContents.length) {
+const checkContentExistsOrNot = async (userEmail, { _id, index }) => {
+  const content = await Content.findOne({ _id, userEmail });
+  if (!content || index >= content.generatedContents.length || index < 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Content not found');
   }
+  return content;
 };
 
-const updateBookmarkedText = async (contentId, index, bookmarkedText) => {
-  const content = await Content.findById(contentId);
-  const previousText = content.generatedContents[index];
+const updateBookmarkedText = async (userEmail, { contentId, index, bookmarkedText }) => {
+  const content = await checkContentExistsOrNot(userEmail, { _id: contentId, index });
   content.generatedContents[index] = bookmarkedText;
   await content.markModified('generatedContents');
   await content.save();
-  return previousText;
 };
 
 module.exports = {

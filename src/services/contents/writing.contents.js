@@ -3,7 +3,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const paraphrase = async (userId, { userText }) => {
+const paraphrase = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `Original: He has tons of stuff to throw away.
@@ -24,6 +24,7 @@ Paraphrase:`;
   const { id, object, created, model, choices } = paraphrasedContents;
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'paraphrasing',
     userPrompt,
     { id, object, created, model },
@@ -34,7 +35,7 @@ Paraphrase:`;
   return userResponse;
 };
 
-const expander = async (userId, { userText }) => {
+const expander = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `Original Text:
@@ -65,6 +66,7 @@ Expanded with more words and information:
   const { id, object, created, model, choices } = expandedContents;
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'expander',
     userPrompt,
     { id, object, created, model },
@@ -75,7 +77,7 @@ Expanded with more words and information:
   return userResponse;
 };
 
-const simplify = async (userId, { userText }) => {
+const simplify = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `My second grader asked me what this passage means:
@@ -96,6 +98,7 @@ I rephrased it for him, in plain language a second grader can understand:
   const { id, object, created, model, choices } = simplifiedContents;
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'simplifier',
     userPrompt,
     { id, object, created, model },
@@ -106,7 +109,7 @@ I rephrased it for him, in plain language a second grader can understand:
   return userResponse;
 };
 
-const summarize = async (userId, { userText }) => {
+const summarize = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `Original Text:
@@ -137,6 +140,7 @@ Short Summary:
   const { id, object, created, model, choices } = summarizedContents;
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'summarizer',
     userPrompt,
     { id, object, created, model },
@@ -147,7 +151,7 @@ Short Summary:
   return userResponse;
 };
 
-const notesFromPassage = async (userId, { userText }) => {
+const notesFromPassage = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `I asked my students to note ALL the important informations from this passage:
@@ -168,6 +172,7 @@ My students wrote -
   const { id, object, created, model, choices } = notes;
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'notes-from-passage',
     userPrompt,
     { id, object, created, model },
@@ -178,7 +183,7 @@ My students wrote -
   return userResponse;
 };
 
-const grammarFixer = async (userId, { userText }) => {
+const grammarFixer = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `Original: ${userPrompt}
@@ -190,6 +195,7 @@ Standard American English:`;
   const { id, object, created, model, choices } = fixedContent;
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'grammar-fixer',
     userPrompt,
     { id, object, created, model },
@@ -200,7 +206,7 @@ Standard American English:`;
   return userResponse;
 };
 
-const changeTone = async (userId, { userText, tone }) => {
+const changeTone = async (userId, userEmail, { userText, tone }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `Change the tone -
@@ -226,6 +232,7 @@ ${tone}:`;
   const { id, object, created, model, choices } = fixedContent;
   const { _id, generatedContents } = await storeData(
     userId,
+    userEmail,
     'change-tone',
     userPrompt,
     { id, object, created, model },

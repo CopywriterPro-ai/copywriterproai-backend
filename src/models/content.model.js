@@ -8,6 +8,12 @@ const contentSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    userEmail: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
     prompt: {
       type: String,
       required: true,
@@ -32,6 +38,11 @@ const contentSchema = mongoose.Schema(
       type: mongoose.Schema.Types.Mixed,
     },
     generatedContents: {
+      type: Array,
+      required: true,
+      default: [],
+    },
+    bookmarks: {
       type: Array,
       required: true,
       default: [],

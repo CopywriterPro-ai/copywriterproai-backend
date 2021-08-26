@@ -1,9 +1,10 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
 const httpStatus = require('http-status');
 const { User, Content } = require('../models');
-const { updateBookmarkedText } = require('./content.service');
+const contentService = require('./content.service');
 const ApiError = require('../utils/ApiError');
 const { authTypes } = require('../config/auths');
 
@@ -66,29 +67,38 @@ const getUser = async (identity) => {
  * @param {string} userId
  * @returns {Promise<User>}
  */
-const getBookmarks = async (userId, { page = 1, limit = 10 }) => {
-  const start = (page - 1) * limit;
-  const end = start + limit;
+const getBookmarks = async (userEmail, { sortBy = 'createdAt:asc', page = 1, limit = 10 }) => {
+  const skip = (page - 1) * limit;
+  let [key, order] = sortBy.split(':');
 
-  const user = await checkUserExistsOrNot(userId);
-  const { bookmarks } = user;
-  const contentIds = Object.keys(bookmarks).slice(start, end);
-  const totalPages = Math.ceil(Object.keys(bookmarks).length / limit);
-  const contents = [];
+  key = key !== 'createdAt' && key !== 'updatedAt' ? 'createdAt' : key;
+  order = order !== 'asc' && order !== 'desc' ? 'asc' : order;
 
-  for (const id of contentIds) {
-    const content = await Content.findById(id);
-    const generatedContents = [];
-    user.bookmarks[id].forEach((index) => generatedContents.push(content.generatedContents[index]));
-    contents.push({
+  const totalPages = Math.ceil(
+    (await Content.find({ userEmail, bookmarks: { $exists: true, $ne: [] } }).countDocuments()) / limit
+  );
+  const contents = await Content.find({ userEmail, bookmarks: { $exists: true, $ne: [] } })
+    .select('documentType prompt generatedContents bookmarks')
+    .sort({ [key]: order })
+    .skip(skip)
+    .limit(limit);
+
+  const bookmarks = [];
+
+  for (content of contents) {
+    const bookmarkedTexts = [];
+    for (index of content.bookmarks) {
+      bookmarkedTexts.push(content.generatedContents[index]);
+    }
+    bookmarks.push({
       tool: content.documentType,
       input: content.prompt,
-      output: generatedContents,
+      output: bookmarkedTexts,
     });
   }
 
   const userBookmarks = {
-    contents,
+    contents: bookmarks,
     totalPages,
   };
 
@@ -110,28 +120,21 @@ const updateUserById = async (user, userId, updateBody) => {
   return user;
 };
 
-const updateBookmarks = async (user, { contentId, index, bookmarkedText }) => {
-  const { bookmarks } = user;
+const updateBookmarks = async (userEmail, { contentId, index }) => {
+  const content = await contentService.checkContentExistsOrNot(userEmail, { _id: contentId, index });
+  const { bookmarks } = content;
 
-  const content = await updateBookmarkedText(contentId, index, bookmarkedText);
-
-  if ([contentId] in bookmarks) {
-    if (bookmarks[contentId].includes(index)) {
-      if (content === bookmarkedText) {
-        bookmarks[contentId] = bookmarks[contentId].filter((ind) => ind !== index);
-        if (!bookmarks[contentId].length) {
-          delete bookmarks[contentId];
-        }
-      }
-    } else {
-      bookmarks[contentId].push(index);
-    }
+  if (!bookmarks.includes(index)) {
+    bookmarks.push(index);
   } else {
-    bookmarks[contentId] = [index];
+    content.bookmarks = bookmarks.filter((ind) => ind !== index);
   }
+  await content.markModified('bookmarks');
+  await content.save();
+};
 
-  await user.markModified('bookmarks');
-  await user.save();
+const updateCredits = async (email, credits) => {
+  await User.updateMany({ email }, { credits });
 };
 
 const updateFavouriteTools = async (user, tool) => {
@@ -140,7 +143,10 @@ const updateFavouriteTools = async (user, tool) => {
   } else {
     user.favouriteTools.push(tool);
   }
-  await user.save();
+
+  const { email, favouriteTools } = user;
+
+  await User.updateMany({ email }, { favouriteTools });
   return user.favouriteTools;
 };
 
@@ -226,6 +232,7 @@ module.exports = {
   checkUserExistsOrNot,
   updateUserById,
   updateBookmarks,
+  updateCredits,
   updateFavouriteTools,
   deleteUserById,
   deleteunVerifiedUserByEmail,

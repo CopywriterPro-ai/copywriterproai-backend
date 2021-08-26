@@ -55,6 +55,37 @@ const stripeCustomer = async ({ user }) => {
   }
 };
 
+const createCheckoutSessions = async ({ customerId, priceId }) => {
+  try {
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      // customer_email: customerEmail,
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      success_url: `${config.frontendUrl.web}/payment/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${config.frontendUrl.web}/payment/canceled.html`,
+    });
+    return { session };
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription sessions not created');
+  }
+};
+
+const checkoutSession = async ({ sessionId }) => {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    return { session };
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Sessions not created');
+  }
+};
+
 const createSubscription = async ({ customerId, priceId }) => {
   try {
     const subscription = await stripe.subscriptions.create({
@@ -124,6 +155,8 @@ const invoicePreview = async ({ customerId, priceId, subscriptionId }) => {
 module.exports = {
   paymentUpdate,
   stripeCustomer,
+  createCheckoutSessions,
+  checkoutSession,
   createSubscription,
   PricesList,
   cancelSubscription,
