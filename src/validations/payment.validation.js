@@ -1,12 +1,5 @@
 const Joi = require('joi');
 
-const createSubscription = {
-  body: Joi.object().keys({
-    customerId: Joi.string().required(),
-    priceId: Joi.string().required(),
-  }),
-};
-
 const createCheckoutSession = {
   body: Joi.object().keys({
     customerId: Joi.string().required(),
@@ -42,7 +35,6 @@ const invoicePreview = {
 };
 
 module.exports = {
-  createSubscription,
   createCheckoutSession,
   checkoutSession,
   cancelSubscription,

@@ -15,6 +15,16 @@ const getInvoice = async (invoiceId) => {
   }
 };
 
+const getSubscriptions = async (customerId) => {
+  const subscriptions = await stripe.subscriptions.list({
+    customer: customerId,
+    status: 'all',
+    expand: ['data.default_payment_method'],
+  });
+
+  return { subscriptions };
+};
+
 const paymentUpdate = async ({ customerId, subscriptionId }) => {
   const payment = await Payment.findOneAndUpdate(
     { customerStripeId: customerId },
@@ -161,18 +171,26 @@ const invoicePreview = async ({ customerId, priceId, subscriptionId }) => {
   return { invoice };
 };
 
-const handlePaymentIntentSucceeded = async (paymentIntent) => {
-  if (paymentIntent.status === 'succeeded') {
-    const { invoice } = await getInvoice(paymentIntent.invoice);
-    console.log(JSON.stringify(invoice));
+const handlePaymentSucceeded = async (dataObject) => {
+  if (dataObject.billing_reason === 'subscription_create') {
+    const subscriptionId = dataObject.subscription;
+    const paymentIntentId = dataObject.payment_intent;
+
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+    const subscription = await stripe.subscriptions.update(subscriptionId, {
+      default_payment_method: paymentIntent.payment_method,
+    });
+    console.log(subscription);
   }
 };
 
-const handlePaymentIntentFailed = async (paymentIntent) => {
-  console.log(paymentIntent);
+const handlePaymentFailed = async (dataObject) => {
+  console.log(dataObject);
 };
 
 module.exports = {
+  findCustomer,
   paymentUpdate,
   stripeCustomer,
   createCheckoutSessions,
@@ -183,6 +201,7 @@ module.exports = {
   updateSubscription,
   invoicePreview,
   getInvoice,
-  handlePaymentIntentSucceeded,
-  handlePaymentIntentFailed,
+  getSubscriptions,
+  handlePaymentSucceeded,
+  handlePaymentFailed,
 };

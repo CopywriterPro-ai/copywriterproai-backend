@@ -7,13 +7,8 @@ const paymentController = require('../../controllers/payment.controller');
 const router = express.Router();
 
 router.get('/product-prices', paymentController.priceList);
+router.get('/subscriptions', auth(), paymentController.getSubscriptions);
 router.post('/create-customer', auth(), paymentController.createCustomer);
-router.post(
-  '/create-subscription',
-  auth(),
-  validate(paymentValidation.createSubscription),
-  paymentController.createSubscription
-);
 router.post(
   '/create-checkout-session',
   auth(),
