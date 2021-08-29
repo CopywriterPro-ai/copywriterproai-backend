@@ -1,10 +1,27 @@
 const httpStatus = require('http-status');
 const Stripe = require('stripe');
+const moment = require('moment-timezone');
 const { Payment } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
+const planConfig = require('../config/plan');
+const userService = require('./user.service');
 
 const stripe = new Stripe(config.stripe.stripeSecretKey);
+
+// const getProduct = async (productId) => {
+//   const product = await stripe.products.retrieve(productId);
+//   return { product };
+// };
+
+const getCustomer = async (customerId) => {
+  try {
+    const customer = await Payment.findOne({ customerStripeId: customerId });
+    return customer;
+  } catch (error) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Customer not found');
+  }
+};
 
 const getInvoice = async (invoiceId) => {
   try {
@@ -181,12 +198,66 @@ const handlePaymentSucceeded = async (dataObject) => {
     const subscription = await stripe.subscriptions.update(subscriptionId, {
       default_payment_method: paymentIntent.payment_method,
     });
-    console.log(subscription);
+
+    // eslint-disable-next-line camelcase
+    const { status, plan, customer, id, current_period_end } = subscription;
+
+    const { email } = await getCustomer(customer);
+
+    await Payment.findOneAndUpdate({ email }, { customerSubscriptionId: id }, { new: true });
+
+    const { subscriptionPlan } = planConfig;
+
+    let planData = {};
+
+    if (status === 'active') {
+      switch (plan.amount) {
+        case subscriptionPlan.monthStarter.amount:
+          planData = {
+            creadit: subscriptionPlan.monthStarter.creadit,
+            package: subscriptionPlan.monthStarter.package,
+          };
+          break;
+
+        case subscriptionPlan.yearStarter.amount:
+          planData = {
+            creadit: subscriptionPlan.yearStarter.creadit,
+            package: subscriptionPlan.yearStarter.package,
+          };
+          break;
+
+        case subscriptionPlan.monthProfessinal.amount:
+          planData = {
+            creadit: subscriptionPlan.monthProfessinal.creadit,
+            package: subscriptionPlan.monthProfessinal.package,
+          };
+          break;
+
+        case subscriptionPlan.yearProfessinal.amount:
+          planData = {
+            creadit: subscriptionPlan.yearProfessinal.creadit,
+            package: subscriptionPlan.yearProfessinal.package,
+          };
+          break;
+
+        default:
+          break;
+      }
+
+      await userService.updateCredits(email, {
+        credits: planData.creadit,
+        subscription: planData.package,
+        subscriptionExpire: moment.unix(current_period_end).format(),
+      });
+
+      return { message: 'successfully subscribe update' };
+    }
   }
 };
 
-const handlePaymentFailed = async (dataObject) => {
-  console.log(dataObject);
+const handlePaymentFailed = async () => {
+  // console.log(dataObject);
+  console.log('Payment failed');
 };
 
 module.exports = {

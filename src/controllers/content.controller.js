@@ -6,7 +6,7 @@ const { userService } = require('../services');
 const { subscription } = require('../config/plan');
 
 const generate = catchAsync(async (req, res) => {
-  const { _id, email, credits, dailyCreaditUsage, freeTrial, getUserCurrentSubscription } = req.user;
+  const { _id, email, credits, dailyCreaditUsage, freeTrial, getUserCurrentSubscription, isPaidSubscribers } = req.user;
 
   if (credits === 0) {
     res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
@@ -14,6 +14,8 @@ const generate = catchAsync(async (req, res) => {
     res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial expired, Upgrade our friendship today!' });
   } else if (freeTrial.eligible === true && freeTrial.dailyLimitExceeded === true) {
     res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial daily limit exceeded' });
+  } else if (freeTrial.eligible === false && isPaidSubscribers === false) {
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Subscription expired,' });
   } else {
     const { task } = req.body;
 

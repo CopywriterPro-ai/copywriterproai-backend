@@ -74,6 +74,9 @@ const userSchema = new Schema(
       enum: subscriptionEnum,
       default: subscription.FREEMIUM,
     },
+    subscriptionExpire: {
+      type: Date,
+    },
     favouriteTools: {
       type: Array,
       required: true,
@@ -133,6 +136,19 @@ userSchema.virtual('freeTrial').get(function () {
     return { eligible: true, dailyLimitExceeded: dailyUsage.usage === trial.dailyLimit };
   }
   return { eligible: false, dailyLimitExceeded: true };
+});
+
+userSchema.virtual('isPaidSubscribers').get(function () {
+  const subs = this.subscription;
+  const subsExpire = this.subscriptionExpire;
+  const excludedFreeSubs = Object.values(subscription).filter((item) => item !== subscription.FREEMIUM);
+  const isPaidSubscription = excludedFreeSubs.includes(subs);
+
+  if (isPaidSubscription && subsExpire) {
+    return moment().isSameOrBefore(subsExpire);
+  }
+
+  return false;
 });
 
 userSchema.virtual('getUserCurrentSubscription').get(function () {

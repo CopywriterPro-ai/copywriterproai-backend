@@ -1,12 +1,5 @@
 const { trial } = require('./config');
 
-const subscriptionPlan = {
-  monthStarter: { creadit: 700 },
-  yearStarter: { creadit: 8400 },
-  monthProfessinal: { creadit: 1000 },
-  yearProfessinal: { creadit: 12000 },
-};
-
 const trialInfo = {
   ...trial,
   dailyLimit: Math.floor(trial.credits / trial.days),
@@ -14,8 +7,17 @@ const trialInfo = {
 
 const subscription = {
   FREEMIUM: 'Freemium',
-  PREMIUM_MONTHLY: 'Premium - Monthly',
-  PREMIUM_ANNUAL: 'Premium - Annual',
+  STARTER_MONTHLY: 'Starter - Monthly',
+  STARTER_ANNUAL: 'Starter - Annual',
+  PROFESSINAL_MONTHLY: 'Professinal - Monthly',
+  PROFESSINAL_ANNUAL: 'Professinal - Annual',
+};
+
+const subscriptionPlan = {
+  monthStarter: { creadit: 700, amount: 15 * 100, package: subscription.STARTER_MONTHLY },
+  yearStarter: { creadit: 8400, amount: 170 * 100, package: subscription.STARTER_ANNUAL },
+  monthProfessinal: { creadit: 1000, amount: 20 * 100, package: subscription.PROFESSINAL_MONTHLY },
+  yearProfessinal: { creadit: 12000, amount: 220 * 100, package: subscription.PROFESSINAL_ANNUAL },
 };
 
 module.exports = { subscription, trial: trialInfo, subscriptionPlan };
