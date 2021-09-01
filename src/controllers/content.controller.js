@@ -5,8 +5,26 @@ const generator = require('../services/contents');
 const { userService } = require('../services');
 const { subscription } = require('../config/plan');
 
+const generateUpdate = catchAsync(async (req, res) => {
+  let calDailyCreaditUsage;
+  const { email, credits, dailyCreaditUsage } = req.user;
+
+  const todayDate = moment().startOf('day').format();
+  const { date, usage } = dailyCreaditUsage;
+  const isSameDay = moment(date).isSame(todayDate);
+
+  if (isSameDay) {
+    calDailyCreaditUsage = { date, usage: usage + 1 };
+  } else {
+    calDailyCreaditUsage = { date: todayDate, usage: 1 };
+  }
+
+  userService.updateCredits(email, { credits: credits - 1, dailyCreaditUsage: calDailyCreaditUsage });
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'success' });
+});
+
 const generate = catchAsync(async (req, res) => {
-  const { _id, email, credits, dailyCreaditUsage, freeTrial, getUserCurrentSubscription, isPaidSubscribers } = req.user;
+  const { _id, email, credits, freeTrial, getUserCurrentSubscription, isPaidSubscribers } = req.user;
 
   if (credits === 0) {
     res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
@@ -20,7 +38,6 @@ const generate = catchAsync(async (req, res) => {
     const { task } = req.body;
 
     let generatedContent;
-    let calDailyCreaditUsage;
 
     if (task === 'paraphrasing') {
       generatedContent = await generator.writing.paraphrase(_id, email, req.body);
@@ -124,21 +141,11 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.recipe.generateRecipe(_id, email, req.body);
     }
 
-    const todayDate = moment().startOf('day').format();
-    const { date, usage } = dailyCreaditUsage;
-    const isSameDay = moment(date).isSame(todayDate);
-
-    if (isSameDay) {
-      calDailyCreaditUsage = { date, usage: usage + 1 };
-    } else {
-      calDailyCreaditUsage = { date: todayDate, usage: 1 };
-    }
-
-    userService.updateCredits(email, { credits: credits - 1, dailyCreaditUsage: calDailyCreaditUsage });
     res.status(httpStatus.OK).send(generatedContent);
   }
 });
 
 module.exports = {
+  generateUpdate,
   generate,
 };

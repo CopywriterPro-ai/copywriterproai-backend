@@ -6,6 +6,8 @@ const { contentController } = require('../../controllers');
 
 const router = express.Router();
 
+router.route('/generate-update').patch(auth(), contentController.generateUpdate);
+
 router
   .route('/generate/paraphrasing')
   .post(auth('generateContent'), validate(contentValidation.paraphrase), contentController.generate);
