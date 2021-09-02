@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const moment = require('moment-timezone');
 
 const { Schema } = mongoose;
 const { toJSON, paginate } = require('./plugins');
@@ -58,24 +57,10 @@ const userSchema = new Schema(
       enum: ['active', 'blocked'],
       default: 'active',
     },
-    credits: {
-      type: Number,
-      trim: true,
-      default: 100,
-    },
-    subscription: {
-      type: String,
-      enum: ['Freemium', 'Premium - Monthly', 'Premium - Annual'],
-      default: 'Freemium',
-    },
     favouriteTools: {
       type: Array,
       required: true,
       default: [],
-    },
-    copycounter: {
-      type: Number,
-      default: 0,
     },
   },
   {
@@ -83,10 +68,6 @@ const userSchema = new Schema(
     minimize: false,
   }
 );
-
-// add plugin that converts mongoose to json
-userSchema.plugin(toJSON);
-userSchema.plugin(paginate);
 
 /**
  * Check if email is taken
@@ -122,25 +103,9 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.virtual('isUserEligibleForFreeTrial').get(function () {
-  const currentDate = new Date();
-  const subs = this.subscription;
-  const sevenDays = moment(this.createdAt).add('7', 'days');
-  if (subs === 'Freemium' && moment(sevenDays).isBefore(currentDate)) {
-    return true;
-  }
-  return false;
-});
-
-userSchema.virtual('getUserCurrentSubscription').get(function () {
-  return this.subscription;
-});
-
-/**
- * @typedef User
- */
-userSchema.set('toObject', { virtuals: true });
-userSchema.set('toJSON', { virtuals: true });
+// add plugin that converts mongoose to json
+userSchema.plugin(toJSON);
+userSchema.plugin(paginate);
 
 const User = mongoose.model('User', userSchema);
 

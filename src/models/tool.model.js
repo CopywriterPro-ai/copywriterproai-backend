@@ -68,14 +68,6 @@ toolSchema.plugin(toJSON);
 
 const Tool = mongoose.model('Tool', toolSchema);
 
-// toolCategorySchema.pre(/^find/, async function (next) {
-//   const tools = await Tool.find({ category: this._id });
-//   console.log(tools);
-//   console.log(this);
-//   this.tools = tools;
-//   next();
-// });
-
 const ToolCategory = mongoose.model('ToolCategory', toolCategorySchema);
 
 module.exports = { ToolCategory, Tool };

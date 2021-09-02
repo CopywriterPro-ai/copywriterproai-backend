@@ -1,14 +1,25 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const generator = require('../services/contents');
-const { userService } = require('../services');
+const { subscriberService } = require('../services');
+const { subscription } = require('../config/plan');
 
 const generate = catchAsync(async (req, res) => {
-  if (req.user.credits === 0) {
+  const { _id, email } = req.user;
+  const { credits, freeTrial, subscription: currentPackage, isPaidSubscribers } = await subscriberService.getOwnSubscribe(
+    email
+  );
+
+  if (credits === 0) {
     res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
+  } else if (currentPackage === subscription.FREEMIUM && freeTrial.eligible === false) {
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial expired, Upgrade our friendship today!' });
+  } else if (freeTrial.eligible === true && freeTrial.dailyLimitExceeded === true) {
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial daily limit exceeded' });
+  } else if (freeTrial.eligible === false && isPaidSubscribers === false) {
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Subscription expired,' });
   } else {
     const { task } = req.body;
-    const { _id, email } = req.user;
 
     let generatedContent;
 
@@ -114,7 +125,6 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.recipe.generateRecipe(_id, email, req.body);
     }
 
-    userService.updateCredits(req.user.email, req.user.credits - 1);
     res.status(httpStatus.OK).send(generatedContent);
   }
 });

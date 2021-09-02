@@ -7,6 +7,7 @@ const config = require('../config/config');
 
 const stripe = new Stripe(config.stripe.stripeSecretKey);
 
+// create or get stripe customer
 const createCustomer = catchAsync(async (req, res) => {
   const customer = await paymentService.stripeCustomer({ user: req.user });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, customer });
@@ -23,13 +24,6 @@ const checkoutSessions = catchAsync(async (req, res) => {
   const { sessionId } = req.query;
   const { session } = await paymentService.checkoutSession({ sessionId });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, session });
-});
-
-const createSubscription = catchAsync(async (req, res) => {
-  const { customerId, priceId } = req.body;
-  const { subscriptionId, clientSecret } = await paymentService.createSubscription({ customerId, priceId });
-  await paymentService.paymentUpdate({ customerId, subscriptionId });
-  res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriptionId, clientSecret });
 });
 
 const priceList = catchAsync(async (req, res) => {
@@ -54,6 +48,14 @@ const invoicePreview = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ status: httpStatus.OK, invoice });
 });
 
+const getSubscriptions = catchAsync(async (req, res) => {
+  const customer = await paymentService.findCustomer(req.user.email);
+  if (customer) {
+    const { subscriptions } = await paymentService.getSubscriptions(customer.customerStripeId);
+    return res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriptions });
+  }
+});
+
 const paymentWebhook = catchAsync(async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let event;
@@ -66,23 +68,21 @@ const paymentWebhook = catchAsync(async (req, res) => {
       .send({ status: httpStatus.BAD_REQUEST, message: 'Webhook signature verification failed.' });
   }
 
-  switch (event.type) {
-    // case 'payment_intent.succeeded': {
-    //   const paymentIntent = event.data.object;
-    //   // handlePaymentIntentSucceeded(paymentIntent);
-    //   console.log(paymentIntent);
-    //   break;
-    // }
+  const dataObject = event.data.object;
 
-    case 'payment_intent.payment_failed': {
-      const paymentIntent = event.data.object;
-      // handlePaymentIntentFailed(paymentIntent);
-      console.log(paymentIntent);
+  switch (event.type) {
+    case 'invoice.payment_succeeded': {
+      paymentService.handlePaymentSucceeded(dataObject);
+      break;
+    }
+
+    case 'invoice.payment_failed': {
+      paymentService.handlePaymentFailed(dataObject);
       break;
     }
 
     default:
-      console.log(`Unhandled event type "${chalk.white.bgGreen(event.type)}"`);
+      console.log(`Unhandled event type ${chalk.black.bgWhite(event.type)}`);
       break;
   }
 
@@ -93,10 +93,10 @@ module.exports = {
   createCustomer,
   createCheckoutSessions,
   checkoutSessions,
-  createSubscription,
   priceList,
   cancelSubscription,
   updateSubscription,
   invoicePreview,
+  getSubscriptions,
   paymentWebhook,
 };

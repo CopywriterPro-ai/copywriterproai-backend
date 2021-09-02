@@ -6,3 +6,4 @@ module.exports.contentService = require('./content.service');
 module.exports.interestService = require('./interest.service');
 module.exports.toolService = require('./tool.service');
 module.exports.blogService = require('./blog.service');
+module.exports.subscriberService = require('./subscriber.service');

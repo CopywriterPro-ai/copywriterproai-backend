@@ -6,3 +6,4 @@ module.exports.paymentController = require('./payment.controller');
 module.exports.supportController = require('./support.controller');
 module.exports.toolController = require('./tool.controller');
 module.exports.blogController = require('./blog.controller');
+module.exports.subscriberController = require('./subscriber.controller');

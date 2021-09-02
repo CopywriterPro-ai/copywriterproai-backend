@@ -31,6 +31,8 @@ const envVarsSchema = Joi.object()
     MAIL_VERIFY_TOKEN_EXPIRE: Joi.string().default('10m').description('Mail verify token expires'),
     CORS_WHITELIST: Joi.string().default('*').description('Cors whitelist'),
     SENTRY_DNS_URL: Joi.string().uri().required().description('sentry dns url'),
+    TRIAL_DAYS: Joi.number().default(7).description('Trial days'),
+    TRIAL_CREDITS: Joi.number().default(700).description('Trial credits'),
   })
   .unknown();
 
@@ -100,5 +102,9 @@ module.exports = {
   },
   sentry: {
     dns: envVars.SENTRY_DNS_URL,
+  },
+  trial: {
+    days: envVars.TRIAL_DAYS,
+    credits: envVars.TRIAL_CREDITS,
   },
 };

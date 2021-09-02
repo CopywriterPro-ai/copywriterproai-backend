@@ -1,10 +1,46 @@
 const httpStatus = require('http-status');
 const Stripe = require('stripe');
+const moment = require('moment-timezone');
 const { Payment } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
+const planConfig = require('../config/plan');
+const subscriberService = require('./subscriber.service');
 
 const stripe = new Stripe(config.stripe.stripeSecretKey);
+
+// const getProduct = async (productId) => {
+//   const product = await stripe.products.retrieve(productId);
+//   return { product };
+// };
+
+const getCustomer = async (customerId) => {
+  try {
+    const customer = await Payment.findOne({ customerStripeId: customerId });
+    return customer;
+  } catch (error) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Customer not found');
+  }
+};
+
+const getInvoice = async (invoiceId) => {
+  try {
+    const invoice = await stripe.invoices.retrieve(invoiceId);
+    return { invoice };
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invoice request failed');
+  }
+};
+
+const getSubscriptions = async (customerId) => {
+  const subscriptions = await stripe.subscriptions.list({
+    customer: customerId,
+    status: 'all',
+    expand: ['data.default_payment_method'],
+  });
+
+  return { subscriptions };
+};
 
 const paymentUpdate = async ({ customerId, subscriptionId }) => {
   const payment = await Payment.findOneAndUpdate(
@@ -152,7 +188,88 @@ const invoicePreview = async ({ customerId, priceId, subscriptionId }) => {
   return { invoice };
 };
 
+const handlePaymentSucceeded = async (dataObject) => {
+  if (dataObject.billing_reason === 'subscription_create') {
+    const subscriptionId = dataObject.subscription;
+    const paymentIntentId = dataObject.payment_intent;
+
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+    const subscription = await stripe.subscriptions.update(subscriptionId, {
+      default_payment_method: paymentIntent.payment_method,
+    });
+
+    // eslint-disable-next-line camelcase
+    const { status, plan, customer, id, current_period_end } = subscription;
+
+    const { email } = await getCustomer(customer);
+
+    await Payment.findOneAndUpdate({ email }, { customerSubscriptionId: id }, { new: true });
+
+    const { subscriptionPlan } = planConfig;
+
+    let planData = {};
+
+    if (status === 'active') {
+      switch (plan.amount) {
+        case subscriptionPlan.monthStarter.amount:
+          planData = {
+            creadit: subscriptionPlan.monthStarter.creadit,
+            package: subscriptionPlan.monthStarter.package,
+          };
+          break;
+
+        case subscriptionPlan.yearStarter.amount:
+          planData = {
+            creadit: subscriptionPlan.yearStarter.creadit,
+            package: subscriptionPlan.yearStarter.package,
+          };
+          break;
+
+        case subscriptionPlan.monthProfessinal.amount:
+          planData = {
+            creadit: subscriptionPlan.monthProfessinal.creadit,
+            package: subscriptionPlan.monthProfessinal.package,
+          };
+          break;
+
+        case subscriptionPlan.yearProfessinal.amount:
+          planData = {
+            creadit: subscriptionPlan.yearProfessinal.creadit,
+            package: subscriptionPlan.yearProfessinal.package,
+          };
+          break;
+
+        default:
+          break;
+      }
+
+      let oldCreadit = 0;
+
+      const subscriber = await subscriberService.getOwnSubscribe(email);
+
+      if (subscriber.isPaidSubscribers === true) {
+        oldCreadit = subscriber.credits * 1;
+      }
+
+      await subscriberService.updateOwnSubscribe(email, {
+        credits: planData.creadit + oldCreadit,
+        subscription: planData.package,
+        subscriptionExpire: moment.unix(current_period_end).format(),
+      });
+
+      return { message: 'success' };
+    }
+  }
+};
+
+const handlePaymentFailed = async () => {
+  // console.log(dataObject);
+  console.log('Payment failed');
+};
+
 module.exports = {
+  findCustomer,
   paymentUpdate,
   stripeCustomer,
   createCheckoutSessions,
@@ -162,4 +279,8 @@ module.exports = {
   cancelSubscription,
   updateSubscription,
   invoicePreview,
+  getInvoice,
+  getSubscriptions,
+  handlePaymentSucceeded,
+  handlePaymentFailed,
 };
