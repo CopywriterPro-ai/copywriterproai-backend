@@ -5,7 +5,7 @@ const { Payment } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
 const planConfig = require('../config/plan');
-const userService = require('./user.service');
+const subscriberService = require('./subscriber.service');
 
 const stripe = new Stripe(config.stripe.stripeSecretKey);
 
@@ -244,13 +244,21 @@ const handlePaymentSucceeded = async (dataObject) => {
           break;
       }
 
-      await userService.updateCredits(email, {
-        credits: planData.creadit,
+      let oldCreadit = 0;
+
+      const subscriber = await subscriberService.getOwnSubscribe(email);
+
+      if (subscriber.isPaidSubscribers === true) {
+        oldCreadit = subscriber.credits * 1;
+      }
+
+      await subscriberService.updateOwnSubscribe(email, {
+        credits: planData.creadit + oldCreadit,
         subscription: planData.package,
         subscriptionExpire: moment.unix(current_period_end).format(),
       });
 
-      return { message: 'successfully subscribe update' };
+      return { message: 'success' };
     }
   }
 };

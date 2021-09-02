@@ -2,10 +2,11 @@ const httpStatus = require('http-status');
 const { Interest } = require('../models');
 const ApiError = require('../utils/ApiError');
 
-const createUserInterest = async (userId) => {
+const createUserInterest = async (userId, userEmail) => {
   const userInterest = {
     _id: userId,
     interests: {},
+    userEmail,
   };
   await Interest.create(userInterest);
 };

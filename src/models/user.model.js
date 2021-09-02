@@ -1,15 +1,12 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const moment = require('moment-timezone');
 
 const { Schema } = mongoose;
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
-const { subscription, trial } = require('../config/plan');
 const { authTypes } = require('../config/auths');
 
 const authTypeEnum = Object.values(authTypes);
-const subscriptionEnum = Object.values(subscription);
 
 const userSchema = new Schema(
   {
@@ -60,31 +57,10 @@ const userSchema = new Schema(
       enum: ['active', 'blocked'],
       default: 'active',
     },
-    credits: {
-      type: Number,
-      trim: true,
-      default: 700,
-    },
-    dailyCreaditUsage: {
-      date: { type: Date },
-      usage: { type: Number, default: 0 },
-    },
-    subscription: {
-      type: String,
-      enum: subscriptionEnum,
-      default: subscription.FREEMIUM,
-    },
-    subscriptionExpire: {
-      type: Date,
-    },
     favouriteTools: {
       type: Array,
       required: true,
       default: [],
-    },
-    copycounter: {
-      type: Number,
-      default: 0,
     },
   },
   {
@@ -126,40 +102,6 @@ userSchema.pre('save', async function (next) {
   }
   next();
 });
-
-userSchema.virtual('freeTrial').get(function () {
-  const subs = this.subscription;
-  const dailyUsage = this.dailyCreaditUsage;
-  const addSevenDays = moment(this.createdAt).add('7', 'days');
-
-  if (subs === subscription.FREEMIUM && moment().isSameOrBefore(addSevenDays)) {
-    return { eligible: true, dailyLimitExceeded: dailyUsage.usage === trial.dailyLimit };
-  }
-  return { eligible: false, dailyLimitExceeded: true };
-});
-
-userSchema.virtual('isPaidSubscribers').get(function () {
-  const subs = this.subscription;
-  const subsExpire = this.subscriptionExpire;
-  const excludedFreeSubs = Object.values(subscription).filter((item) => item !== subscription.FREEMIUM);
-  const isPaidSubscription = excludedFreeSubs.includes(subs);
-
-  if (isPaidSubscription && subsExpire) {
-    return moment().isSameOrBefore(subsExpire);
-  }
-
-  return false;
-});
-
-userSchema.virtual('getUserCurrentSubscription').get(function () {
-  return this.subscription;
-});
-
-/**
- * @typedef User
- */
-userSchema.set('toObject', { virtuals: true });
-userSchema.set('toJSON', { virtuals: true });
 
 // add plugin that converts mongoose to json
 userSchema.plugin(toJSON);

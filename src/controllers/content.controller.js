@@ -1,34 +1,18 @@
 const httpStatus = require('http-status');
-const moment = require('moment-timezone');
 const catchAsync = require('../utils/catchAsync');
 const generator = require('../services/contents');
-const { userService } = require('../services');
+const { subscriberService } = require('../services');
 const { subscription } = require('../config/plan');
 
-const generateUpdate = catchAsync(async (req, res) => {
-  let calDailyCreaditUsage;
-  const { email, credits, dailyCreaditUsage } = req.user;
-
-  const todayDate = moment().startOf('day').format();
-  const { date, usage } = dailyCreaditUsage;
-  const isSameDay = moment(date).isSame(todayDate);
-
-  if (isSameDay) {
-    calDailyCreaditUsage = { date, usage: usage + 1 };
-  } else {
-    calDailyCreaditUsage = { date: todayDate, usage: 1 };
-  }
-
-  userService.updateCredits(email, { credits: credits - 1, dailyCreaditUsage: calDailyCreaditUsage });
-  res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'success' });
-});
-
 const generate = catchAsync(async (req, res) => {
-  const { _id, email, credits, freeTrial, getUserCurrentSubscription, isPaidSubscribers } = req.user;
+  const { _id, email } = req.user;
+  const { credits, freeTrial, subscription: currentPackage, isPaidSubscribers } = await subscriberService.getOwnSubscribe(
+    email
+  );
 
   if (credits === 0) {
     res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
-  } else if (getUserCurrentSubscription === subscription.FREEMIUM && freeTrial.eligible === false) {
+  } else if (currentPackage === subscription.FREEMIUM && freeTrial.eligible === false) {
     res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial expired, Upgrade our friendship today!' });
   } else if (freeTrial.eligible === true && freeTrial.dailyLimitExceeded === true) {
     res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial daily limit exceeded' });
@@ -146,6 +130,5 @@ const generate = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  generateUpdate,
   generate,
 };

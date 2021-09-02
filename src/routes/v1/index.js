@@ -1,4 +1,5 @@
 const express = require('express');
+
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const contentRoute = require('./content.route');
@@ -7,6 +8,7 @@ const interestRoute = require('./interest.route');
 const supportRoute = require('./support.route');
 const toolRoute = require('./tool.route');
 const blogRoute = require('./blog.route');
+const subscriberRoute = require('./subscriber.route');
 
 const router = express.Router();
 
@@ -42,6 +44,10 @@ const defaultRoutes = [
   {
     path: '/blogs',
     route: blogRoute,
+  },
+  {
+    path: '/subscriber',
+    route: subscriberRoute,
   },
 ];
 
