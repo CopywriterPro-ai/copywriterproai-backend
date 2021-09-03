@@ -38,24 +38,24 @@ List of 6 Blog titles:
 };
 
 const blogOutline = async (userId, userEmail, { numberOfPoints, blogAbout }) => {
-  const userPrompt = `Blog About: ${removeSpaces(blogAbout)}`;
+  const userPrompt = `Blog About: "${removeSpaces(blogAbout)}"`;
 
   const prompt = `Blog Outline Example -
 
-Blog about: Importance of logging in product development
+Blog about: "Importance of logging in product development"
 Blog Outline (4 points):
 1. Why Logging is important in product development?
-2. Importance of logging in (software name) product development.
-3. What are the misconceptions around Logging?
-4. How we can create meaningful logs?
+2. What are the misconceptions around Logging?
+3. How we can create meaningful logs?
+4. What are the best available logging tools to boost product development?
 
-Blog about: How Slack is disrupting the enterprise productivity tools market
+Blog about: "How Slack is disrupting the enterprise productivity tools market"
 Blog Outline (5 points):
 1. What is Slack and How it is helping us?
 2. How Flexible and Easy to use Slack is?
 3. Why did all of a sudden it is becoming highly popular?
 4. What makes it unique from other similar apps (if any)?
-5. Methods to integrate slack into current development process.
+5. What are the methods to integrate slack into current development process?
 
 Create a Blog Outline in ${numberOfPoints + 1} points like Example.
 
@@ -67,7 +67,7 @@ Blog Outline (${numberOfPoints + 1} points):
   const blogOutlinesList = [];
 
   for (let i = 0; i < 3; i++) {
-    const blogOutlines = await generateContentUsingGPT3('davinci', 150, prompt, 1, 0.5, 0.2, [
+    const blogOutlines = await generateContentUsingGPT3('davinci', 150, prompt, 1, 0.1, 0.2, [
       '\n\n',
       `${numberOfPoints + 1}. `,
     ]);
