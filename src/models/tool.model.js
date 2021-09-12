@@ -65,6 +65,7 @@ const toolSchema = mongoose.Schema({
 
 // add plugin that converts mongoose to json
 toolSchema.plugin(toJSON);
+toolCategorySchema.plugin(toJSON);
 
 const Tool = mongoose.model('Tool', toolSchema);
 
