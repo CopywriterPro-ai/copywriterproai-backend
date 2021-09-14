@@ -8,13 +8,9 @@ const router = express.Router();
 
 // demo content generation
 
-router
-  .route('/generate/demo/paraphrasing')
-  .post('generateContent', validate(contentValidation.demoParaphrase), contentController.generate);
+router.route('/generate/demo/paraphrasing').post(validate(contentValidation.demoParaphrase), contentController.generate);
 
-router
-  .route('/generate/demo/blog-headline')
-  .post('generateContent', validate(contentValidation.demoBlogHeadline), contentController.generate);
+router.route('/generate/demo/blog-headline').post(validate(contentValidation.demoBlogHeadline), contentController.generate);
 
 // content generation
 
