@@ -10,11 +10,11 @@ const router = express.Router();
 
 router
   .route('/generate/demo/paraphrasing')
-  .post(auth('generateContent'), validate(contentValidation.demoParaphrase), contentController.generate);
+  .post('generateContent', validate(contentValidation.demoParaphrase), contentController.generate);
 
 router
   .route('/generate/demo/blog-headline')
-  .post(auth('generateContent'), validate(contentValidation.demoBlogHeadline), contentController.generate);
+  .post('generateContent', validate(contentValidation.demoBlogHeadline), contentController.generate);
 
 // content generation
 
