@@ -26,11 +26,11 @@ List of 5 Blog ideas
 const blogHeadline = async (userId, userEmail, { blogAbout }) => {
   const userPrompt = `Blog About: ${removeSpaces(blogAbout)}`;
 
-  const prompt = `Generate "catchy and attention-grabbing" Blog titles that can persuade people and get more traffic for following Blog -
+  const prompt = `Generate blog headlines relevant to "Blog About" that can persuade and hook people to the following Blog -
 
 ${userPrompt}
 
-List of 6 Blog titles:
+List of 6 Blog headlines:
 -`;
 
   const blogHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 1, 0.2, 0.1, ['\n\n']);

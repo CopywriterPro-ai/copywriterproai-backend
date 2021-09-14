@@ -1,5 +1,23 @@
 const Joi = require('joi');
 
+// demo content validation
+
+const demoParaphrase = {
+  body: Joi.object().keys({
+    task: Joi.valid('paraphrasing').required(),
+    userText: Joi.string().min(10).max(120).required(),
+  }),
+};
+
+const demoBlogHeadline = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-headline').required(),
+    blogAbout: Joi.string().min(10).max(100).required(),
+  }),
+};
+
+// content validation
+
 const paraphrase = {
   body: Joi.object().keys({
     task: Joi.valid('paraphrasing').required(),
@@ -453,6 +471,8 @@ const recipe = {
 };
 
 module.exports = {
+  demoParaphrase,
+  demoBlogHeadline,
   paraphrase,
   expand,
   simplify,
