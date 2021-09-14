@@ -19,7 +19,7 @@ const getToolCategory = catchAsync(async (req, res) => {
 
 const deleteToolCategory = catchAsync(async (req, res) => {
   await toolService.deleteToolCategory(req.params.categoryId);
-  res.status(httpStatus.OK).send({ status: httpStatus.OK });
+  res.status(httpStatus.NO_CONTENT).send({ status: httpStatus.NO_CONTENT });
 });
 
 const patchToolCategory = catchAsync(async (req, res) => {
@@ -44,7 +44,7 @@ const getTool = catchAsync(async (req, res) => {
 
 const deleteTool = catchAsync(async (req, res) => {
   await toolService.deleteTool(req.params.toolId);
-  res.status(httpStatus.OK).send({ status: httpStatus.OK });
+  res.status(httpStatus.NO_CONTENT).send({ status: httpStatus.NO_CONTENT });
 });
 
 const patchTool = catchAsync(async (req, res) => {

@@ -60,7 +60,8 @@ const postTool = async (data) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Please provide valid category id');
   }
   await checkModelExist(Tool.Tool, data.key);
-  const tool = await Tool.Tool.create(data);
+  const createdTool = await Tool.Tool.create(data);
+  const tool = await Tool.Tool.findById(createdTool.id).populate('category', 'name key');
   return tool;
 };
 
@@ -77,7 +78,7 @@ const getTool = async (id) => {
 
 const patchTool = async (id, data) => {
   await checkModelNotFound(Tool.Tool, id);
-  const tool = await Tool.Tool.findByIdAndUpdate(id, data, { new: true });
+  const tool = await Tool.Tool.findByIdAndUpdate(id, data, { new: true }).populate('category', 'name key');
   return tool;
 };
 
