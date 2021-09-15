@@ -26,7 +26,7 @@ List of 5 Blog ideas
 const blogHeadline = async (userId, userEmail, { blogAbout }) => {
   const userPrompt = `Blog About: ${removeSpaces(blogAbout)}`;
 
-  const prompt = `Generate blog headlines relevant to "Blog About" that can persuade and hook people to the following Blog -
+  const prompt = `Generate attention-grabbing blog headlines relevant to "Blog About" that can persuade and hook people to the following Blog -
 
 ${userPrompt}
 

@@ -6,14 +6,6 @@ const { contentController } = require('../../controllers');
 
 const router = express.Router();
 
-// demo content generation
-
-router.route('/generate/demo/paraphrasing').post(validate(contentValidation.demoParaphrase), contentController.generate);
-
-router.route('/generate/demo/blog-headline').post(validate(contentValidation.demoBlogHeadline), contentController.generate);
-
-// content generation
-
 router
   .route('/generate/paraphrasing')
   .post(auth('generateContent'), validate(contentValidation.paraphrase), contentController.generate);
