@@ -9,6 +9,7 @@ const supportRoute = require('./support.route');
 const toolRoute = require('./tool.route');
 const blogRoute = require('./blog.route');
 const subscriberRoute = require('./subscriber.route');
+const demoRoute = require('./demo.route');
 
 const router = express.Router();
 
@@ -48,6 +49,10 @@ const defaultRoutes = [
   {
     path: '/subscriber',
     route: subscriberRoute,
+  },
+  {
+    path: '/demo',
+    route: demoRoute,
   },
 ];
 
