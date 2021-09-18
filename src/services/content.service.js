@@ -51,10 +51,12 @@ const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, 
       stream: false,
       stop,
     });
-    if (gptResponse.data.choices && gptResponse.data.choices[0].text.trim() !== '') {
+    if (gptResponse.data.choices && gptResponse.data.choices[0].text.trim().replace(/\n\s*\n/g, '\n') >= 10) {
       break;
     }
   }
+
+  gptResponse.data.choices[0].text = gptResponse.data.choices[0].text.trim().replace(/\n\s*\n/g, '\n');
 
   return gptResponse.data;
 };

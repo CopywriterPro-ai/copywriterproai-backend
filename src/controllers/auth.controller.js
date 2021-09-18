@@ -26,8 +26,8 @@ const verifyAccount = catchAsync(async (req, res) => {
       .status(httpStatus.BAD_REQUEST)
       .send({ status: httpStatus.BAD_REQUEST, message: 'User not found or already verified' });
   }
-  await interestService.createUserInterest(userId, email);
-  await userService.updateUserById(user, userId, { isVerified: true, bookmarks: {} });
+  await interestService.createUserInterest(email);
+  await userService.updateUserById(user, userId, { isVerified: true });
   await subscriberService.createOwnSubscribe({ email, subscription: subscription.FREEMIUM });
   await userService.deleteunVerifiedUserByEmail(email);
   res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'Your account is verified, please sign in' });

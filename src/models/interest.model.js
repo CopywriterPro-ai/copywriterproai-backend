@@ -3,11 +3,11 @@ const { toJSON, paginate } = require('./plugins');
 
 const interestSchema = mongoose.Schema(
   {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-      trim: true,
-      ref: 'User',
-    },
+    // _id: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   trim: true,
+    //   ref: 'User',
+    // },
     userEmail: {
       type: String,
       required: true,
