@@ -19,7 +19,7 @@ Directions:`;
   const generateRecipeList = [];
 
   for (let i = 0; i < 1; i++) {
-    const recipe = await generateContentUsingGPT3('davinci-instruct-beta', 120, prompt, 0, 0, 0, ['\n', 'Directions:']);
+    const recipe = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0, 0, 0, ['\n', 'Directions:']);
     const { id, object, created, model, choices } = recipe;
 
     openAPIInformationsList.push({ id, object, created, model });

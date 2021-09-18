@@ -18,7 +18,7 @@ Description:`;
   const websiteShortDescriptionList = [];
 
   for (let i = 0; i < 5; i++) {
-    const websiteShortDescription = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.7, 0.3, 0, [
+    const websiteShortDescription = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.7, 0.3, 0, [
       '\n',
       'Description:',
     ]);
@@ -57,7 +57,7 @@ Keywords:`;
   const KeywordsFromTextList = [];
 
   for (let i = 0; i < 1; i++) {
-    const KeywordsFromText = await generateContentUsingGPT3('davinci', 100, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
+    const KeywordsFromText = await generateContentUsingGPT3('davinci', 50, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
     const { id, object, created, model, choices } = KeywordsFromText;
 
     openAPIInformationsList.push({ id, object, created, model });
