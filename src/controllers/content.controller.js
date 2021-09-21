@@ -1,18 +1,19 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const generator = require('../services/contents');
-const { subscriberService } = require('../services');
-const { subscription } = require('../config/plan');
+// const { subscriberService } = require('../services');
+// const { subscription } = require('../config/plan');
 
 const generate = catchAsync(async (req, res) => {
   const { _id, email } = req.user;
-  const { credits, freeTrial, subscription: currentPackage, isPaidSubscribers } = await subscriberService.getOwnSubscribe(
-    email
-  );
+  // const { credits, freeTrial, subscription: currentPackage, isPaidSubscribers } = await subscriberService.getOwnSubscribe(
+  //   email
+  // );
 
   const tempfalse = false;
 
-  if (tempfalse && credits === 0) {
+  // if (tempfalse && credits === 0) {
+  if (tempfalse) {
     //   res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
     // } else if (currentPackage === subscription.FREEMIUM && freeTrial.eligible === false) {
     //   res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial expired, Upgrade our friendship today!' });
