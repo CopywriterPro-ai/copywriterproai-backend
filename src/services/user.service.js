@@ -5,8 +5,11 @@
 const httpStatus = require('http-status');
 const { User, Content } = require('../models');
 const contentService = require('./content.service');
+const subscriberService = require('./subscriber.service');
 const ApiError = require('../utils/ApiError');
 const { authTypes } = require('../config/auths');
+const { subscription } = require('../config/plan');
+const { Subscriber } = require('../models');
 
 /**
  * Create a user
@@ -169,7 +172,7 @@ const deleteunVerifiedUserByEmail = async (email) => {
 };
 
 const registeredEmail = async (email) => {
-  const user = await User.findOne({ email, isVerified: true });
+  const user = await User.findOne({ email, isVerified: true, authType: authTypes.EMAIL });
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Email not registered');
   }
@@ -211,6 +214,13 @@ const strategyVerify = (authType) => async (accessToken, refreshToken, profile, 
         authType,
         ...userInfo,
       });
+
+      const subscriber = await Subscriber.findOne({ email: userInfo.email });
+
+      if (!subscriber) {
+        await subscriberService.createOwnSubscribe({ email: userInfo.email, subscription: subscription.FREEMIUM });
+      }
+
       done(null, newUser);
     }
   } catch (error) {
