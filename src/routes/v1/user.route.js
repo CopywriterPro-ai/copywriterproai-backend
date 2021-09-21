@@ -6,6 +6,8 @@ const { userController } = require('../../controllers');
 
 const router = express.Router();
 
+router.route('/me').get(auth(), userController.getMe);
+
 router
   .route('/')
   // .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
@@ -15,7 +17,7 @@ router
   .route('/:userId')
   .get(auth('getUserInfo'), validate(userValidation.getUser), userController.getUser)
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser);
-  // .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
+// .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
 router
   .route('/:userId/update/info')

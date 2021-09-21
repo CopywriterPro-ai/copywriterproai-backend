@@ -7,4 +7,4 @@ module.exports.supportController = require('./support.controller');
 module.exports.toolController = require('./tool.controller');
 module.exports.blogController = require('./blog.controller');
 module.exports.subscriberController = require('./subscriber.controller');
-module.exports.demoController = require('./demo.controller'); 
+module.exports.demoController = require('./demo.controller');

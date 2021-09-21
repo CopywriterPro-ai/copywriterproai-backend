@@ -203,10 +203,19 @@ const strategyValuesByAuthType = (strategy, profile) => {
 const strategyVerify = (authType) => async (accessToken, refreshToken, profile, done) => {
   try {
     const user = await User.findOne({ userId: profile.id, authType });
+    const userInfo = strategyValuesByAuthType(authType, profile);
     if (user) {
+      await User.findOneAndUpdate(
+        { userId: profile.id, authType },
+        {
+          profileAvatar: userInfo.profileAvatar,
+          firstName: userInfo.firstName,
+          lastName: userInfo.lastName,
+        },
+        { new: true }
+      );
       done(null, user);
     } else {
-      const userInfo = strategyValuesByAuthType(authType, profile);
       const newUser = await User.create({
         userId: profile.id,
         isVerified: true,
