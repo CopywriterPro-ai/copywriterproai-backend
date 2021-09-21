@@ -4,7 +4,7 @@ const logger = require('../config/logger');
 const tokenService = require('./token.service');
 const { mailTypes } = require('../config/mailtype');
 
-const supportMail = 'sabuj@copywriterpro.ai';
+const supportMail = 'support@copywriterpro.ai';
 
 const transport = nodemailer.createTransport(email.smtp);
 /* istanbul ignore next */
