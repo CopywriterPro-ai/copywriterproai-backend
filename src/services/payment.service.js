@@ -4,7 +4,7 @@ const moment = require('moment-timezone');
 const { Payment } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
-const planConfig = require('../config/plan');
+const { subscriptionPlan } = require('../config/plan');
 const subscriberService = require('./subscriber.service');
 
 const stripe = new Stripe(config.stripe.stripeSecretKey);
@@ -206,46 +206,9 @@ const handlePaymentSucceeded = async (dataObject) => {
 
     await Payment.findOneAndUpdate({ email }, { customerSubscriptionId: id }, { new: true });
 
-    const { subscriptionPlan } = planConfig;
-
-    let planData = {};
-
     if (status === 'active') {
-      switch (plan.amount) {
-        case subscriptionPlan.monthStarter.amount:
-          planData = {
-            creadit: subscriptionPlan.monthStarter.creadit,
-            package: subscriptionPlan.monthStarter.package,
-          };
-          break;
-
-        case subscriptionPlan.yearStarter.amount:
-          planData = {
-            creadit: subscriptionPlan.yearStarter.creadit,
-            package: subscriptionPlan.yearStarter.package,
-          };
-          break;
-
-        case subscriptionPlan.monthProfessinal.amount:
-          planData = {
-            creadit: subscriptionPlan.monthProfessinal.creadit,
-            package: subscriptionPlan.monthProfessinal.package,
-          };
-          break;
-
-        case subscriptionPlan.yearProfessinal.amount:
-          planData = {
-            creadit: subscriptionPlan.yearProfessinal.creadit,
-            package: subscriptionPlan.yearProfessinal.package,
-          };
-          break;
-
-        default:
-          break;
-      }
-
       let oldCreadit = 0;
-
+      const planData = subscriptionPlan[plan.metadata.priceKey];
       const subscriber = await subscriberService.getOwnSubscribe(email);
 
       if (subscriber.isPaidSubscribers === true) {
