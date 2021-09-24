@@ -7,17 +7,17 @@ const trialInfo = {
 
 const subscription = {
   FREEMIUM: 'Freemium',
-  STARTER_MONTHLY: 'Starter - Monthly',
-  STARTER_ANNUAL: 'Starter - Annual',
-  PROFESSINAL_MONTHLY: 'Professinal - Monthly',
-  PROFESSINAL_ANNUAL: 'Professinal - Annual',
+  BASIC_1MONTH: 'BASIC_1MONTH',
+  BASIC_6MONTH: 'BASIC_6MONTH',
+  PROFESSINAL_1MONTH: 'PROFESSINAL_1MONTH',
+  PROFESSINAL_6MONTH: 'PROFESSINAL_6MONTH',
 };
 
 const subscriptionPlan = {
-  monthStarter: { creadit: 700, amount: 15 * 100, package: subscription.STARTER_MONTHLY },
-  yearStarter: { creadit: 8400, amount: 170 * 100, package: subscription.STARTER_ANNUAL },
-  monthProfessinal: { creadit: 1000, amount: 20 * 100, package: subscription.PROFESSINAL_MONTHLY },
-  yearProfessinal: { creadit: 12000, amount: 220 * 100, package: subscription.PROFESSINAL_ANNUAL },
+  [subscription.BASIC_1MONTH]: { creadit: 700, package: subscription.BASIC_1MONTH },
+  [subscription.BASIC_6MONTH]: { creadit: 8400, package: subscription.BASIC_6MONTH },
+  [subscription.PROFESSINAL_1MONTH]: { creadit: 1000, package: subscription.PROFESSINAL_1MONTH },
+  [subscription.PROFESSINAL_6MONTH]: { creadit: 12000, package: subscription.PROFESSINAL_6MONTH },
 };
 
 module.exports = { subscription, trial: trialInfo, subscriptionPlan };

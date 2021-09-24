@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 });
 
 // request timeout
-app.use(timeout('60s'))
+app.use(timeout('60s'));
 
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
