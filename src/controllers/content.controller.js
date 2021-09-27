@@ -5,21 +5,20 @@ const { subscriberService } = require('../services');
 const { subscription } = require('../config/plan');
 
 const generate = catchAsync(async (req, res) => {
-  const { _id, email } = req.user;
+  const { _id, email, role } = req.user;
   const { credits, freeTrial, subscription: currentPackage, isPaidSubscribers } = await subscriberService.getOwnSubscribe(
     email
   );
 
-  // const tempfalse = false;
+  const isAdmin = role === 'admin';
 
-  // if (tempfalse && credits === 0) {
-  if (credits === 0) {
+  if (credits === 0 && !isAdmin) {
     res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
-  } else if (currentPackage === subscription.FREEMIUM && freeTrial.eligible === false) {
+  } else if (currentPackage === subscription.FREEMIUM && freeTrial.eligible === false && !isAdmin) {
     res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial expired, Upgrade our friendship today!' });
-  } else if (freeTrial.eligible === true && freeTrial.dailyLimitExceeded === true) {
+  } else if (freeTrial.eligible === true && freeTrial.dailyLimitExceeded === true && !isAdmin) {
     res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial daily limit exceeded' });
-  } else if (freeTrial.eligible === false && isPaidSubscribers === false) {
+  } else if (freeTrial.eligible === false && isPaidSubscribers === false && !isAdmin) {
     res.status(httpStatus.BAD_REQUEST).send({ message: 'Subscription expired,' });
   } else {
     const { task } = req.body;
