@@ -50,6 +50,7 @@
     "passport-jwt": "^4.0.0",
     "pm2": "^4.5.5",
     "stripe": "^8.138.0",
+    "uuid": "^8.3.2",
     "validator": "^13.5.2",
     "winston": "^3.3.3",
     "xss-clean": "^0.1.1"

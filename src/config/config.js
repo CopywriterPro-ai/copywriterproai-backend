@@ -33,6 +33,7 @@ const envVarsSchema = Joi.object()
     SENTRY_DNS_URL: Joi.string().uri().required().description('sentry dns url'),
     TRIAL_DAYS: Joi.number().default(7).description('Trial days'),
     TRIAL_CREDITS: Joi.number().default(700).description('Trial credits'),
+    IGNORE_CONTENT_SAVING_EMAIL: Joi.string().allow('').default('').description('Ignore content saving email'),
   })
   .unknown();
 
@@ -106,5 +107,8 @@ module.exports = {
   trial: {
     days: envVars.TRIAL_DAYS,
     credits: envVars.TRIAL_CREDITS,
+  },
+  content: {
+    ignoresavingdb: envVars.IGNORE_CONTENT_SAVING_EMAIL.split(','),
   },
 };

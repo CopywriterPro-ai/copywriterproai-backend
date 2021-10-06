@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-use-before-define */
 const OpenAI = require('openai-api');
+const { v4: uuidv4 } = require('uuid');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { Content } = require('../models');
@@ -121,8 +122,17 @@ const cleanAllTexts = (contents) => {
 };
 
 const storeData = async (userId, userEmail, task, prompt, apiInfos, choices) => {
+  const isIgnoresaving = config.content.ignoresavingdb.includes(userEmail);
   const formattedContents = await formatContents(userId, userEmail, task, prompt, apiInfos, choices);
-  const content = await Content.create(formattedContents);
+
+  let content;
+
+  if (isIgnoresaving) {
+    content = { ...formattedContents, id: uuidv4() };
+  } else {
+    content = await Content.create(formattedContents);
+  }
+
   return content;
 };
 
