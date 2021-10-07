@@ -32,7 +32,7 @@ const envVarsSchema = Joi.object()
     CORS_WHITELIST: Joi.string().default('*').description('Cors whitelist'),
     SENTRY_DNS_URL: Joi.string().uri().required().description('sentry dns url'),
     TRIAL_DAYS: Joi.number().default(7).description('Trial days'),
-    TRIAL_CREDITS: Joi.number().default(700).description('Trial credits'),
+    TRIAL_WORDS: Joi.number().default(700).description('Trial words'),
     IGNORE_CONTENT_SAVING_EMAIL: Joi.string().allow('').default('').description('Ignore content saving email'),
   })
   .unknown();
@@ -106,7 +106,7 @@ module.exports = {
   },
   trial: {
     days: envVars.TRIAL_DAYS,
-    credits: envVars.TRIAL_CREDITS,
+    words: envVars.TRIAL_WORDS,
   },
   content: {
     ignoresavingdb: envVars.IGNORE_CONTENT_SAVING_EMAIL.split(','),

@@ -6,13 +6,13 @@ const { subscription } = require('../config/plan');
 
 const generate = catchAsync(async (req, res) => {
   const { _id, email, role } = req.user;
-  const { credits, freeTrial, subscription: currentPackage, isPaidSubscribers } = await subscriberService.getOwnSubscribe(
+  const { words, freeTrial, subscription: currentPackage, isPaidSubscribers } = await subscriberService.getOwnSubscribe(
     email
   );
 
   const isAdmin = role === 'admin';
 
-  if (credits === 0 && !isAdmin) {
+  if (words === 0 && !isAdmin) {
     res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
   } else if (currentPackage === subscription.FREEMIUM && freeTrial.eligible === false && !isAdmin) {
     res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial expired, Upgrade our friendship today!' });

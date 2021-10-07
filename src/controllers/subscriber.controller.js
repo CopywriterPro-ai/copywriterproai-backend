@@ -22,7 +22,8 @@ const updateOwnCopyCounter = catchAsync(async (req, res) => {
 const generateUpdate = catchAsync(async (req, res) => {
   let calDailyCreaditUsage;
   const { email, role } = req.user;
-  const { credits, dailyCreaditUsage } = await subscriberService.getOwnSubscribe(email);
+  const { useWords = 0 } = req.body;
+  const { words, dailyCreaditUsage } = await subscriberService.getOwnSubscribe(email);
 
   const todayDate = moment().startOf('day').format();
   const { date, usage } = dailyCreaditUsage;
@@ -35,8 +36,17 @@ const generateUpdate = catchAsync(async (req, res) => {
     calDailyCreaditUsage = { date: todayDate, usage: 1 };
   }
 
+  let remainingWords = 0;
+  const subtractionWords = words - useWords;
+
+  if (subtractionWords < 0) {
+    remainingWords = 0;
+  } else {
+    remainingWords = subtractionWords;
+  }
+
   const subscriber = await subscriberService.updateOwnSubscribe(email, {
-    credits: isAdmin ? credits : credits - 1,
+    words: isAdmin ? words : remainingWords,
     dailyCreaditUsage: calDailyCreaditUsage,
   });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });

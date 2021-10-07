@@ -11,7 +11,7 @@ const subscriberSchema = mongoose.Schema(
     email: {
       type: String,
     },
-    credits: {
+    words: {
       type: Number,
       trim: true,
       default: 700,
