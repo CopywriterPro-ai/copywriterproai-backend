@@ -207,16 +207,16 @@ const handlePaymentSucceeded = async (dataObject) => {
     await Payment.findOneAndUpdate({ email }, { customerSubscriptionId: id }, { new: true });
 
     if (status === 'active') {
-      let oldCreadit = 0;
+      let oldWords = 0;
       const planData = subscriptionPlan[plan.metadata.priceKey];
       const subscriber = await subscriberService.getOwnSubscribe(email);
 
       if (subscriber.isPaidSubscribers === true) {
-        oldCreadit = subscriber.credits * 1;
+        oldWords = subscriber.words * 1;
       }
 
       await subscriberService.updateOwnSubscribe(email, {
-        credits: planData.creadit + oldCreadit,
+        words: planData.words + oldWords,
         subscription: planData.package,
         subscriptionExpire: moment.unix(current_period_end).format(),
       });

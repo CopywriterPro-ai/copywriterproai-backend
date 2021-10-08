@@ -2,7 +2,7 @@ const { trial } = require('./config');
 
 const trialInfo = {
   ...trial,
-  dailyLimit: Math.floor(trial.credits / trial.days),
+  dailyLimit: Math.floor(trial.words / trial.days),
 };
 
 const subscription = {
@@ -14,10 +14,10 @@ const subscription = {
 };
 
 const subscriptionPlan = {
-  [subscription.BASIC_1MONTH]: { creadit: 700, package: subscription.BASIC_1MONTH },
-  [subscription.BASIC_6MONTH]: { creadit: 8400, package: subscription.BASIC_6MONTH },
-  [subscription.PROFESSINAL_1MONTH]: { creadit: 1000, package: subscription.PROFESSINAL_1MONTH },
-  [subscription.PROFESSINAL_6MONTH]: { creadit: 12000, package: subscription.PROFESSINAL_6MONTH },
+  [subscription.BASIC_1MONTH]: { words: 700, package: subscription.BASIC_1MONTH },
+  [subscription.BASIC_6MONTH]: { words: 8400, package: subscription.BASIC_6MONTH },
+  [subscription.PROFESSINAL_1MONTH]: { words: 1000, package: subscription.PROFESSINAL_1MONTH },
+  [subscription.PROFESSINAL_6MONTH]: { words: 12000, package: subscription.PROFESSINAL_6MONTH },
 };
 
 module.exports = { subscription, trial: trialInfo, subscriptionPlan };
