@@ -105,8 +105,8 @@ const createCheckoutSessions = async ({ customerId, priceId }) => {
         },
       ],
       allow_promotion_codes: true,
-      success_url: `${config.frontendUrl.web}/payment/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${config.frontendUrl.web}/payment/canceled.html`,
+      success_url: `${config.frontendUrl.web}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${config.frontendUrl.web}/payment/canceled`,
     });
     return { session };
   } catch (error) {
