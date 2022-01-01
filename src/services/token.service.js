@@ -127,6 +127,18 @@ const generateMailingToken = (payload) => {
   });
 };
 
+const generateExtensionAccessToken = async (user) => {
+  const extensionAccessTokenExpires = moment().add(jwtConfig.extensionAccessExpirationMonths, 'months');
+  const accessToken = generateToken(user.id, extensionAccessTokenExpires, tokenTypes.ACCESS);
+
+  return {
+    access: {
+      token: accessToken,
+      expires: extensionAccessTokenExpires.toDate(),
+    },
+  };
+};
+
 module.exports = {
   generateToken,
   saveToken,
@@ -136,4 +148,5 @@ module.exports = {
   generateResetPasswordToken,
   generateStrategyToken,
   generateMailingToken,
+  generateExtensionAccessToken,
 };

@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const catchAsync = require('../utils/catchAsync');
-const { userService, contentService } = require('../services');
+const { userService, contentService, tokenService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -67,6 +67,11 @@ const updateUserCopyCounter = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(copyCounter);
 });
 
+const extensionAccessToken = catchAsync(async (req, res) => {
+  const accessToken = await tokenService.generateExtensionAccessToken(req.user);
+  res.status(httpStatus.OK).send(accessToken);
+});
+
 module.exports = {
   createUser,
   getMe,
@@ -80,4 +85,5 @@ module.exports = {
   updateUserContent,
   updateUserFavouriteTools,
   updateUserCopyCounter,
+  extensionAccessToken,
 };

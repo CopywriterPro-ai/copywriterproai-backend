@@ -39,4 +39,6 @@ router
 
 router.route('/:userId/copycounter').patch(auth('updateUserInfo'), userController.updateUserCopyCounter);
 
+router.route('/extension/access').post(auth(), userController.extensionAccessToken);
+
 module.exports = router;
