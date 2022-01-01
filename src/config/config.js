@@ -12,6 +12,9 @@ const envVarsSchema = Joi.object()
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
+    JWT_EXTENSION_ACCESS_EXPIRATION_MONTHS: Joi.number()
+      .default(6)
+      .description('months after which extension access tokens expire'),
     OPENAI_API_KEY: Joi.string().required().description('OpenAI secret key'),
     STRIPE_SECRET_KEY: Joi.string().required().description('Stripe secret key'),
     STRIPE_WEBHOOK_SECRET_KEY: Joi.string().description('Stripe webhook secret key'),
@@ -60,6 +63,7 @@ module.exports = {
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: 10,
+    extensionAccessExpirationMonths: envVars.JWT_EXTENSION_ACCESS_EXPIRATION_MONTHS,
   },
   passportConfig: {
     authSecretKey: envVars.PASSPORT_SECRET_JWT_KEY,
