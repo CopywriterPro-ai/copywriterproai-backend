@@ -63,5 +63,10 @@
     "eslint-plugin-prettier": "^3.3.1",
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "src/data/*"
+    ]
   }
 }

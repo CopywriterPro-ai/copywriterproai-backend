@@ -12,6 +12,7 @@ roleRights.set(roles[1], [
   'manageContent',
   'getBlog',
   'manageBlog',
+  'updateNotice',
 ]);
 
 module.exports = {

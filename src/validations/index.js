@@ -7,3 +7,4 @@ module.exports.supportValidation = require('./support.validation');
 module.exports.toolValidation = require('./tool.validation');
 module.exports.blogValidation = require('./blog.validation');
 module.exports.demoValidation = require('./demo.validation');
+module.exports.noticeValidation = require('./notice.validation');
