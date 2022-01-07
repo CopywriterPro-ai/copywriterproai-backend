@@ -10,6 +10,7 @@ const toolRoute = require('./tool.route');
 const blogRoute = require('./blog.route');
 const subscriberRoute = require('./subscriber.route');
 const demoRoute = require('./demo.route');
+const noticeRoute = require('./notice.route');
 
 const router = express.Router();
 
@@ -53,6 +54,10 @@ const defaultRoutes = [
   {
     path: '/demo',
     route: demoRoute,
+  },
+  {
+    path: '/notice',
+    route: noticeRoute,
   },
 ];
 
