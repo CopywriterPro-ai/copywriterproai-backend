@@ -24,11 +24,6 @@ const contentSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    wordLimit: {
-      type: Number,
-      trim: true,
-      default: null,
-    },
     tone: {
       type: String,
       trim: true,

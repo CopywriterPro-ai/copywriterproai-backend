@@ -3,49 +3,77 @@ const Joi = require('joi');
 const paraphrase = {
   body: Joi.object().keys({
     task: Joi.valid('paraphrasing').required(),
-    userText: Joi.string().required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(15).max(400).required(),
+      otherwise: Joi.string().min(15).max(600).required(),
+    }),
   }),
 };
 
 const simplify = {
   body: Joi.object().keys({
     task: Joi.valid('simplifier').required(),
-    userText: Joi.string().required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(15).max(400).required(),
+      otherwise: Joi.string().min(15).max(600).required(),
+    }),
   }),
 };
 
 const summarize = {
   body: Joi.object().keys({
     task: Joi.valid('summarizer').required(),
-    userText: Joi.string().required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(15).max(400).required(),
+      otherwise: Joi.string().min(15).max(600).required(),
+    }),
   }),
 };
 
 const expand = {
   body: Joi.object().keys({
     task: Joi.valid('expander').required(),
-    userText: Joi.string().required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(15).max(400).required(),
+      otherwise: Joi.string().min(15).max(600).required(),
+    }),
   }),
 };
 
 const notesFromPassage = {
   body: Joi.object().keys({
     task: Joi.valid('notes-from-passage').required(),
-    userText: Joi.string().required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(15).max(400).required(),
+      otherwise: Joi.string().min(15).max(600).required(),
+    }),
   }),
 };
 
 const grammarFixer = {
   body: Joi.object().keys({
     task: Joi.valid('grammar-fixer').required(),
-    userText: Joi.string().required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(15).max(400).required(),
+      otherwise: Joi.string().min(15).max(600).required(),
+    }),
   }),
 };
 
 const changeTone = {
   body: Joi.object().keys({
     task: Joi.valid('change-tone').required(),
-    userText: Joi.string().required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(15).max(400).required(),
+      otherwise: Joi.string().min(15).max(600).required(),
+    }),
     tone: Joi.string()
       .required()
       .valid(
@@ -73,217 +101,237 @@ const changeTone = {
 const blogIdea = {
   body: Joi.object().keys({
     task: Joi.valid('blog-idea').required(),
-    productName: Joi.string().required(),
-    productDescription: Joi.string().required(),
+    productName: Joi.string().min(1).max(50).required(),
+    productDescription: Joi.string().min(15).max(300).required(),
   }),
 };
 
 const blogHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('blog-headline').required(),
-    blogAbout: Joi.string().required(),
+    blogAbout: Joi.string().min(15).max(200).required(),
   }),
 };
 
 const blogOutline = {
   body: Joi.object().keys({
     task: Joi.valid('blog-outline').required(),
-    numberOfPoints: Joi.number().required(),
-    blogAbout: Joi.string().required(),
+    numberOfPoints: Joi.number().min(1).max(10).required(),
+    blogAbout: Joi.string().min(15).max(200).required(),
   }),
 };
 
 const blogIntro = {
   body: Joi.object().keys({
     task: Joi.valid('blog-intro').required(),
-    title: Joi.string().required(),
-    about: Joi.string().required(),
+    title: Joi.string().min(15).max(150).required(),
+    about: Joi.string().min(15).max(200).required(),
   }),
 };
 
 const blogTopic = {
   body: Joi.object().keys({
     task: Joi.valid('blog-topic').required(),
-    about: Joi.string().required(),
-    topic: Joi.string().required(),
+    about: Joi.string().min(15).max(200).required(),
+    topic: Joi.string().min(15).max(200).required(),
   }),
 };
 
 const productDescription = {
   body: Joi.object().keys({
     task: Joi.valid('product-description').required(),
-    productName: Joi.string().required(),
-    productType: Joi.string().required(),
+    productName: Joi.string().min(1).max(50).required(),
+    productType: Joi.string().min(5).max(100).required(),
   }),
 };
 
 const makeProductDescriptionSEOFriendly = {
   body: Joi.object().keys({
     task: Joi.valid('seo-friendly-product-description').required(),
-    productName: Joi.string().trim().required(),
-    productType: Joi.string().trim().required(),
-    productFeatures: Joi.string().trim().required(),
-    productBenefits: Joi.string().trim().required(),
-    targetAudience: Joi.string().trim().required(),
+    productName: Joi.string().min(1).max(50).required(),
+    productType: Joi.string().min(5).max(100).required(),
+    productFeatures: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(15).max(150).required(),
+      otherwise: Joi.string().min(15).max(250).required(),
+    }),
+    productBenefits: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(15).max(150).required(),
+      otherwise: Joi.string().min(15).max(250).required(),
+    }),
+    targetAudience: Joi.string().min(3).max(50).required(),
   }),
 };
 
 const productReview = {
   body: Joi.object().keys({
     task: Joi.valid('product-review').required(),
-    product: Joi.string().required(),
-    rating: Joi.string().required(),
-    comment: Joi.string().required(),
+    product: Joi.string().min(1).max(50).required(),
+    rating: Joi.string().required().valid('Worst', 'Bad', 'Average', 'Good', 'Best'),
+    comment: Joi.string().min(1).max(150).required(),
   }),
 };
 
 const catchyHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('catchy-headline').required(),
-    content: Joi.string().required(),
+    content: Joi.string().min(1).max(200).required(),
   }),
 };
 
 const attentionGrabbingHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('attention-grabbing-headline').required(),
-    content: Joi.string().required(),
+    content: Joi.string().min(1).max(200).required(),
   }),
 };
 
 const newspaperHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('newspaper-headline').required(),
-    content: Joi.string().required(),
+    content: Joi.string().min(1).max(200).required(),
   }),
 };
 
 const resumeHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('resume-headline').required(),
-    profession: Joi.string().required(),
+    profession: Joi.string().min(1).max(50).required(),
   }),
 };
 
 const campaignPostIdeaFromBusinessType = {
   body: Joi.object().keys({
     task: Joi.valid('campaign-facebook-post', 'twitter-campaign-post').required(),
-    platformType: Joi.string().required(),
+    platformType: Joi.string().min(5).max(100).required(),
   }),
 };
 
 const facebookAdPrimaryTexts = {
   body: Joi.object().keys({
     task: Joi.valid('ads-facebook-primary-texts').required(),
-    companyName: Joi.string().required(),
-    businessType: Joi.string().required(),
-    benefits: Joi.string().required(),
+    companyName: Joi.string().min(1).max(50).required(),
+    businessType: Joi.string().min(3).max(100).required(),
+    benefits: Joi.string().min(10).max(200).required(),
   }),
 };
 
 const facebookAdHeadlines = {
   body: Joi.object().keys({
     task: Joi.valid('ads-facebook-headlines').required(),
-    productName: Joi.string().required(),
-    businessType: Joi.string().required(),
-    customerBenefit: Joi.string().required(),
+    productName: Joi.string().min(1).max(50).required(),
+    businessType: Joi.string().min(3).max(100).required(),
+    customerBenefit: Joi.string().min(10).max(200).required(),
   }),
 };
 
 const facebookAdLinkDescription = {
   body: Joi.object().keys({
     task: Joi.valid('ads-facebook-link-descriptions').required(),
-    companyName: Joi.string().required(),
-    platformType: Joi.string().required(),
+    companyName: Joi.string().min(1).max(50).required(),
+    platformType: Joi.string().min(3).max(100).required(),
   }),
 };
 
 const facebookAdsFromProductDescription = {
   body: Joi.object().keys({
     task: Joi.valid('facebook-ads-from-product-description').required(),
-    product: Joi.string().required(),
+    product: Joi.string().min(15).max(200).required(),
   }),
 };
 
 const instagramAdTexts = {
   body: Joi.object().keys({
     task: Joi.valid('instagram-ad-texts').required(),
-    platformType: Joi.string().required(),
-    context: Joi.string().required(),
+    platformType: Joi.string().min(5).max(100).required(),
+    context: Joi.string().min(15).max(200).required(),
   }),
 };
 
 const linkedinAdTexts = {
   body: Joi.object().keys({
     task: Joi.valid('linkedin-ad-texts').required(),
-    companyName: Joi.string().required(),
-    businessType: Joi.string().required(),
-    benefits: Joi.string().required(),
+    companyName: Joi.string().min(1).max(50).required(),
+    businessType: Joi.string().min(5).max(100).required(),
+    benefits: Joi.string().min(10).max(200).required(),
   }),
 };
 
 const googleAdHeadlines = {
   body: Joi.object().keys({
     task: Joi.valid('ads-google-headlines').required(),
-    name: Joi.string().required(),
-    businessType: Joi.string().required(),
+    name: Joi.string().min(1).max(50).required(),
+    businessType: Joi.string().min(5).max(100).required(),
   }),
 };
 
 const googleAdDescriptions = {
   body: Joi.object().keys({
     task: Joi.valid('ads-google-descriptions').required(),
-    businessName: Joi.string().required(),
-    productCategories: Joi.string().required(),
-    uniqueness: Joi.string().required(),
-    promotions: Joi.string().required(),
-    keywords: Joi.string().required(),
+    businessName: Joi.string().min(1).max(50).required(),
+    productCategories: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(3).max(100).required(),
+      otherwise: Joi.string().min(3).max(150).required(),
+    }),
+    uniqueness: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(10).max(100).required(),
+      otherwise: Joi.string().min(10).max(200).required(),
+    }),
+    promotions: Joi.string().min(5).max(50).required(),
+    keywords: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(3).max(100).required(),
+      otherwise: Joi.string().min(3).max(150).required(),
+    }),
   }),
 };
 
 const youtubeVideoTitleFromDescription = {
   body: Joi.object().keys({
     task: Joi.valid('youtube-video-titles-from-description').required(),
-    description: Joi.string().required(),
+    description: Joi.string().min(10).max(300).required(),
   }),
 };
 
 const youtubeVideoIdeas = {
   body: Joi.object().keys({
     task: Joi.valid('youtube-video-ideas').required(),
-    topic: Joi.string().required(),
+    topic: Joi.string().min(10).max(200).required(),
   }),
 };
 
 const imageIdeasFromAdText = {
   body: Joi.object().keys({
     task: Joi.valid('image-idea-from-ad-text').required(),
-    product: Joi.string().required(),
-    adText: Joi.string().required(),
+    product: Joi.string().min(5).max(100).required(),
+    adText: Joi.string().min(20).max(200).required(),
   }),
 };
 
 const emailMarketingCampaignSubject = {
   body: Joi.object().keys({
     task: Joi.valid('email-marketing-campaign-subject').required(),
-    productDescription: Joi.string().required(),
+    productDescription: Joi.string().min(20).max(300).required(),
   }),
 };
 
 const emailMarketingCampaignBody = {
   body: Joi.object().keys({
     task: Joi.valid('email-marketing-campaign-body').required(),
-    productDescription: Joi.string().required(),
-    about: Joi.string().required(),
-    subjectLine: Joi.string().required(),
+    productDescription: Joi.string().min(20).max(200).required(),
+    about: Joi.string().min(20).max(150).required(),
+    subjectLine: Joi.string().min(5).max(60).required(),
   }),
 };
 
 const emailBody = {
   body: Joi.object().keys({
     task: Joi.valid('email-body').required(),
-    about: Joi.string().required(),
-    to: Joi.string().required(),
+    about: Joi.string().min(20).max(150).required(),
+    to: Joi.string().min(5).max(30).required(),
     tone: Joi.string()
       .required()
       .valid(
@@ -311,77 +359,93 @@ const emailBody = {
 const generatedSubjectFromBody = {
   body: Joi.object().keys({
     task: Joi.valid('email-subject-from-body').required(),
-    emailBody: Joi.string().required(),
+    emailBody: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(10).max(400).required(),
+      otherwise: Joi.string().min(10).max(600).required(),
+    }),
   }),
 };
 
 const websiteShortDescription = {
   body: Joi.object().keys({
     task: Joi.valid('website-short-description').required(),
-    industryType: Joi.string().required(),
-    businessName: Joi.string().required(),
+    industryType: Joi.string().min(5).max(100).required(),
+    businessName: Joi.string().min(1).max(50).required(),
   }),
 };
 
 const keywordsFromText = {
   body: Joi.object().keys({
     task: Joi.valid('website-keywords-from-text').required(),
-    primaryText: Joi.string().required(),
+    primaryText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(10).max(400).required(),
+      otherwise: Joi.string().min(10).max(600).required(),
+    }),
   }),
 };
 
 const videoTagsFromDescription = {
   body: Joi.object().keys({
     task: Joi.valid('youtube-video-tags-from-description').required(),
-    primaryText: Joi.string().required(),
+    primaryText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(10).max(400).required(),
+      otherwise: Joi.string().min(10).max(600).required(),
+    }),
   }),
 };
 
 const channelTagsFromDescription = {
   body: Joi.object().keys({
     task: Joi.valid('youtube-channel-tags-from-description').required(),
-    primaryText: Joi.string().required(),
+    primaryText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(10).max(400).required(),
+      otherwise: Joi.string().min(10).max(600).required(),
+    }),
   }),
 };
 
 const seoFriendlyBlogIdeas = {
   body: Joi.object().keys({
     task: Joi.valid('website-seo-friendly-blog-ideas').required(),
-    content: Joi.string().required(),
-    desiredOutcome: Joi.string().required(),
-    industry: Joi.string().required(),
-    targetAudience: Joi.string().required(),
+    content: Joi.string().min(5).max(100).required(),
+    desiredOutcome: Joi.string().min(5).max(100).required(),
+    industry: Joi.string().min(5).max(50).required(),
+    targetAudience: Joi.string().min(3).max(50).required(),
   }),
 };
 
 const landingPageHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('website-landing-page-headline').required(),
-    businessType: Joi.string().trim().required(),
+    businessType: Joi.string().min(5).max(100).required(),
   }),
 };
 
 const productName = {
   body: Joi.object().keys({
     task: Joi.valid('product-name').required(),
-    productDescription: Joi.string().required(),
-    keywords: Joi.string().required(),
+    productDescription: Joi.string().min(20).max(200).required(),
+    keywords: Joi.string().min(3).max(100).required(),
   }),
 };
 
 const linkedInSummary = {
   body: Joi.object().keys({
     task: Joi.valid('linkedin-summary').required(),
-    profession: Joi.string().required(),
-    skills: Joi.string().required(),
+    profession: Joi.string().min(3).max(50).required(),
+    skills: Joi.string().min(3).max(100).required(),
   }),
 };
 
 const catchyBusinessTaglines = {
   body: Joi.object().keys({
     task: Joi.valid('catchy-business-taglines').required(),
-    companyName: Joi.string().trim().required(),
-    businessType: Joi.string().trim().required(),
+    companyName: Joi.string().min(1).max(50).required(),
+    businessType: Joi.string().min(5).max(100).required(),
   }),
 };
 
@@ -395,33 +459,33 @@ const fiverrCategoriesHeadline = {
 const CVSummary = {
   body: Joi.object().keys({
     task: Joi.valid('cv-summary').required(),
-    yourJobTitle: Joi.string().required(),
-    keyAchievements: Joi.string().required(),
-    yearsOfExperience: Joi.string().required(),
+    yourJobTitle: Joi.string().min(3).max(50).required(),
+    keyAchievements: Joi.string().min(10).max(150).required(),
+    yearsOfExperience: Joi.string().max(2).required(),
   }),
 };
 
 const problemAgitateSolution = {
   body: Joi.object().keys({
     task: Joi.valid('problem-agitate-solution').required(),
-    productName: Joi.string().required(),
-    productDescription: Joi.string().required(),
+    productName: Joi.string().min(1).max(50).required(),
+    productDescription: Joi.string().min(10).max(300).required(),
   }),
 };
 
 const problemAgitateSolutionOutcome = {
   body: Joi.object().keys({
     task: Joi.valid('problem-agitate-solution-outcome').required(),
-    productName: Joi.string().required(),
-    productDescription: Joi.string().required(),
+    productName: Joi.string().min(1).max(50).required(),
+    productDescription: Joi.string().min(10).max(300).required(),
   }),
 };
 
 const attentionInterestDesireAction = {
   body: Joi.object().keys({
     task: Joi.valid('attention-interest-desire-action').required(),
-    productName: Joi.string().required(),
-    productDescription: Joi.string().required(),
+    productName: Joi.string().min(1).max(50).required(),
+    productDescription: Joi.string().min(10).max(300).required(),
   }),
 };
 
@@ -438,9 +502,9 @@ const attentionInterestDesireAction = {
 const amazonProductListings = {
   body: Joi.object().keys({
     task: Joi.valid('amazon-product-listings').required(),
-    productName: Joi.string().required(),
-    productCategories: Joi.string().required(),
-    productFeatures: Joi.string().required(),
+    productName: Joi.string().min(1).max(50).required(),
+    productCategories: Joi.string().min(5).max(50).required(),
+    productFeatures: Joi.string().min(10).max(250).required(),
   }),
 };
 

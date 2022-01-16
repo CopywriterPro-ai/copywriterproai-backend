@@ -62,6 +62,10 @@ const userSchema = new Schema(
       required: true,
       default: [],
     },
+    inputLimit: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
