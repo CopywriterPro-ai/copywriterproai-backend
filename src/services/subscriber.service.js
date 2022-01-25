@@ -10,7 +10,7 @@ const createOwnSubscribe = async (data) => {
 const getOwnSubscribe = async (email) => {
   const subscriber = await Subscriber.findOne({ email });
   if (!subscriber) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Subscribe not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subscriber not found');
   }
   return subscriber;
 };
@@ -18,7 +18,7 @@ const getOwnSubscribe = async (email) => {
 const updateOwnSubscribe = async (email, data) => {
   const subscriber = await Subscriber.findOneAndUpdate({ email }, data, { new: true });
   if (!subscriber) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Subscribe not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subscriber not found');
   }
   return subscriber;
 };

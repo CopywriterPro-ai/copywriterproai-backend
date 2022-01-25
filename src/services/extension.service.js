@@ -117,16 +117,6 @@ const removeSpaces = (text) => {
   return text.trim().replace(/ +(?= )/g, '');
 };
 
-/**
- * Temporary
- */
-
-const cleanAllTextsDemo = (contents) => {
-  return contents
-    .filter((text) => text.trim() !== '')
-    .map((text, idx) => (idx ? text.substr(3, text.length).trim() : text.trim()));
-};
-
 const cleanAllTexts = (contents) => {
   return contents.filter((text) => text.trim() !== '').map((text) => text.substr(text.indexOf('-') + 1, text.length).trim());
 };
@@ -188,7 +178,6 @@ module.exports = {
   generateContentUsingGPT3,
   formatContents,
   removeSpaces,
-  cleanAllTextsDemo,
   cleanAllTexts,
   storeData,
   formatResponse,

@@ -5,7 +5,7 @@ const generator = require('../services/contents');
 const generate = catchAsync(async (req, res) => {
   const { task } = req.body;
 
-  let generatedContent;
+  let generatedContent = {};
 
   if (task === 'paraphrasing') {
     generatedContent = await generator.demo.paraphrase(req.body);

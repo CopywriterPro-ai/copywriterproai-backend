@@ -6,9 +6,12 @@ const { subscription } = require('../config/plan');
 
 const generate = catchAsync(async (req, res) => {
   const { _id, email, role } = req.user;
-  const { words, freeTrial, subscription: currentPackage, isPaidSubscribers } = await subscriberService.getOwnSubscribe(
-    email
-  );
+  const {
+    words,
+    freeTrial,
+    subscription: currentPackage,
+    subscriberInfo: { isPaidSubscribers },
+  } = await subscriberService.getOwnSubscribe(email);
 
   const isAdmin = role === 'admin';
 
@@ -17,13 +20,13 @@ const generate = catchAsync(async (req, res) => {
   } else if (currentPackage === subscription.FREEMIUM && freeTrial.eligible === false && !isAdmin) {
     res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial expired, Upgrade our friendship today!' });
   } else if (freeTrial.eligible === true && freeTrial.dailyLimitExceeded === true && !isAdmin) {
-    res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial daily limit exceeded' });
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial daily limit exceeded!' });
   } else if (freeTrial.eligible === false && isPaidSubscribers === false && !isAdmin) {
-    res.status(httpStatus.BAD_REQUEST).send({ message: 'Subscription expired,' });
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Subscription expired!' });
   } else {
     const { task } = req.body;
 
-    let generatedContent;
+    let generatedContent = {};
 
     if (task === 'paraphrasing') {
       generatedContent = await generator.writing.paraphrase(_id, email, req.body);

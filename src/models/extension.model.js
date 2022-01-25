@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
-const contentSchema = mongoose.Schema(
+const extensionSchema = mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.ObjectId,
@@ -49,12 +49,9 @@ const contentSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-contentSchema.plugin(toJSON);
-contentSchema.plugin(paginate);
+extensionSchema.plugin(toJSON);
+extensionSchema.plugin(paginate);
 
-/**
- * @typedef Content
- */
-const Content = mongoose.model('Content', contentSchema);
+const Extension = mongoose.model('Extension', extensionSchema);
 
-module.exports = Content;
+module.exports = Extension;

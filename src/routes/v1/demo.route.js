@@ -1,5 +1,5 @@
 const express = require('express');
-const validate = require('../../middlewares/validate');
+const validate = require('../../middlewares/content.validate');
 const { demoValidation } = require('../../validations');
 const { demoController } = require('../../controllers');
 
