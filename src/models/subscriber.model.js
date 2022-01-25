@@ -62,6 +62,31 @@ subscriberSchema.virtual('isPaidSubscribers').get(function () {
   return false;
 });
 
+subscriberSchema.virtual('inputLimit').get(function () {
+  const subs = this.subscription;
+  const subsExpire = this.subscriptionExpire;
+  const excludedFreeSubs = Object.values(subscription).filter((item) => item !== subscription.FREEMIUM);
+  const isPaidSubscription = excludedFreeSubs.includes(subs);
+
+  const isPaidSubscribers = isPaidSubscription && subsExpire ? moment().isSameOrBefore(subsExpire) : false;
+
+  if (isPaidSubscribers) {
+    switch (subs) {
+      case subscription.BASIC_1MONTH:
+      case subscription.BASIC_6MONTH:
+        return true;
+
+      case subscription.PROFESSIONAL_1MONTH:
+      case subscription.PROFESSIONAL_6MONTH:
+        return false;
+
+      default:
+        return true;
+    }
+  }
+  return true;
+});
+
 subscriberSchema.set('toObject', { virtuals: true });
 subscriberSchema.set('toJSON', { virtuals: true });
 

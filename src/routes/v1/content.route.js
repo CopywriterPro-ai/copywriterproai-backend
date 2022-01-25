@@ -1,47 +1,17 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
-const validate = require('../../middlewares/validate');
+const validate = require('../../middlewares/content.validate');
 const { contentValidation } = require('../../validations');
 const { contentController } = require('../../controllers');
 
 const router = express.Router();
 
-const hello = (tx) => (req, res, next) => {
-  console.log(tx);
-  return next();
-}
-
-router.route('/generate/paraphrasing').post(
-  auth('generateContent'),
-  (req, res, next) => {
-    if (2 === 2) {
-      hello("hi");
-    }
-    return next();
-  },
-  contentController.generate
-);
+router.route('/generate/paraphrasing')
+  .post(auth('generateContent'), validate(contentValidation.paraphrase), contentController.generate);
 
 router
   .route('/generate/expander')
   .post(auth('generateContent'), validate(contentValidation.expand), contentController.generate);
-
-// const expand = {
-//   body: Joi.object().keys({
-//     task: Joi.valid('expander').required(),
-//     userText: Joi.string().min(5).max(50).required(),
-//   }),
-// };
-
-// a = package.expand.userText.min
-// b = package.expand.userText.max
-
-// const expand = {
-//   body: Joi.object().keys({
-//     task: Joi.valid('expander').required(),
-//     userText: Joi.string().min(a).max(b).required(),
-//   }),
-// };
 
 router
   .route('/generate/simplifier')

@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 const Demo = require('../../models/demo.model');
-const { generateContentUsingGPT3, removeSpaces, cleanAllTexts } = require('../content.service');
+const { generateContentUsingGPT3, removeSpaces, cleanAllTextsDemo } = require('../content.service');
 
 const storeData = async (documentType, prompt, openAPIInformation, generatedContents) => {
   const formattedContents = {
@@ -18,25 +18,22 @@ const storeData = async (documentType, prompt, openAPIInformation, generatedCont
 const paraphrase = async ({ userText }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Original: He has tons of stuff to throw away.
-Paraphrase: He needs to get rid of a lot of junk.
-Original: Symptoms of influenza include fever and nasal congestion.
-Paraphrase: A stuffy nose and elevated temperature are signs you may have the flu.
+  const prompt = `Paraphrase the Original text.
+
+Original: Her life spanned years of incredible change for women as they gained more rights than ever before.
+Paraphrase: She lived through the exciting era of women's liberation.
+Original: Giraffes like Acacia leaves and hay, and they can consume 75 pounds of food a day.
+Paraphrase: A giraffe can eat up to 75 pounds of Acacia leaves and hay daily.
 Original: ${userPrompt}
-Paraphrase:`;
+3 different ways to Paraphrase:
+1.`;
 
-  let paraphrasedContents;
-  while (1) {
-    paraphrasedContents = await generateContentUsingGPT3('davinci', 100, prompt, 0.9, 0.9, 0.9, ['\n']);
-    if (paraphrasedContents.choices[0].text.trim() !== userPrompt) {
-      paraphrasedContents.choices[0].text = paraphrasedContents.choices[0].text.trim();
-      break;
-    }
-  }
-  const { id, object, created, model, choices } = paraphrasedContents;
-  await storeData('paraphrasing', userPrompt, { id, object, created, model }, choices[0].text);
+  const paraphrasedContents = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 0.9, 0.9, 0.9, ['\n\n', '4. ']);
 
-  return [choices[0].text];
+  const cleanedContents = cleanAllTextsDemo(paraphrasedContents.choices[0].text.split('\n'));
+  const { generatedContents } = await storeData('paraphrasing', userPrompt, paraphrasedContents, cleanedContents);
+
+  return generatedContents;
 };
 
 const blogHeadline = async ({ blogAbout }) => {
@@ -44,17 +41,17 @@ const blogHeadline = async ({ blogAbout }) => {
 
   const prompt = `Generate attention-grabbing blog headlines relevant to "Blog About" that can persuade and hook people to the following Blog -
 
-${userPrompt}
+Blog About: ${userPrompt}
 
-List of 4 Blog headlines:
--`;
+List of 3 Blog headlines:
+1.`;
 
-  const blogHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 1, 0.2, 0.1, ['\n\n']);
+  const blogHeadlines = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 1, 0.2, 0.1, ['\n\n']);
 
-  const cleanedContents = cleanAllTexts(blogHeadlines.choices[0].text.split('\n'));
+  const cleanedContents = cleanAllTextsDemo(blogHeadlines.choices[0].text.split('\n'));
   const { generatedContents } = await storeData('blog-headline', userPrompt, blogHeadlines, cleanedContents);
 
-  return generatedContents.slice(0, 3);
+  return generatedContents;
 };
 
 module.exports = {
