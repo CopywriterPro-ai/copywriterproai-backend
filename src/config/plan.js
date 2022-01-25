@@ -8,6 +8,8 @@ const trialInfo = {
 
 const subscription = {
   FREEMIUM: 'Freemium',
+  LIGHT_1MONTH: 'LIGHT_1MONTH',
+  LIGHT_6MONTH: 'LIGHT_6MONTH',
   BASIC_1MONTH: 'BASIC_1MONTH',
   BASIC_6MONTH: 'BASIC_6MONTH',
   PROFESSIONAL_1MONTH: 'PROFESSIONAL_1MONTH',
@@ -15,6 +17,8 @@ const subscription = {
 };
 
 const subscriptionPlan = {
+  [subscription.LIGHT_1MONTH]: { words: 13000, package: subscription.LIGHT_1MONTH },
+  [subscription.LIGHT_6MONTH]: { words: 13000 * 6, package: subscription.LIGHT_6MONTH },
   [subscription.BASIC_1MONTH]: { words: 70000, package: subscription.BASIC_1MONTH },
   [subscription.BASIC_6MONTH]: { words: 70000 * 6, package: subscription.BASIC_6MONTH },
   [subscription.PROFESSIONAL_1MONTH]: { words: 300000, package: subscription.PROFESSIONAL_1MONTH },
