@@ -49,42 +49,50 @@ subscriberSchema.virtual('freeTrial').get(function () {
   return { eligible: false, dailyLimitExceeded: true };
 });
 
-subscriberSchema.virtual('isPaidSubscribers').get(function () {
-  const subs = this.subscription;
-  const subsExpire = this.subscriptionExpire;
-  const excludedFreeSubs = Object.values(subscription).filter((item) => item !== subscription.FREEMIUM);
-  const isPaidSubscription = excludedFreeSubs.includes(subs);
+// subscriberSchema.virtual('isPaidSubscribers').get(function () {
+//   const subs = this.subscription;
+//   const subsExpire = this.subscriptionExpire;
+//   const excludedFreeSubs = Object.values(subscription).filter((item) => item !== subscription.FREEMIUM);
+//   const isPaidSubscription = excludedFreeSubs.includes(subs);
 
-  if (isPaidSubscription && subsExpire) {
-    return moment().isSameOrBefore(subsExpire);
-  }
+//   if (isPaidSubscription && subsExpire) {
+//     return moment().isSameOrBefore(subsExpire);
+//   }
 
-  return false;
-});
+//   return false;
+// });
 
-subscriberSchema.virtual('inputLimit').get(function () {
+subscriberSchema.virtual('subscriberInfo').get(function () {
   const subs = this.subscription;
   const subsExpire = this.subscriptionExpire;
   const excludedFreeSubs = Object.values(subscription).filter((item) => item !== subscription.FREEMIUM);
   const isPaidSubscription = excludedFreeSubs.includes(subs);
 
   const isPaidSubscribers = isPaidSubscription && subsExpire ? moment().isSameOrBefore(subsExpire) : false;
+  let inputLimit = true;
 
   if (isPaidSubscribers) {
     switch (subs) {
+      case subscription.LIGHT_1MONTH:
+      case subscription.LIGHT_6MONTH:
+        inputLimit = true;
+        break;
+
       case subscription.BASIC_1MONTH:
       case subscription.BASIC_6MONTH:
-        return true;
+        inputLimit = true;
+        break;
 
       case subscription.PROFESSIONAL_1MONTH:
       case subscription.PROFESSIONAL_6MONTH:
-        return false;
+        inputLimit = false;
+        break;
 
       default:
-        return true;
+        inputLimit = true;
     }
   }
-  return true;
+  return { isPaidSubscribers, inputLimit };
 });
 
 subscriberSchema.set('toObject', { virtuals: true });

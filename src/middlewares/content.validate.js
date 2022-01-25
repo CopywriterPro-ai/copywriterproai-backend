@@ -4,20 +4,19 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const { Subscriber } = require('../models');
 
-const getSubscriberInfo = async ({ email }) => {
+const getSubscriberInfo = async ({ email }, next) => {
   const subscriber = await Subscriber.findOne({ email });
   if (!subscriber) {
     return next(new ApiError(httpStatus.NOT_FOUND, 'Subscriber not found'));
   }
-  const { inputLimit, isPaidSubscribers } = subscriber;
+  const { inputLimit, isPaidSubscribers } = subscriber.subscriberInfo;
   return { inputLimit, isPaidSubscribers };
 }
 
 const validate = (schema) => async (req, res, next) => {
   const validSchema = pick(schema, ['params', 'query', 'body']);
   const object = pick(req, Object.keys(validSchema));
-  const context = req.user ? getSubscriberInfo(req.user) : undefined;
-
+  const context = req.user ? await getSubscriberInfo(req.user, next) : undefined;
   const { value, error } = Joi.compile(validSchema)
     .prefs({ errors: { label: 'key' } })
     .validate(object, { context } );

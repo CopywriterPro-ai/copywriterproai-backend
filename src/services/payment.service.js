@@ -212,7 +212,7 @@ const handlePaymentSucceeded = async (dataObject) => {
       const planData = subscriptionPlan[plan.metadata.priceKey];
       const subscriber = await subscriberService.getOwnSubscribe(email);
 
-      if (subscriber.isPaidSubscribers === true) {
+      if (subscriber.subscriberInfo.isPaidSubscribers === true) {
         oldWords = subscriber.words * 1;
       }
 
