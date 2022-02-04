@@ -15,18 +15,20 @@ const generate = catchAsync(async (req, res) => {
   const { task } = req.body;
   let generatedContent = {};
 
-  if ((words === 0 || isPaidSubscribers === false) && (task === 'simplifier' || task === 'summarizer') && !isAdmin) {
+  if ((words === 0 || isPaidSubscribers === false) && task !== 'paraphrasing' && task !== 'grammar-fixer' && !isAdmin) {
     res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
   }
 
   if (task === 'paraphrasing') {
     generatedContent = await generator.extension.paraphrase(_id, email, req.body);
+  } else if (task === 'grammar-fixer') {
+    generatedContent = await generator.extension.grammarFixer(_id, email, req.body);
+  } else if (task === 'simplifier') {
+    generatedContent = await generator.extension.simplifier(_id, email, req.body);
+  } else if (task === 'summarizer') {
+    generatedContent = await generator.extension.summarizer(_id, email, req.body);
   } else if (task === 'change-tone') {
     generatedContent = await generator.extension.changeTone(_id, email, req.body);
-  } else if (task === 'simplifier') {
-    generatedContent = await generator.extension.simplify(_id, email, req.body);
-  } else if (task === 'summarizer') {
-    generatedContent = await generator.extension.summarize(_id, email, req.body);
   }
 
   res.status(httpStatus.OK).send(generatedContent);

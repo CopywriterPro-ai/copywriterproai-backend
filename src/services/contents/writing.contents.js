@@ -1,41 +1,36 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-constant-condition */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
+const {
+  generateContentUsingGPT3,
+  removeSpaces,
+  processListContents,
+  storeData,
+  formatResponse,
+} = require('../content.service');
 
-const paraphrase = async (userId, userEmail, { userText }) => {
+const paraphrase = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Original: He has tons of stuff to throw away.
-Paraphrase: He needs to get rid of a lot of junk.
-Original: Symptoms of influenza include fever and nasal congestion.
-Paraphrase: A stuffy nose and elevated temperature are signs you may have the flu.
+  const prompt = `Paraphrase the Original text.
+
+Original: Her life spanned years of incredible change for women as they gained more rights than ever before.
+Paraphrase: She lived through the exciting era of women's liberation.
+
 Original: ${userPrompt}
-Paraphrase:`;
+${numberOfSuggestions} unique way(s) to Paraphrase:
+1.`;
 
-  let paraphrasedContents;
-  while (1) {
-    paraphrasedContents = await generateContentUsingGPT3('davinci', 400, prompt, 0.9, 0.9, 0.9, ['\n']);
-    if (paraphrasedContents.choices[0].text.trim() !== userPrompt) {
-      paraphrasedContents.choices[0].text = paraphrasedContents.choices[0].text.trim();
-      break;
-    }
-  }
-  const { id, object, created, model, choices } = paraphrasedContents;
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'paraphrasing',
-    userPrompt,
-    { id, object, created, model },
-    choices[0].text
-  );
-  const userResponse = formatResponse(_id, 'paraphrasing', generatedContents);
+  const paraphrasedContents = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.9, 0.9, 0.9, [
+    '\n\n',
+    `${numberOfSuggestions + 1}. `,
+  ]);
 
-  return userResponse;
+  return processListContents(userId, userEmail, 'paraphrasing', userPrompt, paraphrasedContents);
 };
 
-const expander = async (userId, userEmail, { userText }) => {
+const expander = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `Original Text:
@@ -55,29 +50,34 @@ Expanded with more words and information:
 """
 `;
 
-  let expandedContents;
-  while (1) {
-    expandedContents = await generateContentUsingGPT3('davinci', 200, prompt, 0.6, 0.2, 0.0, ['"""', 'Original Text:']);
-    if (expandedContents.choices && expandedContents.choices[0].text.trim() !== userPrompt) {
-      expandedContents.choices[0].text = expandedContents.choices[0].text.trim();
-      break;
-    }
+  const openAPIInformationsList = [];
+  const expandedContentsList = [];
+
+  while (numberOfSuggestions--) {
+    const expandedContents = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 1, 0.2, 2, [
+      '"""',
+      'Original Text:',
+    ]);
+    const { id, object, created, model, choices } = expandedContents;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    expandedContentsList.push(choices[0].text.trim());
   }
-  const { id, object, created, model, choices } = expandedContents;
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
     'expander',
     userPrompt,
-    { id, object, created, model },
-    choices[0].text
+    openAPIInformationsList,
+    expandedContentsList
   );
   const userResponse = formatResponse(_id, 'expander', generatedContents);
 
   return userResponse;
 };
 
-const simplify = async (userId, userEmail, { userText }) => {
+const simplifier = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `My second grader asked me what this passage means:
@@ -85,85 +85,119 @@ const simplify = async (userId, userEmail, { userText }) => {
 ${userPrompt}
 """
 I rephrased it for him, in plain language a second grader can understand:
-"""`;
+"""
+`;
 
-  let simplifiedContents;
-  while (1) {
-    simplifiedContents = await generateContentUsingGPT3('davinci', 150, prompt, 0.5, 0.2, 0.0, ['"""']);
-    if (simplifiedContents.choices && simplifiedContents.choices[0].text.trim() !== userPrompt) {
-      simplifiedContents.choices[0].text = simplifiedContents.choices[0].text.trim();
-      break;
-    }
+  const openAPIInformationsList = [];
+  const simplifiedContentsList = [];
+
+  while (numberOfSuggestions--) {
+    const simplifiedContents = await generateContentUsingGPT3('text-davinci-001', 150, prompt, 0.7, 0.0, 0.0, ['"""']);
+    const { id, object, created, model, choices } = simplifiedContents;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    simplifiedContentsList.push(choices[0].text.trim());
   }
-  const { id, object, created, model, choices } = simplifiedContents;
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
     'simplifier',
     userPrompt,
-    { id, object, created, model },
-    choices[0].text
+    openAPIInformationsList,
+    simplifiedContentsList
   );
   const userResponse = formatResponse(_id, 'simplifier', generatedContents);
 
   return userResponse;
 };
 
-const summarize = async (userId, userEmail, { userText }) => {
+const summarizer = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Original Text:
-"""
-There are times when the night sky glows with bands of color. They may fall in folds like a curtain drawn across the heavens. The lights usually grow brighter, then suddenly dim. During this time the sky glows with pale yellow, pink, green, violet, blue, and red. These lights are called the Aurora Borealis. Some people call them the Northern Lights. Scientists have been watching them for hundreds of years. They are not quite sure what causes them. In ancient times Long Beach City College WRSC Page 2 of 2 people were afraid of the Lights. They imagined that they saw fiery dragons in the sky. Some even concluded that the heavens were on fire.
-"""
-Short Summary:
-"""
-The Aurora Borealis, or Northern Lights, are bands of color in the night sky. Ancient people thought that these lights were dragon on fire, and even modern scientists are not sure what they are.
-"""
+  const prompt = `${userPrompt}
 
-Original Text:
-"""
-${userPrompt}
-"""
-Short Summary:
-"""
+Tl;dr
 `;
 
-  let summarizedContents;
-  while (1) {
-    summarizedContents = await generateContentUsingGPT3('davinci', 150, prompt, 0.7, 0.0, 0.0, ['"""', 'Original Text:']);
-    if (summarizedContents.choices && summarizedContents.choices[0].text.trim() !== userPrompt) {
-      summarizedContents.choices[0].text = summarizedContents.choices[0].text.trim();
-      break;
-    }
+  const openAPIInformationsList = [];
+  const summarizedContentsList = [];
+
+  while (numberOfSuggestions--) {
+    const summarizedContents = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 0.7, 0.0, 0.0, ['\n\n']);
+    const { id, object, created, model, choices } = summarizedContents;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    summarizedContentsList.push(choices[0].text.trim());
   }
-  const { id, object, created, model, choices } = summarizedContents;
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
     'summarizer',
     userPrompt,
-    { id, object, created, model },
-    choices[0].text
+    openAPIInformationsList,
+    summarizedContentsList
   );
   const userResponse = formatResponse(_id, 'summarizer', generatedContents);
 
   return userResponse;
 };
 
-const notesFromPassage = async (userId, userEmail, { userText }) => {
+const abstractGenerator = async (userId, userEmail, { userText, numberOfSuggestions }) => {
+  const userPrompt = removeSpaces(userText);
+
+  const prompt = `Write a SHORT ABSTRACT of the ORIGINAL TEXT.
+
+ORIGINAL TEXT:
+"""
+${userPrompt}
+"""
+
+SHORT ABSTRACT:
+"""
+`;
+
+  const openAPIInformationsList = [];
+  const abstractsList = [];
+
+  while (numberOfSuggestions--) {
+    const abstract = await generateContentUsingGPT3('text-davinci-001', 150, prompt, 0.7, 0.0, 0.0, [
+      '"""',
+      'ORIGINAL TEXT:',
+    ]);
+    const { id, object, created, model, choices } = abstract;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    abstractsList.push(choices[0].text.trim());
+  }
+
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    'abstract',
+    userPrompt,
+    openAPIInformationsList,
+    abstractsList
+  );
+  const userResponse = formatResponse(_id, 'abstract', generatedContents);
+
+  return userResponse;
+};
+
+const notesFromPassage = async (userId, userEmail, { userText, numberOfPoints }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `I asked my students to note ALL the important informations from this passage:
 """
 ${userPrompt}
 """
-My students wrote -
+My students wrote ${numberOfPoints} points:
 1.`;
 
   let notes;
   while (1) {
-    notes = await generateContentUsingGPT3('davinci-instruct-beta', 150, prompt, 0.7, 0.0, 0.0, ['"""', '\n\n']);
+    notes = await generateContentUsingGPT3('text-davinci-001', 150, prompt, 0.7, 0.0, 0.0, ['"""', '\n\n']);
     if (notes.choices && notes.choices[0].text.trim() !== userPrompt) {
       notes.choices[0].text = `1. ${notes.choices[0].text.trim()}`;
       break;
@@ -186,10 +220,12 @@ My students wrote -
 const grammarFixer = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Original: ${userPrompt}
-Standard American English:`;
+  const prompt = `Correct this to standard English:
 
-  const fixedContent = await generateContentUsingGPT3('davinci', 200, prompt, 0.0, 0.0, 0.0, ['\n']);
+${userPrompt}
+`;
+
+  const fixedContent = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   fixedContent.choices[0].text = fixedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = fixedContent;
@@ -206,13 +242,10 @@ Standard American English:`;
   return userResponse;
 };
 
-const changeTone = async (userId, userEmail, { userText, tone }) => {
+const changeTone = async (userId, userEmail, { userText, tone, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
   const prompt = `Change the tone -
-
-Original: I asked the mayor about earthquake preparedness, and he said we haven’t done enough to be ready.
-Formal: When asked about earthquake preparedness, Mayor Kim said the city has more work to do.
 
 Original: The company really needs to work on its customer service.
 Humorous: Company management should take a look at their customer service.
@@ -224,21 +257,69 @@ Original: Do you think we’re ready for the new school year?
 Authoritative: Are we ready for the new school year?
 
 Original: ${userPrompt}
-${tone}:`;
+${tone} (${numberOfSuggestions} unique ways):
+1.`;
 
-  const fixedContent = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 0.8, 0.0, 0.0, ['\n\n']);
-  fixedContent.choices[0].text = fixedContent.choices[0].text.trim();
+  const fixedContent = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.8, 0.0, 0.0, [
+    '\n\n',
+    `${numberOfSuggestions + 1}. `,
+  ]);
 
-  const { id, object, created, model, choices } = fixedContent;
+  return processListContents(userId, userEmail, 'change-tone', userPrompt, fixedContent);
+};
+
+const activePassive = async (userId, userEmail, { userText, from, to }) => {
+  const userPrompt = removeSpaces(userText);
+  const convertFrom = removeSpaces(from);
+  const convertTo = removeSpaces(to);
+
+  const prompt = `Convert this sentence from ${convertFrom} to ${convertTo} voice.
+
+${convertFrom}: ${userPrompt}
+
+${convertTo}:`;
+
+  const convertedContent = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  convertedContent.choices[0].text = convertedContent.choices[0].text.trim();
+
+  const { id, object, created, model, choices } = convertedContent;
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
-    'change-tone',
+    'active-passive',
     userPrompt,
     { id, object, created, model },
     choices[0].text
   );
-  const userResponse = formatResponse(_id, 'change-tone', generatedContents);
+  const userResponse = formatResponse(_id, 'active-passive', generatedContents);
+
+  return userResponse;
+};
+
+const pointOfView = async (userId, userEmail, { userText, from, to, gender }) => {
+  const userPrompt = removeSpaces(userText);
+  const convertFrom = removeSpaces(from);
+  const convertTo = removeSpaces(to);
+  const convertGender = gender ? ` (gender ${removeSpaces(gender)})` : '';
+
+  const prompt = `Convert this from ${convertFrom} to ${convertTo}:${convertGender}
+
+${userPrompt}
+`;
+
+  const convertedContent = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  convertedContent.choices[0].text = convertedContent.choices[0].text.trim();
+
+  const { id, object, created, model, choices } = convertedContent;
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    'point-of-view',
+    userPrompt,
+    { id, object, created, model },
+    choices[0].text
+  );
+  const userResponse = formatResponse(_id, 'point-of-view', generatedContents);
 
   return userResponse;
 };
@@ -246,9 +327,12 @@ ${tone}:`;
 module.exports = {
   paraphrase,
   expander,
-  simplify,
-  summarize,
+  simplifier,
+  summarizer,
+  abstractGenerator,
   notesFromPassage,
   grammarFixer,
   changeTone,
+  activePassive,
+  pointOfView,
 };

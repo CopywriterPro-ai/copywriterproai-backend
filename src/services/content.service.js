@@ -37,6 +37,7 @@ const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, 
   // return gptResponse.data;
 
   let gptResponse;
+  let count = 0; // will try to generate content for maximum 10 times
 
   while (1) {
     gptResponse = await openai.complete({
@@ -52,54 +53,57 @@ const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, 
       stream: false,
       stop,
     });
-    if (gptResponse.data.choices && gptResponse.data.choices[0].text.trim().replace(/\n\s*\n/g, '\n').length >= 10) {
+    if (
+      count === 10 ||
+      (gptResponse.data.choices && gptResponse.data.choices[0].text.trim().replace(/\n\s*\n/g, '\n').length >= 5)
+    ) {
       break;
     }
+    count += 1;
   }
-
   gptResponse.data.choices[0].text = gptResponse.data.choices[0].text.trim().replace(/\n\s*\n/g, '\n');
 
   return gptResponse.data;
 };
 
-const filterContents = async (content) => {
-  const response = await openai.complete({
-    engine: 'content-filter-alpha-c4',
-    prompt: `${content}\n--\nLabel:`,
-    max_tokens: 1,
-    temperature: 0,
-    topP: 1,
-    presence_penalty: 0,
-    frequency_penalty: 0,
-    logprobs: 10,
-  });
+// const filterContents = async (content) => {
+//   const response = await openai.complete({
+//     engine: 'content-filter-alpha-c4',
+//     prompt: `${content}\n--\nLabel:`,
+//     max_tokens: 1,
+//     temperature: 0,
+//     topP: 1,
+//     presence_penalty: 0,
+//     frequency_penalty: 0,
+//     logprobs: 10,
+//   });
 
-  let outputLabel = response.data.choices[0].text;
+//   let outputLabel = response.data.choices[0].text;
 
-  const toxicThreshold = -0.355;
+//   const toxicThreshold = -0.355;
 
-  if (outputLabel === '2') {
-    const logprobs = response.data.choices[0].logprobs.top_logprobs[0];
+//   if (outputLabel === '2') {
+//     const logprobs = response.data.choices[0].logprobs.top_logprobs[0];
 
-    if (logprobs['2'] < toxicThreshold) {
-      const logprob0 = logprobs['0'];
-      const logprob1 = logprobs['1'];
+//     if (logprobs['2'] < toxicThreshold) {
+//       const logprob0 = logprobs['0'];
+//       const logprob1 = logprobs['1'];
 
-      if (logprob0 && logprob1) {
-        outputLabel = logprob0 >= logprob1 ? '0' : '1';
-      } else if (logprob0) {
-        outputLabel = '0';
-      } else if (logprob1) {
-        outputLabel = '1';
-      }
-    }
-  }
-  if (!['0', '1', '2'].includes(outputLabel)) {
-    outputLabel = '2';
-  }
+//       if (logprob0 && logprob1) {
+//         outputLabel = logprob0 >= logprob1 ? '0' : '1';
+//       } else if (logprob0) {
+//         outputLabel = '0';
+//       } else if (logprob1) {
+//         outputLabel = '1';
+//       }
+//     }
+//   }
+//   if (!['0', '1', '2'].includes(outputLabel)) {
+//     outputLabel = '2';
+//   }
 
-  return outputLabel;
-};
+//   return outputLabel;
+// };
 
 const formatContents = async (userId, userEmail, documentType, prompt, apiInfos, choices) => {
   const contentInformation = {
@@ -117,19 +121,15 @@ const removeSpaces = (text) => {
   return text.trim().replace(/ +(?= )/g, '');
 };
 
-/**
- * Temporary
- */
-
-const cleanAllTextsDemo = (contents) => {
+const cleanAllTexts = (contents) => {
   return contents
     .filter((text) => text.trim() !== '')
-    .map((text, idx) => (idx ? text.substr(3, text.length).trim() : text.trim()));
+    .map((text, idx) => (idx ? text.substr(text[2] === ' ' ? 3 : 2, text.length).trim() : text.trim()));
 };
 
-const cleanAllTexts = (contents) => {
-  return contents.filter((text) => text.trim() !== '').map((text) => text.substr(text.indexOf('-') + 1, text.length).trim());
-};
+// const cleanAllTexts = (contents) => {
+//   return contents.filter((text) => text.trim() !== '').map((text) => text.substr(text.indexOf('-') + 1, text.length).trim());
+// };
 
 const storeData = async (userId, userEmail, task, prompt, apiInfos, choices) => {
   // const isIgnoresaving = config.content.ignoresavingdb.includes(userEmail);
@@ -166,7 +166,7 @@ const processListContents = async (userId, userEmail, task, prompt, { id, object
     { id, object, created, model },
     contents
   );
-  return formatResponse(_id, task, generatedContents.slice(0, 5));
+  return formatResponse(_id, task, generatedContents);
 };
 
 const checkContentExistsOrNot = async (userEmail, { _id, index }) => {
@@ -188,7 +188,6 @@ module.exports = {
   generateContentUsingGPT3,
   formatContents,
   removeSpaces,
-  cleanAllTextsDemo,
   cleanAllTexts,
   storeData,
   formatResponse,

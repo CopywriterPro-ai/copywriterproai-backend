@@ -8,32 +8,11 @@ const paraphrase = {
       then: Joi.string().min(5).max(400).required(),
       otherwise: Joi.string().min(5).max(600).required(),
     }),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
-const simplify = {
-  body: Joi.object().keys({
-    task: Joi.valid('simplifier').required(),
-    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
-      is: true,
-      then: Joi.string().min(5).max(400).required(),
-      otherwise: Joi.string().min(5).max(600).required(),
-    }),
-  }),
-};
-
-const summarize = {
-  body: Joi.object().keys({
-    task: Joi.valid('summarizer').required(),
-    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
-      is: true,
-      then: Joi.string().min(5).max(400).required(),
-      otherwise: Joi.string().min(5).max(600).required(),
-    }),
-  }),
-};
-
-const expand = {
+const expander = {
   body: Joi.object().keys({
     task: Joi.valid('expander').required(),
     userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
@@ -41,6 +20,43 @@ const expand = {
       then: Joi.string().min(5).max(400).required(),
       otherwise: Joi.string().min(5).max(600).required(),
     }),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
+  }),
+};
+
+const simplifier = {
+  body: Joi.object().keys({
+    task: Joi.valid('simplifier').required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(5).max(400).required(),
+      otherwise: Joi.string().min(5).max(600).required(),
+    }),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
+  }),
+};
+
+const summarizer = {
+  body: Joi.object().keys({
+    task: Joi.valid('summarizer').required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(5).max(400).required(),
+      otherwise: Joi.string().min(5).max(600).required(),
+    }),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
+  }),
+};
+
+const abstractGenerator = {
+  body: Joi.object().keys({
+    task: Joi.valid('abstract').required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(5).max(400).required(),
+      otherwise: Joi.string().min(5).max(600).required(),
+    }),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -52,6 +68,7 @@ const notesFromPassage = {
       then: Joi.string().min(5).max(400).required(),
       otherwise: Joi.string().min(5).max(600).required(),
     }),
+    numberOfPoints: Joi.number().min(2).max(10).required(),
   }),
 };
 
@@ -62,6 +79,17 @@ const grammarFixer = {
       is: true,
       then: Joi.string().min(5).max(400).required(),
       otherwise: Joi.string().min(5).max(600).required(),
+    }),
+  }),
+};
+
+const proofread = {
+  body: Joi.object().keys({
+    task: Joi.valid('proofread').required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(5).max(500).required(),
+      otherwise: Joi.string().min(5).max(1000).required(),
     }),
   }),
 };
@@ -95,6 +123,26 @@ const changeTone = {
         'Persuasive',
         'Empathetic'
       ),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
+  }),
+};
+
+const activePassive = {
+  body: Joi.object().keys({
+    task: Joi.valid('active-passive').required(),
+    userText: Joi.string().min(5).max(200).required(),
+    from: Joi.string().required().valid('Active', 'Passive'),
+    to: Joi.string().required().valid('Active', 'Passive'),
+  }),
+};
+
+const pointOfView = {
+  body: Joi.object().keys({
+    task: Joi.valid('point-of-view').required(),
+    userText: Joi.string().min(5).max(200).required(),
+    from: Joi.string().required().valid('first-person', 'second-person', 'third-person'),
+    to: Joi.string().required().valid('first-person', 'second-person', 'third-person'),
+    gender: Joi.string().valid('male', 'female'),
   }),
 };
 
@@ -103,13 +151,24 @@ const blogIdea = {
     task: Joi.valid('blog-idea').required(),
     productName: Joi.string().min(3).max(50).required(),
     productDescription: Joi.string().min(10).max(300).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
 const blogHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('blog-headline').required(),
-    blogAbout: Joi.string().min(10).max(200).required(),
+    about: Joi.string().min(10).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
+  }),
+};
+
+const blogIntro = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-intro').required(),
+    about: Joi.string().min(10).max(200).required(),
+    headline: Joi.string().min(10).max(150).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -117,15 +176,9 @@ const blogOutline = {
   body: Joi.object().keys({
     task: Joi.valid('blog-outline').required(),
     numberOfPoints: Joi.number().min(3).max(10).required(),
-    blogAbout: Joi.string().min(10).max(200).required(),
-  }),
-};
-
-const blogIntro = {
-  body: Joi.object().keys({
-    task: Joi.valid('blog-intro').required(),
-    title: Joi.string().min(10).max(150).required(),
     about: Joi.string().min(10).max(200).required(),
+    headline: Joi.string().min(10).max(150).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -133,7 +186,18 @@ const blogTopic = {
   body: Joi.object().keys({
     task: Joi.valid('blog-topic').required(),
     about: Joi.string().min(10).max(200).required(),
+    headline: Joi.string().min(10).max(150).required(),
     topic: Joi.string().min(10).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
+  }),
+};
+
+const blogOutro = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-outro').required(),
+    about: Joi.string().min(10).max(200).required(),
+    headline: Joi.string().min(10).max(150).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -449,6 +513,15 @@ const catchyBusinessTaglines = {
   }),
 };
 
+const fiverrProfileDescription = {
+  body: Joi.object().keys({
+    task: Joi.valid('fiverr-profile-description').required(),
+    profession: Joi.string().min(5).max(100).required(),
+    experience: Joi.string().min(5).max(20).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
+  }),
+};
+
 const fiverrCategoriesHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('fiverr-categories-headline').required(),
@@ -518,17 +591,22 @@ const recipe = {
 
 module.exports = {
   paraphrase,
-  expand,
-  simplify,
-  summarize,
+  expander,
+  simplifier,
+  summarizer,
+  abstractGenerator,
   notesFromPassage,
   grammarFixer,
+  proofread,
   changeTone,
+  activePassive,
+  pointOfView,
   blogIdea,
   blogHeadline,
   blogOutline,
   blogIntro,
   blogTopic,
+  blogOutro,
   productDescription,
   makeProductDescriptionSEOFriendly,
   productReview,
@@ -561,6 +639,7 @@ module.exports = {
   productName,
   linkedInSummary,
   catchyBusinessTaglines,
+  fiverrProfileDescription,
   fiverrCategoriesHeadline,
   CVSummary,
   amazonProductListings,
