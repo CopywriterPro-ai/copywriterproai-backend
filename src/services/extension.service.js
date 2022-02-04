@@ -4,7 +4,7 @@ const OpenAI = require('openai-api');
 const { v4: uuidv4 } = require('uuid');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
-const { Content } = require('../models');
+const { Extension } = require('../models');
 const config = require('../config/config');
 
 const { openAIAPIKey } = config.openAI;
@@ -118,14 +118,16 @@ const removeSpaces = (text) => {
 };
 
 const cleanAllTexts = (contents) => {
-  return contents.filter((text) => text.trim() !== '').map((text) => text.substr(text.indexOf('-') + 1, text.length).trim());
+  return contents
+    .filter((text) => text.trim() !== '')
+    .map((text, idx) => (idx ? text.substr(text[2] === ' ' ? 3 : 2, text.length).trim() : text.trim()));
 };
 
 const storeData = async (userId, userEmail, task, prompt, apiInfos, choices) => {
   // const isIgnoresaving = config.content.ignoresavingdb.includes(userEmail);
   const formattedContents = await formatContents(userId, userEmail, task, prompt, apiInfos, choices);
 
-  const content = await Content.create(formattedContents);
+  const content = await Extension.create(formattedContents);
 
   // let content;
 
@@ -160,7 +162,7 @@ const processListContents = async (userId, userEmail, task, prompt, { id, object
 };
 
 const checkContentExistsOrNot = async (userEmail, { _id, index }) => {
-  const content = await Content.findOne({ _id, userEmail });
+  const content = await Extension.findOne({ _id, userEmail });
   if (!content || index >= content.generatedContents.length || index < 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Content not found');
   }

@@ -11,15 +11,19 @@ router.route('/generate/paraphrasing')
 
 router
   .route('/generate/expander')
-  .post(auth('generateContent'), validate(contentValidation.expand), contentController.generate);
+  .post(auth('generateContent'), validate(contentValidation.expander), contentController.generate);
 
 router
   .route('/generate/simplifier')
-  .post(auth('generateContent'), validate(contentValidation.simplify), contentController.generate);
+  .post(auth('generateContent'), validate(contentValidation.simplifier), contentController.generate);
 
 router
   .route('/generate/summarizer')
-  .post(auth('generateContent'), validate(contentValidation.summarize), contentController.generate);
+  .post(auth('generateContent'), validate(contentValidation.summarizer), contentController.generate);
+
+router
+  .route('/generate/abstract')
+  .post(auth('generateContent'), validate(contentValidation.abstractGenerator), contentController.generate);
 
 router
   .route('/generate/notes-from-passage')
@@ -30,8 +34,20 @@ router
   .post(auth('generateContent'), validate(contentValidation.grammarFixer), contentController.generate);
 
 router
+  .route('/generate/proofread')
+  .post(auth('generateContent'), validate(contentValidation.proofread), contentController.generate);
+
+router
   .route('/generate/change-tone')
   .post(auth('generateContent'), validate(contentValidation.changeTone), contentController.generate);
+
+router
+  .route('/generate/active-passive')
+  .post(auth('generateContent'), validate(contentValidation.activePassive), contentController.generate);
+
+router
+  .route('/generate/point-of-view')
+  .post(auth('generateContent'), validate(contentValidation.pointOfView), contentController.generate);
 
 router
   .route('/generate/blog-idea')
@@ -52,6 +68,10 @@ router
 router
   .route('/generate/blog-topic')
   .post(auth('generateContent'), validate(contentValidation.blogTopic), contentController.generate);
+
+router
+  .route('/generate/blog-outro')
+  .post(auth('generateContent'), validate(contentValidation.blogOutro), contentController.generate);
 
 router
   .route('/generate/product-description')
@@ -180,6 +200,10 @@ router
 router
   .route('/generate/catchy-business-taglines')
   .post(auth('generateContent'), validate(contentValidation.catchyBusinessTaglines), contentController.generate);
+
+router
+  .route('/generate/fiverr-profile-description')
+  .post(auth('generateContent'), validate(contentValidation.fiverrProfileDescription), contentController.generate);
 
 router
   .route('/generate/fiverr-categories-headline')

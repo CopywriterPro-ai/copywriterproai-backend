@@ -11,15 +11,19 @@ router
   .post(auth('generateContentExtension'), validate(extensionValidation.paraphrase), extensionController.generate);
 
 router
-  .route('/generate/change-tone')
-  .post(auth('generateContentExtension'), validate(extensionValidation.changeTone), extensionController.generate);
+  .route('/generate/grammar-fixer')
+  .post(auth('generateContent'), validate(extensionValidation.grammarFixer), extensionController.generate);
 
 router
   .route('/generate/simplifier')
-  .post(auth('generateContentExtension'), validate(extensionValidation.simplify), extensionController.generate);
+  .post(auth('generateContentExtension'), validate(extensionValidation.simplifier), extensionController.generate);
 
 router
   .route('/generate/summarizer')
-  .post(auth('generateContentExtension'), validate(extensionValidation.summarize), extensionController.generate);
+  .post(auth('generateContentExtension'), validate(extensionValidation.summarizer), extensionController.generate);
+
+router
+  .route('/generate/change-tone')
+  .post(auth('generateContentExtension'), validate(extensionValidation.changeTone), extensionController.generate);
 
 module.exports = router;

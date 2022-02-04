@@ -78,6 +78,7 @@ Summary: I’m a research scientist working to better understand how neural acti
 
 Professional headline: Software Engineer, Product Manager, Lead Software Developer, Software Engineer Manager, Machine Learning Expert
 Summary: I am a software engineer, product manager, and lead software developer focused on building quality products with modern and scalable technologies. I have a proven track record of engineering excellence in the areas of software development, product management, and technology management. I am skilled at hands-on development, team leadership, mentoring, and production level software engineering. I am a lifelong learner and accomplished engineer who is adept at translating business requirements into technical solutions.
+
 Professional headline: ${removeSpaces(professionalHeadline)}
 Summary:`;
 

@@ -15,9 +15,9 @@ const paraphrase = {
   }),
 };
 
-const changeTone = {
+const grammarFixer = {
   body: Joi.object().keys({
-    task: Joi.valid('change-tone').required(),
+    task: Joi.valid('grammar-fixer').required(),
     userText:  Joi.alternatives().conditional(Joi.ref('$isPaidSubscribers'), {
       is: false,
       then: Joi.string().min(5).max(100).required(),
@@ -26,6 +26,39 @@ const changeTone = {
         then: Joi.string().min(5).max(400).required(),
         otherwise: Joi.string().min(5).max(600).required(),
       }),
+    }),
+  }),
+};
+
+const simplifier = {
+  body: Joi.object().keys({
+    task: Joi.valid('simplifier').required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(5).max(400).required(),
+      otherwise: Joi.string().min(5).max(600).required(),
+    }),
+  }),
+};
+
+const summarizer = {
+  body: Joi.object().keys({
+    task: Joi.valid('summarizer').required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(5).max(400).required(),
+      otherwise: Joi.string().min(5).max(600).required(),
+    }),
+  }),
+};
+
+const changeTone = {
+  body: Joi.object().keys({
+    task: Joi.valid('change-tone').required(),
+    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(5).max(400).required(),
+      otherwise: Joi.string().min(5).max(600).required(),
     }),
     tone: Joi.string()
       .required()
@@ -51,31 +84,10 @@ const changeTone = {
   }),
 };
 
-const simplify = {
-  body: Joi.object().keys({
-    task: Joi.valid('simplifier').required(),
-    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
-      is: true,
-      then: Joi.string().min(5).max(400).required(),
-      otherwise: Joi.string().min(5).max(600).required(),
-    }),
-  }),
-};
-
-const summarize = {
-  body: Joi.object().keys({
-    task: Joi.valid('summarizer').required(),
-    userText: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
-      is: true,
-      then: Joi.string().min(5).max(400).required(),
-      otherwise: Joi.string().min(5).max(600).required(),
-    }),
-  }),
-};
-
 module.exports = {
   paraphrase,
+  grammarFixer,
+  simplifier,
+  summarizer,
   changeTone,
-  simplify,
-  summarize,
 };

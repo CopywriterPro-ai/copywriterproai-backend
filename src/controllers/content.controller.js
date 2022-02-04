@@ -33,15 +33,23 @@ const generate = catchAsync(async (req, res) => {
     } else if (task === 'expander') {
       generatedContent = await generator.writing.expander(_id, email, req.body);
     } else if (task === 'simplifier') {
-      generatedContent = await generator.writing.simplify(_id, email, req.body);
+      generatedContent = await generator.writing.simplifier(_id, email, req.body);
     } else if (task === 'summarizer') {
-      generatedContent = await generator.writing.summarize(_id, email, req.body);
+      generatedContent = await generator.writing.summarizer(_id, email, req.body);
+    } else if (task === 'abstract') {
+      generatedContent = await generator.writing.abstractGenerator(_id, email, req.body);
     } else if (task === 'notes-from-passage') {
       generatedContent = await generator.writing.notesFromPassage(_id, email, req.body);
     } else if (task === 'grammar-fixer') {
       generatedContent = await generator.writing.grammarFixer(_id, email, req.body);
+    } else if (task === 'proofread') {
+      generatedContent = await generator.features.proofread(_id, email, req.body);
     } else if (task === 'change-tone') {
       generatedContent = await generator.writing.changeTone(_id, email, req.body);
+    } else if (task === 'active-passive') {
+      generatedContent = await generator.writing.activePassive(_id, email, req.body);
+    } else if (task === 'point-of-view') {
+      generatedContent = await generator.writing.pointOfView(_id, email, req.body);
     } else if (task === 'blog-idea') {
       generatedContent = await generator.blog.blogIdea(_id, email, req.body);
     } else if (task === 'blog-headline') {
@@ -52,6 +60,8 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.blog.blogIntro(_id, email, req.body);
     } else if (task === 'blog-topic') {
       generatedContent = await generator.blog.blogTopic(_id, email, req.body);
+    } else if (task === 'blog-outro') {
+      generatedContent = await generator.blog.blogOutro(_id, email, req.body);
     } else if (task === 'product-description') {
       generatedContent = await generator.product.productDescription(_id, email, req.body);
     } else if (task === 'seo-friendly-product-description') {
@@ -114,6 +124,8 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.linkedIn.generateLinkedInSummary(_id, email, req.body);
     } else if (task === 'catchy-business-taglines') {
       generatedContent = await generator.business.generateCatchyBusinessTaglines(_id, email, req.body);
+    } else if (task === 'fiverr-profile-description') {
+      generatedContent = await generator.fiverr.profileDescription(_id, email, req.body);
     } else if (task === 'fiverr-categories-headline') {
       generatedContent = await generator.fiverr.generateFiverrCategoriesHeadline(_id, email, req.body);
     } else if (task === 'cv-summary') {
