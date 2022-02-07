@@ -31,9 +31,9 @@ const generateUpdate = catchAsync(async (req, res) => {
   const isAdmin = role === 'admin';
 
   if (isSameDay) {
-    calDailyCreaditUsage = { date, usage: usage + 1 };
+    calDailyCreaditUsage = { date, usage: usage + useWords };
   } else {
-    calDailyCreaditUsage = { date: todayDate, usage: 1 };
+    calDailyCreaditUsage = { date: todayDate, usage: useWords };
   }
 
   let remainingWords = 0;
