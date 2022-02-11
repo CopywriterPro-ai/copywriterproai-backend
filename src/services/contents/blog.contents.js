@@ -57,7 +57,7 @@ BLOG INTRODUCTION (LONG):
   const blogIntrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogIntros = await generateContentUsingGPT3('text-davinci-001', 250, prompt, 1, 0.5, 0.5, ['\n\n']);
+    const blogIntros = await generateContentUsingGPT3('text-davinci-001', 400, prompt, 1, 0.5, 0.5, ['\n\n']);
     const { id, object, created, model, choices } = blogIntros;
     openAPIInformationsList.push({ id, object, created, model });
     blogIntrosList.push(choices[0].text.trim());
@@ -90,7 +90,7 @@ BLOG OUTLINE (5 points):
 3. Why did all of a sudden it is becoming highly popular?
 4. What makes it unique from other similar apps (if any)?
 5. What are the methods to integrate slack into current development process?
-  
+
 ${userPrompt}
 BLOG OUTLINE (${numberOfPoints} points):
 1.`;
@@ -145,7 +145,7 @@ Write on the above topic with valuable information.
   const blogTopicWritingsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogTopicWriting = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.7, 0.0, 0.0, ['\n\n\n']);
+    const blogTopicWriting = await generateContentUsingGPT3('text-davinci-001', 500, prompt, 0.7, 0.0, 0.0, ['\n\n\n']);
     const { id, object, created, model, choices } = blogTopicWriting;
     openAPIInformationsList.push({ id, object, created, model });
     blogTopicWritingsList.push(choices[0].text.trim());
