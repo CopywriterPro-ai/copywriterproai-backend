@@ -53,6 +53,7 @@ const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, 
       stream: false,
       stop,
     });
+
     if (
       count === 10 ||
       (gptResponse.data.choices && gptResponse.data.choices[0].text.trim().replace(/\n\s*\n/g, '\n').length >= 5)

@@ -6,7 +6,8 @@ const { contentController } = require('../../controllers');
 
 const router = express.Router();
 
-router.route('/generate/paraphrasing')
+router
+  .route('/generate/paraphrasing')
   .post(auth('generateContent'), validate(contentValidation.paraphrase), contentController.generate);
 
 router
@@ -48,6 +49,8 @@ router
 router
   .route('/generate/point-of-view')
   .post(auth('generateContent'), validate(contentValidation.pointOfView), contentController.generate);
+
+router.route('/generate/blog').post(auth('generateContent'), validate(contentValidation.blog), contentController.generate);
 
 router
   .route('/generate/blog-idea')
