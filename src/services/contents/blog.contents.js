@@ -116,7 +116,7 @@ BLOG OUTLINE (5 points):
 3. Why did all of a sudden it is becoming highly popular?
 4. What makes it unique from other similar apps (if any)?
 5. What are the methods to integrate slack into current development process?
-  
+
 ${userPrompt}
 BLOG OUTLINE (${numberOfPoints} points):
 1.`;

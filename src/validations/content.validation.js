@@ -198,7 +198,7 @@ const blogTopic = {
     task: Joi.valid('blog-topic').required(),
     about: Joi.string().min(10).max(200).required(),
     headline: Joi.string().min(10).max(150).required(),
-    topic: Joi.string().min(10).max(200).required(),
+    topic: Joi.string().min(10).max(500).required(),
     numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
