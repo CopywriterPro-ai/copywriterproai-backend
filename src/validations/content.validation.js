@@ -146,6 +146,17 @@ const pointOfView = {
   }),
 };
 
+const blog = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-writing').required(),
+    about: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(10).max(400).required(),
+      otherwise: Joi.string().min(10).max(600).required(),
+    }),
+  }),
+};
+
 const blogIdea = {
   body: Joi.object().keys({
     task: Joi.valid('blog-idea').required(),
@@ -233,7 +244,7 @@ const productReview = {
     task: Joi.valid('product-review').required(),
     product: Joi.string().min(3).max(50).required(),
     rating: Joi.string().required().valid('Worst', 'Bad', 'Average', 'Good', 'Best'),
-    comment: Joi.string().min(10).max(150).required(),
+    comment: Joi.string().min(10).max(200).required(),
   }),
 };
 
@@ -601,6 +612,7 @@ module.exports = {
   changeTone,
   activePassive,
   pointOfView,
+  blog,
   blogIdea,
   blogHeadline,
   blogOutline,

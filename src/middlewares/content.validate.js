@@ -11,7 +11,7 @@ const getSubscriberInfo = async ({ email }, next) => {
   }
   const { inputLimit, isPaidSubscribers } = subscriber.subscriberInfo;
   return { inputLimit, isPaidSubscribers };
-}
+};
 
 const validate = (schema) => async (req, res, next) => {
   const validSchema = pick(schema, ['params', 'query', 'body']);
@@ -19,7 +19,7 @@ const validate = (schema) => async (req, res, next) => {
   const context = req.user ? await getSubscriberInfo(req.user, next) : undefined;
   const { value, error } = Joi.compile(validSchema)
     .prefs({ errors: { label: 'key' } })
-    .validate(object, { context } );
+    .validate(object, { context });
 
   if (error) {
     const errorMessage = error.details.map((details) => details.message).join(', ');

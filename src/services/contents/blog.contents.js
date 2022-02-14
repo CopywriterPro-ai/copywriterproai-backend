@@ -8,6 +8,32 @@ const {
   formatResponse,
 } = require('../content.service');
 
+const blog = async (userId, userEmail, { about }) => {
+  const userPrompt = `Topic: ${removeSpaces(about)}`;
+
+  const prompt = `Write a complete blog with a sweet intro on the following topic, that can rank on google and hook the readers.
+
+${userPrompt}
+Blog:
+`;
+
+  const _blog = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 1.0, 1.4, 1.4, ['\n\n\n\n']);
+
+  const { id, object, created, model, choices } = _blog;
+
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    'blog',
+    userPrompt,
+    { id, object, created, model },
+    choices[0].text
+  );
+  const userResponse = formatResponse(_id, 'blog', generatedContents);
+
+  return userResponse;
+};
+
 const blogIdea = async (userId, userEmail, { productName, productDescription, numberOfSuggestions }) => {
   const userPrompt = `Name: ${removeSpaces(productName)}
 Description: ${removeSpaces(productDescription)}`;
@@ -19,7 +45,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} BLOG IDEAS:
 1.`;
 
-  const blogIdeas = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 0.8, 0.2, 0.3, [
+  const blogIdeas = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 1.0, 1.2, 1.2, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
@@ -36,7 +62,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} BLOG HEADLINES:
 1.`;
 
-  const blogHeadlines = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 1, 0.2, 0.1, [
+  const blogHeadlines = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 1.0, 1.0, 1.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
@@ -47,17 +73,17 @@ const blogIntro = async (userId, userEmail, { about, headline, numberOfSuggestio
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
-  const prompt = `Write a long captivating BLOG INTRODUCTION maintaining context for following blog that can hook the readers.
+  const prompt = `Write a sweet and captivating BLOG INTRODUCTION maintaining context for following blog that can hook the readers.
 
 ${userPrompt}
-BLOG INTRODUCTION (LONG):
+BLOG INTRODUCTION (between 100 to 130 words):
 `;
 
   const openAPIInformationsList = [];
   const blogIntrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogIntros = await generateContentUsingGPT3('text-davinci-001', 400, prompt, 1, 0.5, 0.5, ['\n\n']);
+    const blogIntros = await generateContentUsingGPT3('text-davinci-001', 250, prompt, 1.0, 1.5, 1.5, ['\n\n\n', '"""']);
     const { id, object, created, model, choices } = blogIntros;
     openAPIInformationsList.push({ id, object, created, model });
     blogIntrosList.push(choices[0].text.trim());
@@ -136,16 +162,19 @@ const blogTopic = async (userId, userEmail, { about, headline, topic, numberOfSu
 BLOG HEADLINE: ${removeSpaces(headline)}
 BLOG TOPIC: ${removeSpaces(topic)}`;
 
-  const prompt = `${userPrompt}
+  const prompt = `BLOG ABOUT: ${removeSpaces(about)}
+BLOG HEADLINE: ${removeSpaces(headline)}
 
-Write on the above topic with valuable information.
+Write a medium sized paragraph on the following BLOG TOPIC with valuable information.
+
+BLOG TOPIC: ${removeSpaces(topic)}
 `;
 
   const openAPIInformationsList = [];
   const blogTopicWritingsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogTopicWriting = await generateContentUsingGPT3('text-davinci-001', 500, prompt, 0.7, 0.0, 0.0, ['\n\n\n']);
+    const blogTopicWriting = await generateContentUsingGPT3('text-davinci-001', 300, prompt, 0.8, 1.4, 1.4, ['\n\n\n']);
     const { id, object, created, model, choices } = blogTopicWriting;
     openAPIInformationsList.push({ id, object, created, model });
     blogTopicWritingsList.push(choices[0].text.trim());
@@ -169,7 +198,7 @@ const blogOutro = async (userId, userEmail, { about, headline, numberOfSuggestio
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
-  const prompt = `Write a sweet, engaging BLOG CONCLUSION maintaining context for the following blog.
+  const prompt = `Write a short, sweet, and engaging BLOG CONCLUSION maintaining context for the following blog.
 
 ${userPrompt}
 BLOG CONCLUSION:
@@ -179,7 +208,7 @@ BLOG CONCLUSION:
   const blogOutrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogOutros = await generateContentUsingGPT3('text-davinci-001', 150, prompt, 0.7, 0, 0, ['\n\n']);
+    const blogOutros = await generateContentUsingGPT3('text-davinci-001', 150, prompt, 0.7, 1.7, 1.7, ['\n\n']);
     const { id, object, created, model, choices } = blogOutros;
     openAPIInformationsList.push({ id, object, created, model });
     blogOutrosList.push(choices[0].text.trim());
@@ -199,6 +228,7 @@ BLOG CONCLUSION:
 };
 
 module.exports = {
+  blog,
   blogIdea,
   blogHeadline,
   blogIntro,

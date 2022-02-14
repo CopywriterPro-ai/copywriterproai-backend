@@ -50,6 +50,8 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.writing.activePassive(_id, email, req.body);
     } else if (task === 'point-of-view') {
       generatedContent = await generator.writing.pointOfView(_id, email, req.body);
+    } else if (task === 'blog-writing') {
+      generatedContent = await generator.blog.blog(_id, email, req.body);
     } else if (task === 'blog-idea') {
       generatedContent = await generator.blog.blogIdea(_id, email, req.body);
     } else if (task === 'blog-headline') {
