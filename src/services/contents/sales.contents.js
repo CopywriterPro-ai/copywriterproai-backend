@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const problemAgitateSolution = async (userId, userEmail, { productName, productDescription }) => {
+const problemAgitateSolution = async (userId, userEmail, { productName, productDescription, numberOfSuggestions  }) => {
   const cleanedProductName = removeSpaces(productName);
   const cleanedProductDescription = removeSpaces(productDescription);
 
@@ -24,7 +24,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   const openAPIInformationsList = [];
   const problemAgitateSolutionList = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const pasSalesCopy = await generateContentUsingGPT3('davinci-instruct-beta', 150, prompt, 1, 0, 0, [
       '\n\n',
       'Product Description:',
@@ -51,7 +51,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   return userResponse;
 };
 
-const problemAgitateSolutionOutcome = async (userId, userEmail, { productName, productDescription }) => {
+const problemAgitateSolutionOutcome = async (userId, userEmail, { productName, productDescription, numberOfSuggestions }) => {
   const cleanedProductName = removeSpaces(productName);
   const cleanedProductDescription = removeSpaces(productDescription);
 
@@ -74,7 +74,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   const openAPIInformationsList = [];
   const problemAgitateSolutionOutcomeList = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const pasoSalesCopy = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 1, 0, 0, [
       '\n\n',
       'Product Description:',
@@ -101,7 +101,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   return userResponse;
 };
 
-const attentionInterestDesireAction = async (userId, userEmail, { productName, productDescription }) => {
+const attentionInterestDesireAction = async (userId, userEmail, { productName, productDescription, numberOfSuggestions }) => {
   const cleanedProductName = removeSpaces(productName);
   const cleanedProductDescription = removeSpaces(productDescription);
 
@@ -124,7 +124,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   const openAPIInformationsList = [];
   const attentionInterestDesireActionList = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const aidaSalesCopy = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 1, 0, 0, [
       '\n\n',
       'Product Description:',

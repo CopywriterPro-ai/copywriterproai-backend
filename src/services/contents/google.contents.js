@@ -8,7 +8,7 @@ const {
   removeSpaces,
 } = require('../content.service');
 
-const googleAdHeadlines = async (userId, userEmail, { name, businessType }) => {
+const googleAdHeadlines = async (userId, userEmail, { name, businessType, numberOfSuggestions  }) => {
   const userPrompt = `Name: ${removeSpaces(name)}
 Business Type: ${removeSpaces(businessType)}`;
 
@@ -40,7 +40,7 @@ Headline:`;
   const openAPIInformationsList = [];
   const googleAdHeadlinesList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const adHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 30, prompt, 0.9, 0.3, 0.2, [
       'Headline:',
       '\n',
@@ -64,7 +64,7 @@ Headline:`;
   return userResponse;
 };
 
-const googleAdDescriptions = async (userId, userEmail, { businessName, productCategories, uniqueness, promotions, keywords }) => {
+const googleAdDescriptions = async (userId, userEmail, { businessName, productCategories, uniqueness, promotions, keywords, numberOfSuggestions }) => {
   const userPrompt = `Business Name: ${removeSpaces(businessName)}
 Product Categories: ${removeSpaces(productCategories)}
 What makes you unique: ${removeSpaces(uniqueness)}
@@ -100,7 +100,7 @@ Description:`;
   const openAPIInformationsList = [];
   const googleAdDescriptionsList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const generatedAdDescription = await generateContentUsingGPT3('davinci-instruct-beta', 60, prompt, 0.9, 0, 0, [
       '\n',
       'Description:',
