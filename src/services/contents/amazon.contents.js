@@ -1,7 +1,11 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const generateAmazonProductListings = async (userId, userEmail, { productName, productCategories, productFeatures }) => {
+const generateAmazonProductListings = async (
+  userId,
+  userEmail,
+  { productName, productCategories, productFeatures, numberOfSuggestions }
+) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Product Categories: ${removeSpaces(productCategories)}
 productFeatures: ${removeSpaces(productFeatures)}`;
@@ -26,7 +30,8 @@ Description:`;
   const openAPIInformationsList = [];
   const amazonProductListingsList = [];
 
-  for (let i = 0; i < 3; i++) {
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const amazonProductListings = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 0, 0, ['\n\n']);
     const { id, object, created, model, choices } = amazonProductListings;
 

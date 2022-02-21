@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const websiteShortDescription = async (userId, userEmail, { industryType, businessName }) => {
+const websiteShortDescription = async (userId, userEmail, { industryType, businessName, numberOfSuggestions  }) => {
   const userPrompt = `Industry: ${removeSpaces(industryType)}
 BusinessName: ${removeSpaces(businessName)}`;
 
@@ -17,7 +17,7 @@ Description:`;
   const openAPIInformationsList = [];
   const websiteShortDescriptionList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const websiteShortDescription = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.7, 0.3, 0, [
       '\n',
       'Description:',
@@ -41,7 +41,7 @@ Description:`;
   return userResponse;
 };
 
-const keywordsFromText = async (userId, userEmail, { primaryText }) => {
+const keywordsFromText = async (userId, userEmail, { primaryText, numberOfSuggestions  }) => {
   const userPrompt = `Primary Text: ${removeSpaces(primaryText)}`;
 
   const prompt = `Generate Keywords extracted from content for Optimization search engine, SEO meta tag, or youtube tags.
@@ -56,7 +56,7 @@ Keywords:`;
   const openAPIInformationsList = [];
   const KeywordsFromTextList = [];
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const KeywordsFromText = await generateContentUsingGPT3('davinci', 50, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
     const { id, object, created, model, choices } = KeywordsFromText;
 
@@ -77,7 +77,7 @@ Keywords:`;
   return userResponse;
 };
 
-const SEOFriendlyBlogIdeas = async (userId, userEmail, { content, desiredOutcome, industry, targetAudience }) => {
+const SEOFriendlyBlogIdeas = async (userId, userEmail, { content, desiredOutcome, industry, targetAudience, numberOfSuggestions }) => {
   const userPrompt = `Content: ${removeSpaces(content)}
 Desired outcome: ${removeSpaces(desiredOutcome)}
 Industry: ${removeSpaces(industry)}
@@ -102,7 +102,7 @@ Headlines:`;
   const openAPIInformationsList = [];
   const seoFriendlyBlogIdeasList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const seoFriendlyBlogIdeas = await generateContentUsingGPT3('davinci', 50, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
     const { id, object, created, model, choices } = seoFriendlyBlogIdeas;
 
@@ -123,7 +123,7 @@ Headlines:`;
   return userResponse;
 };
 
-const landingPageHeadline = async (userId, userEmail, { businessType }) => {
+const landingPageHeadline = async (userId, userEmail, { businessType, numberOfSuggestions }) => {
   const userPrompt = `Product: ${removeSpaces(businessType)}`;
 
   const prompt = `Generate High-Converting Landing page headline that will makes user to pay for the service
@@ -142,7 +142,7 @@ Headlines:`;
   const openAPIInformationsList = [];
   const landingPageHeadlineList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const seoFriendlyBlogIdeas = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.9, 1, 0, [
       '\n',
       'Headlines:',

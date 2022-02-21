@@ -217,6 +217,7 @@ const productDescription = {
     task: Joi.valid('product-description').required(),
     productName: Joi.string().min(3).max(50).required(),
     productType: Joi.string().min(5).max(100).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -224,18 +225,19 @@ const makeProductDescriptionSEOFriendly = {
   body: Joi.object().keys({
     task: Joi.valid('seo-friendly-product-description').required(),
     productName: Joi.string().min(3).max(50).required(),
-    productType: Joi.string().min(5).max(100).required(),
+    productType: Joi.string().min(3).max(100).required(),
     productFeatures: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
       is: true,
-      then: Joi.string().min(10).max(150).required(),
+      then: Joi.string().min(3).max(150).required(),
       otherwise: Joi.string().min(10).max(250).required(),
     }),
     productBenefits: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
       is: true,
-      then: Joi.string().min(10).max(150).required(),
+      then: Joi.string().min(3).max(150).required(),
       otherwise: Joi.string().min(10).max(250).required(),
     }),
     targetAudience: Joi.string().min(3).max(50).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -243,8 +245,9 @@ const productReview = {
   body: Joi.object().keys({
     task: Joi.valid('product-review').required(),
     product: Joi.string().min(3).max(50).required(),
-    rating: Joi.string().required().valid('Worst', 'Bad', 'Average', 'Good', 'Best'),
+    rating: Joi.string().required().valid('Worst', 'Bad', 'Average', 'Good', 'Best').insensitive(),
     comment: Joi.string().min(10).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -252,6 +255,7 @@ const catchyHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('catchy-headline').required(),
     content: Joi.string().min(5).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -259,6 +263,7 @@ const attentionGrabbingHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('attention-grabbing-headline').required(),
     content: Joi.string().min(5).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -266,6 +271,7 @@ const newspaperHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('newspaper-headline').required(),
     content: Joi.string().min(5).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -273,6 +279,7 @@ const resumeHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('resume-headline').required(),
     profession: Joi.string().min(5).max(50).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -280,6 +287,7 @@ const campaignPostIdeaFromBusinessType = {
   body: Joi.object().keys({
     task: Joi.valid('campaign-facebook-post', 'twitter-campaign-post').required(),
     platformType: Joi.string().min(5).max(100).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -289,6 +297,7 @@ const facebookAdPrimaryTexts = {
     companyName: Joi.string().min(3).max(50).required(),
     businessType: Joi.string().min(5).max(100).required(),
     benefits: Joi.string().min(10).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -298,6 +307,7 @@ const facebookAdHeadlines = {
     productName: Joi.string().min(3).max(50).required(),
     businessType: Joi.string().min(5).max(100).required(),
     customerBenefit: Joi.string().min(10).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -306,6 +316,7 @@ const facebookAdLinkDescription = {
     task: Joi.valid('ads-facebook-link-descriptions').required(),
     companyName: Joi.string().min(3).max(50).required(),
     platformType: Joi.string().min(5).max(100).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -313,6 +324,7 @@ const facebookAdsFromProductDescription = {
   body: Joi.object().keys({
     task: Joi.valid('facebook-ads-from-product-description').required(),
     product: Joi.string().min(10).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -321,6 +333,7 @@ const instagramAdTexts = {
     task: Joi.valid('instagram-ad-texts').required(),
     platformType: Joi.string().min(5).max(100).required(),
     context: Joi.string().min(10).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -330,6 +343,7 @@ const linkedinAdTexts = {
     companyName: Joi.string().min(3).max(50).required(),
     businessType: Joi.string().min(5).max(100).required(),
     benefits: Joi.string().min(10).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -338,6 +352,7 @@ const googleAdHeadlines = {
     task: Joi.valid('ads-google-headlines').required(),
     name: Joi.string().min(3).max(50).required(),
     businessType: Joi.string().min(5).max(100).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -361,6 +376,7 @@ const googleAdDescriptions = {
       then: Joi.string().min(3).max(100).required(),
       otherwise: Joi.string().min(3).max(150).required(),
     }),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -368,6 +384,7 @@ const youtubeVideoTitleFromDescription = {
   body: Joi.object().keys({
     task: Joi.valid('youtube-video-titles-from-description').required(),
     description: Joi.string().min(10).max(300).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -375,6 +392,7 @@ const youtubeVideoIdeas = {
   body: Joi.object().keys({
     task: Joi.valid('youtube-video-ideas').required(),
     topic: Joi.string().min(5).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -383,6 +401,7 @@ const imageIdeasFromAdText = {
     task: Joi.valid('image-idea-from-ad-text').required(),
     product: Joi.string().min(5).max(100).required(),
     adText: Joi.string().min(10).max(200).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -390,6 +409,7 @@ const emailMarketingCampaignSubject = {
   body: Joi.object().keys({
     task: Joi.valid('email-marketing-campaign-subject').required(),
     productDescription: Joi.string().min(10).max(300).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -399,6 +419,7 @@ const emailMarketingCampaignBody = {
     productDescription: Joi.string().min(10).max(200).required(),
     about: Joi.string().min(10).max(150).required(),
     subjectLine: Joi.string().min(5).max(60).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -427,7 +448,9 @@ const emailBody = {
         'Witty',
         'Persuasive',
         'Empathetic'
-      ),
+      )
+      .insensitive(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -439,6 +462,7 @@ const generatedSubjectFromBody = {
       then: Joi.string().min(10).max(400).required(),
       otherwise: Joi.string().min(10).max(600).required(),
     }),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -447,6 +471,7 @@ const websiteShortDescription = {
     task: Joi.valid('website-short-description').required(),
     industryType: Joi.string().min(5).max(100).required(),
     businessName: Joi.string().min(3).max(50).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -458,6 +483,7 @@ const keywordsFromText = {
       then: Joi.string().min(10).max(400).required(),
       otherwise: Joi.string().min(10).max(600).required(),
     }),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -469,6 +495,7 @@ const videoTagsFromDescription = {
       then: Joi.string().min(10).max(400).required(),
       otherwise: Joi.string().min(10).max(600).required(),
     }),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -480,6 +507,7 @@ const channelTagsFromDescription = {
       then: Joi.string().min(10).max(400).required(),
       otherwise: Joi.string().min(10).max(600).required(),
     }),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -490,6 +518,7 @@ const seoFriendlyBlogIdeas = {
     desiredOutcome: Joi.string().min(5).max(100).required(),
     industry: Joi.string().min(5).max(50).required(),
     targetAudience: Joi.string().min(3).max(50).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -497,6 +526,7 @@ const landingPageHeadline = {
   body: Joi.object().keys({
     task: Joi.valid('website-landing-page-headline').required(),
     businessType: Joi.string().min(5).max(100).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -505,6 +535,7 @@ const productName = {
     task: Joi.valid('product-name').required(),
     productDescription: Joi.string().min(10).max(200).required(),
     keywords: Joi.string().min(3).max(100).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -513,6 +544,7 @@ const linkedInSummary = {
     task: Joi.valid('linkedin-summary').required(),
     profession: Joi.string().min(5).max(50).required(),
     skills: Joi.string().min(5).max(100).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -521,6 +553,7 @@ const catchyBusinessTaglines = {
     task: Joi.valid('catchy-business-taglines').required(),
     companyName: Joi.string().min(3).max(50).required(),
     businessType: Joi.string().min(5).max(100).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -545,7 +578,8 @@ const CVSummary = {
     task: Joi.valid('cv-summary').required(),
     yourJobTitle: Joi.string().min(3).max(50).required(),
     keyAchievements: Joi.string().min(10).max(150).required(),
-    yearsOfExperience: Joi.string().max(2).required(),
+    yearsOfExperience: Joi.number().max(100).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -554,6 +588,7 @@ const problemAgitateSolution = {
     task: Joi.valid('problem-agitate-solution').required(),
     productName: Joi.string().min(3).max(50).required(),
     productDescription: Joi.string().min(10).max(300).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -562,6 +597,7 @@ const problemAgitateSolutionOutcome = {
     task: Joi.valid('problem-agitate-solution-outcome').required(),
     productName: Joi.string().min(3).max(50).required(),
     productDescription: Joi.string().min(10).max(300).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -570,6 +606,7 @@ const attentionInterestDesireAction = {
     task: Joi.valid('attention-interest-desire-action').required(),
     productName: Joi.string().min(3).max(50).required(),
     productDescription: Joi.string().min(10).max(300).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 
@@ -589,6 +626,7 @@ const amazonProductListings = {
     productName: Joi.string().min(3).max(50).required(),
     productCategories: Joi.string().min(5).max(50).required(),
     productFeatures: Joi.string().min(10).max(250).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
   }),
 };
 

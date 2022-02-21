@@ -1,8 +1,8 @@
 const { generateContentUsingGPT3, storeData, formatResponse, removeSpaces } = require('../content.service');
 
-const generateCVSummary = async (userId, userEmail, { yourJobTitle, yearsOfExperience, keyAchievements }) => {
+const generateCVSummary = async (userId, userEmail, { yourJobTitle, yearsOfExperience, keyAchievements, numberOfSuggestions }) => {
   const userPrompt = `Job Title: ${removeSpaces(yourJobTitle)}
-Years Of Experience: ${removeSpaces(yearsOfExperience)}
+Years Of Experience: ${yearsOfExperience}
 Key Achievements: ${removeSpaces(keyAchievements)}`;
 
   const prompt = `
@@ -19,7 +19,7 @@ Summary:`;
   const openAPIInformationsList = [];
   const generateCVSummaryList = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const cvSummary = await generateContentUsingGPT3('davinci-instruct-beta', 200, prompt, 0.7, 0, 0, ['\n', 'Summary:']);
     const { id, object, created, model, choices } = cvSummary;
 

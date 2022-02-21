@@ -8,7 +8,7 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const youtubeVideoIdeas = async (userId, userEmail, { topic }) => {
+const youtubeVideoIdeas = async (userId, userEmail, { topic,numberOfSuggestions  }) => {
   const userPrompt = `Topic: ${removeSpaces(topic)}`;
 
   const prompt = `Generate awesome YouTube video Title that Gets Views ${removeSpaces(topic)}.
@@ -30,7 +30,7 @@ Title:`;
   const openAPIInformationsList = [];
   const youtubeVideoIdeasList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions ; i++) {
     const videoIdeas = await generateContentUsingGPT3('davinci', 25, prompt, 0.9, 0, 0, ['\n', 'Title:']);
     const { id, object, created, model, choices } = videoIdeas;
 
@@ -50,13 +50,13 @@ Title:`;
   return userResponse;
 };
 
-const youtubeVideoTitleFromDescription = async (userId, userEmail, { description }) => {
+const youtubeVideoTitleFromDescription = async (userId, userEmail, { description, numberOfSuggestions }) => {
   const userPrompt = `Description: ${removeSpaces(description)}`;
 
   const prompt = `Write a Title that summarizes Description
 
 ${userPrompt}
-List of 5 Titles:
+List of ${numberOfSuggestions} Titles:
 
 -`;
 
@@ -64,7 +64,7 @@ List of 5 Titles:
   return processListContents(userId, userEmail, 'youtube-video-titles-from-description', userPrompt, titlesFromDescription);
 };
 
-const generateVideoTagsFromDescription = async (userId, userEmail, { primaryText }) => {
+const generateVideoTagsFromDescription = async (userId, userEmail, { primaryText, numberOfSuggestions }) => {
   const userPrompt = `PrimaryText: ${removeSpaces(primaryText)}`;
 
   const prompt = `Generate Keywords extracted from content for Optimization search engine, SEO meta tag, or youtube tags.
@@ -79,7 +79,7 @@ Keywords:`;
   const openAPIInformationsList = [];
   const videoTagsFromDescriptionList = [];
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const videoTagsFromDescription = await generateContentUsingGPT3('davinci', 50, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
     const { id, object, created, model, choices } = videoTagsFromDescription;
 
@@ -100,7 +100,7 @@ Keywords:`;
   return userResponse;
 };
 
-const generateChannelTagsFromDescription = async (userId, userEmail, { primaryText }) => {
+const generateChannelTagsFromDescription = async (userId, userEmail, { primaryText, numberOfSuggestions }) => {
   const userPrompt = `PrimaryText: ${removeSpaces(primaryText)}`;
 
   const prompt = `Generate Keywords extracted from content for Optimization search engine, SEO meta tag, or youtube tags.
@@ -115,7 +115,7 @@ Keywords:`;
   const openAPIInformationsList = [];
   const channelTagsFromDescriptionList = [];
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < numberOfSuggestions ; i++) {
     const channelTagsFromDescription = await generateContentUsingGPT3('davinci', 80, prompt, 0.7, 0.3, 0, [
       '\n',
       'Keywords:',

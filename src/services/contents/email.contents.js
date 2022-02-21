@@ -5,10 +5,9 @@ const {
   removeSpaces,
   storeData,
   formatResponse,
-  processListContents,
 } = require('../content.service');
 
-const emailMarketingCampaignSubject = async (userId, userEmail, { productDescription }) => {
+const emailMarketingCampaignSubject = async (userId, userEmail, { productDescription, numberOfSuggestions }) => {
   const userPrompt = `Product Description: ${removeSpaces(productDescription)}`;
 
   const prompt = `Examples of Marketing Email's persuasive Subject lines that can get click -
@@ -34,17 +33,33 @@ const emailMarketingCampaignSubject = async (userId, userEmail, { productDescrip
 - Hot freebie alert! 15 free gifts, you pick 5.
 - Watch Out for This Amazon Phishing Scam.
 
-Write 5 short persuasive Email Subject lines for following Product like above examples.
 ${userPrompt}
-
-List of 6 Email Subject Lines -
 -`;
+  const openAPIInformationsList = [];
+  const emailMarketingCampaignSubjectList = [];
 
-  const marketingEmailSubject = await generateContentUsingGPT3('davinci', 100, prompt, 1, 0, 0, ['\n\n']);
-  return processListContents(userId, userEmail, 'email-marketing-campaign-subject', userPrompt, marketingEmailSubject);
+  for (let i = 0; i < numberOfSuggestions; i++) {
+    const marketingEmailSubject = await generateContentUsingGPT3('davinci', 100, prompt, 1, 0, 0, ['\n\n']);
+    const { id, object, created, model, choices } = marketingEmailSubject;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    emailMarketingCampaignSubjectList.push(choices[0].text.trim());
+  }
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    'email-marketing-campaign-subject',
+    userPrompt,
+    openAPIInformationsList,
+    emailMarketingCampaignSubjectList
+  );
+
+  const userResponse = formatResponse(_id, 'email-marketing-campaign-subject', generatedContents);
+
+  return userResponse;
 };
 
-const emailMarketingCampaignBody = async (userId, userEmail, { productDescription, about, subjectLine }) => {
+const emailMarketingCampaignBody = async (userId, userEmail, { productDescription, about, subjectLine, numberOfSuggestions }) => {
   const userPrompt = `Product Description: ${removeSpaces(productDescription)}
 About: ${removeSpaces(about)}
 Subject: ${removeSpaces(subjectLine)}`;
@@ -64,7 +79,7 @@ Small Email Marketing Campaign:
   const openAPIInformationsList = [];
   const emailMarketingCampaignBodyList = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const emailBody = await generateContentUsingGPT3('davinci-instruct-beta', 300, prompt, 1, 0.5, 0, ['\n\n\n', 'About:', 'Subject:']);
     const { id, object, created, model, choices } = emailBody;
 
@@ -85,12 +100,12 @@ Small Email Marketing Campaign:
   return userResponse;
 };
 
-const emailBody = async (userId, userEmail, { about, to, tone }) => {
+const emailBody = async (userId, userEmail, { about, to, tone, numberOfSuggestions }) => {
   const userPrompt = `About: ${removeSpaces(about)}
 To: ${removeSpaces(to)}
 Tone: ${removeSpaces(tone)}`;
 
-  const prompt = `Email Template - 
+  const prompt = `Email Template -
 - Subject
 - Email greeting,
 - Body
@@ -103,7 +118,7 @@ Subject:`;
   const openAPIInformationsList = [];
   const emailBodyList = [];
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const emailBodyText = await generateContentUsingGPT3('davinci-instruct-beta', 250, prompt, 0.9, 0, 0, ['\n\n\n', 'About:', 'Subject:']);
     const { id, object, created, model, choices } = emailBodyText;
 
@@ -124,7 +139,7 @@ Subject:`;
   return userResponse;
 };
 
-const emailSubjectsFromBody = async (userId, userEmail, { emailBody }) => {
+const emailSubjectsFromBody = async (userId, userEmail, { emailBody, numberOfSuggestions }) => {
   const userPrompt = `Email Body: ${removeSpaces(emailBody)}`;
 
   const prompt = `Write email subject based on email body to increase email opening by less than 50 words.
@@ -135,7 +150,7 @@ Subject:`;
   const openAPIInformationsList = [];
   const emailSubjectsFromBodyList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const emailSubjectFromBody = await generateContentUsingGPT3('davinci-instruct-beta', 20, prompt, 0.7, 1, 0, [
       '\n',
       'Subject:',

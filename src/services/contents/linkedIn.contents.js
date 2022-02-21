@@ -7,7 +7,7 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const linkedinAdTexts = async (userId, userEmail, { companyName, businessType, benefits }) => {
+const linkedinAdTexts = async (userId, userEmail, { companyName, businessType, benefits, numberOfSuggestions  }) => {
   const userPrompt = `Company Name: ${removeSpaces(companyName)}
 Business Type: ${removeSpaces(businessType)}
 Benefits: ${removeSpaces(benefits)}`;
@@ -45,7 +45,7 @@ Description:`;
   const openAPIInformationsList = [];
   const linkedinAdTextsList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions ; i++) {
     const adTexts = await generateContentUsingGPT3('davinci', 100, prompt, 0.8, 0.2, 0.3, ['\n', 'Description:']);
     const { id, object, created, model, choices } = adTexts;
 
@@ -66,7 +66,7 @@ Description:`;
   return userResponse;
 };
 
-const generateLinkedInSummary = async (userId, userEmail, { profession, skills }) => {
+const generateLinkedInSummary = async (userId, userEmail, { profession, skills, numberOfSuggestions }) => {
   const userPrompt = `Profession: ${removeSpaces(profession)}
 Skills: ${removeSpaces(skills)}`;
 
@@ -85,7 +85,7 @@ Summary:`;
   const openAPIInformationsList = [];
   const generateLinkedInSummaryList = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const linkedInSummary = await generateContentUsingGPT3('davinci-instruct-beta', 400, prompt, 0.7, 0, 0, [
       '\n',
       'Summary:',

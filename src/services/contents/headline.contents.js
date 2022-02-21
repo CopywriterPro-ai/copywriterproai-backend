@@ -1,6 +1,6 @@
 const { generateContentUsingGPT3, processListContents, removeSpaces } = require('../content.service');
 
-const catchyHeadline = async (userId, userEmail, { content }) => {
+const catchyHeadline = async (userId, userEmail, { content, numberOfSuggestions }) => {
   const userPrompt = `Content: ${removeSpaces(content)}`;
 
   const prompt = `Samples List -
@@ -13,17 +13,17 @@ const catchyHeadline = async (userId, userEmail, { content }) => {
 - How I Made a Fortune With a "Fool Idea"
 - Millionaire Day Trader Reveals How to Cash In
 
-Generate Catchy Headlines for following online content like above Samples - 
+Generate Catchy Headlines for following online content like above Samples -
 Online ${userPrompt}
 
-List of 5 Catchy Headlines
+List of ${numberOfSuggestions} Catchy Headlines
 -`;
 
   const catchyHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
   return processListContents(userId, userEmail, 'catchy-headline', userPrompt, catchyHeadlines);
 };
 
-const attentionGrabbingHeadline = async (userId, userEmail, { content }) => {
+const attentionGrabbingHeadline = async (userId, userEmail, { content, numberOfSuggestions}) => {
   const userPrompt = `Content: ${removeSpaces(content)}`;
 
   const prompt = `Samples List -
@@ -37,17 +37,17 @@ const attentionGrabbingHeadline = async (userId, userEmail, { content }) => {
 - When Doctors Feel "Rotten" This is What They Do
 - You'll Never Get Hired if You Say This in a Job Interview
 
-Generate Attention Grabbing Headlines for following online content like above Samples - 
+Generate Attention Grabbing Headlines for following online content like above Samples -
 Online ${userPrompt}
 
-List of 5 Attention Grabbing Headlines
+List of ${numberOfSuggestions} Attention Grabbing Headlines
 -`;
 
   const attentionGrabbingHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
   return processListContents(userId, userEmail, 'attention-grabbing-headline', userPrompt, attentionGrabbingHeadlines);
 };
 
-const newspaperHeadline = async (userId, userEmail, { content }) => {
+const newspaperHeadline = async (userId, userEmail, { content, numberOfSuggestions }) => {
   const userPrompt = `News: ${removeSpaces(content)}`;
 
   const prompt = `Samples List -
@@ -64,14 +64,14 @@ const newspaperHeadline = async (userId, userEmail, { content }) => {
 Generate Newspaper Headlines for following News like above Samples -
 ${userPrompt}
 
-List of 5 Newspaper Headlines
+List of ${numberOfSuggestions} Newspaper Headlines
 -`;
 
   const newspaperHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
   return processListContents(userId, userEmail, 'newspaper-headline', userPrompt, newspaperHeadlines);
 };
 
-const resumeHeadline = async (userId, userEmail, { profession }) => {
+const resumeHeadline = async (userId, userEmail, { profession, numberOfSuggestions }) => {
   const userPrompt = `Profession: ${removeSpaces(profession)}`;
 
   const prompt = `Samples List -
@@ -85,9 +85,9 @@ const resumeHeadline = async (userId, userEmail, { profession }) => {
 - Results-Oriented Regional Manager
 - Award-Winning Writer and Editor
 
-Generate Resume Headlines for following ${removeSpaces(profession)} position like above Samples - 
+Generate Resume Headlines for following ${removeSpaces(profession)} position like above Samples -
 
-List of 5 Resume Headlines
+List of ${numberOfSuggestions} Resume Headlines
 -`;
 
   const resumeHeadlines = await generateContentUsingGPT3('davinci-instruct-beta', 70, prompt, 0.9, 0, 0, ['\n\n']);
