@@ -30,6 +30,7 @@ const verifyAccount = catchAsync(async (req, res) => {
   await userService.updateUserById(user, userId, { isVerified: true });
   await subscriberService.createOwnSubscribe({ email, subscription: subscription.FREEMIUM });
   await userService.deleteunVerifiedUserByEmail(email);
+  await emailService.sendWelcomeEmail(email, user.firstName);
   res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'Your account is verified, please sign in' });
 });
 

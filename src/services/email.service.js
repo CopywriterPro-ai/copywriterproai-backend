@@ -43,6 +43,19 @@ const sendEmailWithAttachment = async (to, subject, html, filename, image) => {
   await transport.sendMail(msg);
 };
 
+const sendWelcomeEmail = async (to, name = '') => {
+  const subject = 'Welcome to copywriterpro';
+
+  const html = `<div> Hi ${name}, <div><br>
+  <p>Welcome to CopywriterPro. Your free trial starts today.<br/>
+  What happens next?<br/>
+  Keep an eye on your inbox as we’ll be sending you the best tips for content writing and sales copy.<br/>
+  To learn more about CopywriterPro [Tutorial LInk]</p>
+  `;
+
+  await sendEmail(to, subject, html);
+};
+
 /**
  * Send reset password email
  * @param {string} to
@@ -137,6 +150,7 @@ const userMessage = async (subject, { email, message }) => {
 module.exports = {
   transport,
   sendEmail,
+  sendWelcomeEmail,
   sendResetPasswordEmailUsingToken,
   sendVerifyAccountEmailUsingToken,
   featureRequest,
