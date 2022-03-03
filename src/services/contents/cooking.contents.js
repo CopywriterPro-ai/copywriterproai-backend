@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, storeData, formatResponse } = require('../content.service');
 
-const generateRecipe = async (userId, userEmail, { recipeName, ingredients }) => {
+const generateRecipe = async (userId, userEmail, { recipeName, ingredients, numberOfSuggestions}) => {
   const userPrompt = `
 Recipe Name: ${recipeName}
 Ingredients: ${ingredients}`;
@@ -18,7 +18,7 @@ Directions:`;
   const openAPIInformationsList = [];
   const generateRecipeList = [];
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const recipe = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0, 0, 0, ['\n', 'Directions:']);
     const { id, object, created, model, choices } = recipe;
 

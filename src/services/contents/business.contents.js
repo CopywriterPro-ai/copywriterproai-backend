@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const generateCatchyBusinessTaglines = async (userId, userEmail, { companyName, businessType }) => {
+const generateCatchyBusinessTaglines = async (userId, userEmail, { companyName, businessType, numberOfSuggestions }) => {
   const userPrompt = `Company Name: ${removeSpaces(companyName)}
 Business Type: ${removeSpaces(businessType)}`;
 
@@ -42,7 +42,7 @@ Taglines:`;
   const openAPIInformationsList = [];
   const catchyBusinessTaglinesList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const catchyBusinessTaglines = await generateContentUsingGPT3('davinci-instruct-beta', 20, prompt, 0.9, 0, 0, [
       '\n',
       'Taglines:',

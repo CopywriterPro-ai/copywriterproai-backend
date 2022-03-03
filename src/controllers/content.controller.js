@@ -16,13 +16,13 @@ const generate = catchAsync(async (req, res) => {
   const isAdmin = role === 'admin';
 
   if (words === 0 && !isAdmin) {
-    res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Upgrade our friendship today!' });
+    res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Your trial period has been expired! You need to purchase product to continue using it.' });
   } else if (currentPackage === subscription.FREEMIUM && freeTrial.eligible === false && !isAdmin) {
-    res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial expired, Upgrade our friendship today!' });
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Your trial period has been expired! You need to purchase product to continue using it.' });
   } else if (freeTrial.eligible === true && freeTrial.dailyLimitExceeded === true && !isAdmin) {
-    res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial daily limit exceeded!' });
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial daily limit exceeded! You need to purchase product to continue using it.' });
   } else if (freeTrial.eligible === false && isPaidSubscribers === false && !isAdmin) {
-    res.status(httpStatus.BAD_REQUEST).send({ message: 'Subscription expired!' });
+    res.status(httpStatus.BAD_REQUEST).send({ message: 'Your trial period has been expired! You need to purchase product to continue using it.' });
   } else {
     const { task } = req.body;
 

@@ -7,20 +7,20 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const campaignPostFromBusinessType = async (userId, userEmail, task, { platformType }) => {
+const campaignPostFromBusinessType = async (userId, userEmail, task, { platformType, numberOfSuggestions }) => {
   const userPrompt = `Platform: ${removeSpaces(platformType)}`;
 
   const prompt = `Write a Facebook Ad Primary text from the given context.
 
 ${userPrompt}
-List of 5 Primary text:
+List of ${numberOfSuggestions} Primary text:
 -`;
 
   const campaignPostIdea = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
   return processListContents(userId, userEmail, task, userPrompt, campaignPostIdea);
 };
 
-const facebookAdPrimaryTexts = async (userId, userEmail, { businessType, companyName, benefits }) => {
+const facebookAdPrimaryTexts = async (userId, userEmail, { businessType, companyName, benefits, numberOfSuggestions }) => {
   const userPrompt = `Company Name: ${removeSpaces(companyName)}
 Business Type: ${removeSpaces(businessType)}
 Customers Benefit: ${removeSpaces(benefits)}`;
@@ -53,7 +53,7 @@ Description:`;
   const openAPIInformationsList = [];
   const facebookAdPrimaryTextsList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const description = await generateContentUsingGPT3('davinci-instruct-beta', 100, prompt, 0.8, 0.2, 0.1, [
       'Description:',
       '\n',
@@ -77,7 +77,7 @@ Description:`;
   return userResponse;
 };
 
-const facebookAdHeadlines = async (userId, userEmail, { productName, businessType, customerBenefit }) => {
+const facebookAdHeadlines = async (userId, userEmail, { productName, businessType, customerBenefit,numberOfSuggestions  }) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Business Type: ${removeSpaces(businessType)}
 Customer Benefit: ${removeSpaces(customerBenefit)}`;
@@ -115,7 +115,7 @@ Headline:`;
   const openAPIInformationsList = [];
   const facebookAdHeadlinesList = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const headlines = await generateContentUsingGPT3('davinci-instruct-beta', 50, prompt, 0.8, 0.2, 0.1, [
       'Headline:',
       '\n',

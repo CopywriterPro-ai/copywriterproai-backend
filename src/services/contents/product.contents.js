@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const productDescription = async (userId, userEmail, { productName, productType }) => {
+const productDescription = async (userId, userEmail, { productName, productType, numberOfSuggestions  }) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Product Type: ${removeSpaces(productType)}`;
 
@@ -21,7 +21,7 @@ Short Description:`;
   const openAPIInformationsList = [];
   const productDescriptionSEOFriendlyList = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const productDescriptionSEOFriendly = await generateContentUsingGPT3('davinci', 50, prompt, 0.5, 0, 0, [
       '\n',
       'Short Description:',
@@ -48,7 +48,7 @@ Short Description:`;
 const makeProductDescriptionSEOFriendly = async (
   userId,
   userEmail,
-  { productName, productType, targetAudience, productBenefits, productFeatures }
+  { productName, productType, targetAudience, productBenefits, productFeatures, numberOfSuggestions }
 ) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Product Type: ${removeSpaces(productType)}
@@ -70,7 +70,7 @@ Description:`;
   const openAPIInformationsList = [];
   const roductDescriptionSEOFriendlyList = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const generatedProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 300, prompt, 0.7, 0.2, 0.3, [
       '\n',
       'Description:',
@@ -94,7 +94,7 @@ Description:`;
   return userResponse;
 };
 
-const productReview = async (userId, userEmail, { product, rating, comment }) => {
+const productReview = async (userId, userEmail, { product, rating, comment, numberOfSuggestions }) => {
   const userPrompt = `Product: ${removeSpaces(product)}
 Rating: ${removeSpaces(rating)}
 Comment: ${removeSpaces(comment)}`;
@@ -105,28 +105,37 @@ ${userPrompt}
 Review:`;
 
   let review;
-  while (1) {
+
+  const openAPIInformationsList = [];
+  const productReviewList = [];
+
+  // eslint-disable-next-line no-param-reassign
+  while (numberOfSuggestions--) {
     review = await generateContentUsingGPT3('davinci', 100, prompt, 0.3, 0.2, 0.1, ['\n']);
-    if (review.choices && review.choices[0].text.trim() !== '') {
-      review.choices[0].text = review.choices[0].text.trim();
-      break;
-    }
+    // if (review.choices && review.choices[0].text.trim() !== '') {
+    //   review.choices[0].text = review.choices[0].text.trim();
+    //   break;
+    // }
+    const { id, object, created, model, choices } = review;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    productReviewList.push(choices[0].text.trim());
   }
-  const { id, object, created, model, choices } = review;
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
     'product-review',
     userPrompt,
-    { id, object, created, model },
-    choices[0].text
+    openAPIInformationsList,
+    productReviewList
   );
   const userResponse = formatResponse(_id, 'product-review', generatedContents);
 
   return userResponse;
 };
 
-const generateProductName = async (userId, userEmail, { productDescription, keywords }) => {
+const generateProductName = async (userId, userEmail, { productDescription, keywords, numberOfSuggestions }) => {
   const userPrompt = `Product description: ${removeSpaces(productDescription)}
 Keywords: ${removeSpaces(keywords)}`;
 
@@ -146,7 +155,7 @@ Product names:`;
   const openAPIInformationsList = [];
   const generateProductNameList = [];
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < numberOfSuggestions; i++) {
     const productName = await generateContentUsingGPT3('davinci', 60, prompt, 0.5, 0, 0, ['\n', 'Product names:']);
     const { id, object, created, model, choices } = productName;
 
