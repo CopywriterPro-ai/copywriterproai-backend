@@ -222,15 +222,15 @@ ${intro}
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
-    'blog',
+    'blog-writing',
     userPrompt,
     { id, object, created, model },
     choices[0].text
   );
 
-  const userResponse = { 
+  const userResponse = {
     id: _id,
-    task: 'blog',
+    task: 'blog-writing',
     headline,
     generatedBlog: `${intro}\n\n${generatedContents}`,
   };
