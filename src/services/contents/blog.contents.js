@@ -8,33 +8,7 @@ const {
   formatResponse,
 } = require('../content.service');
 
-const blog = async (userId, userEmail, { about }) => {
-  const userPrompt = `Topic: ${removeSpaces(about)}`;
-
-  const prompt = `Write a complete blog with a sweet intro on the following topic, that can rank on google and hook the readers.
-
-${userPrompt}
-Blog:
-`;
-
-  const _blog = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 1.0, 1.4, 1.4, ['\n\n\n\n']);
-
-  const { id, object, created, model, choices } = _blog;
-
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'blog',
-    userPrompt,
-    { id, object, created, model },
-    choices[0].text
-  );
-  const userResponse = formatResponse(_id, 'blog', generatedContents);
-
-  return userResponse;
-};
-
-const blogIdea = async (userId, userEmail, { productName, productDescription, numberOfSuggestions }) => {
+const blogIdea = async (userId, userEmail, { productName, productDescription, numberOfSuggestions = 1 }) => {
   const userPrompt = `Name: ${removeSpaces(productName)}
 Description: ${removeSpaces(productDescription)}`;
 
@@ -52,7 +26,7 @@ List of ${numberOfSuggestions} BLOG IDEAS:
   return processListContents(userId, userEmail, 'blog-idea', userPrompt, blogIdeas);
 };
 
-const blogHeadline = async (userId, userEmail, { about, numberOfSuggestions }) => {
+const blogHeadline = async (userId, userEmail, { about, numberOfSuggestions = 1 }) => {
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}`;
 
   const prompt = `Generate attention-grabbing blog headlines relevant to BLOG ABOUT that can persuade and hook people to the following Blog -
@@ -69,7 +43,7 @@ List of ${numberOfSuggestions} BLOG HEADLINES:
   return processListContents(userId, userEmail, 'blog-headline', userPrompt, blogHeadlines);
 };
 
-const blogIntro = async (userId, userEmail, { about, headline, numberOfSuggestions }) => {
+const blogIntro = async (userId, userEmail, { about, headline, numberOfSuggestions = 1 }) => {
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
@@ -83,7 +57,7 @@ BLOG INTRODUCTION (between 100 to 130 words):
   const blogIntrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogIntros = await generateContentUsingGPT3('text-davinci-001', 250, prompt, 1.0, 1.5, 1.5, ['\n\n\n', '"""']);
+    const blogIntros = await generateContentUsingGPT3('text-davinci-001', 250, prompt, 1.0, 1.5, 1.5, ['\n\n\n']);
     const { id, object, created, model, choices } = blogIntros;
     openAPIInformationsList.push({ id, object, created, model });
     blogIntrosList.push(choices[0].text.trim());
@@ -102,7 +76,7 @@ BLOG INTRODUCTION (between 100 to 130 words):
   return userResponse;
 };
 
-const blogOutline = async (userId, userEmail, { about, headline, numberOfPoints, numberOfSuggestions }) => {
+const blogOutline = async (userId, userEmail, { about, headline, numberOfPoints, numberOfSuggestions = 1 }) => {
   let userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
@@ -157,7 +131,7 @@ ${userPrompt}`;
   return userResponse;
 };
 
-const blogTopic = async (userId, userEmail, { about, headline, topic, numberOfSuggestions }) => {
+const blogTopic = async (userId, userEmail, { about, headline, topic, numberOfSuggestions = 1 }) => {
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}
 BLOG TOPIC: ${removeSpaces(topic)}`;
@@ -194,7 +168,7 @@ BLOG TOPIC: ${removeSpaces(topic)}
   return userResponse;
 };
 
-const blogOutro = async (userId, userEmail, { about, headline, numberOfSuggestions }) => {
+const blogOutro = async (userId, userEmail, { about, headline, numberOfSuggestions = 1 }) => {
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
@@ -227,12 +201,49 @@ BLOG CONCLUSION:
   return userResponse;
 };
 
+const blog = async (userId, userEmail, { about }) => {
+  const headline = (await blogHeadline(userId, userEmail, { about })).generatedTexts[0];
+  const intro = (await blogIntro(userId, userEmail, { about, headline })).generatedTexts[0];
+
+  const userPrompt = `Topic: ${removeSpaces(about)}`;
+
+  const prompt = `Write a complete blog with a sweet intro on the following topic, that can rank on google and hook the readers.
+
+${userPrompt}
+Blog:
+
+${intro}
+`;
+
+  const _blog = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 1.0, 1.4, 1.4, ['\n\n\n\n']);
+
+  const { id, object, created, model, choices } = _blog;
+
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    'blog',
+    userPrompt,
+    { id, object, created, model },
+    choices[0].text
+  );
+
+  const userResponse = { 
+    id: _id,
+    task: 'blog',
+    headline,
+    generatedBlog: `${intro}\n\n${generatedContents}`,
+  };
+
+  return userResponse;
+};
+
 module.exports = {
-  blog,
   blogIdea,
   blogHeadline,
   blogIntro,
   blogOutline,
   blogTopic,
   blogOutro,
+  blog,
 };
