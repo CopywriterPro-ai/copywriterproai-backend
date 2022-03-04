@@ -131,17 +131,17 @@ ${userPrompt}`;
   return userResponse;
 };
 
-const blogTopic = async (userId, userEmail, { about, headline, topic, numberOfSuggestions = 1 }) => {
+const blogTopic = async (userId, userEmail, { about, headline, userText, numberOfSuggestions = 1 }) => {
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}
-BLOG TOPIC: ${removeSpaces(topic)}`;
+BLOG TOPIC: ${removeSpaces(userText)}`;
 
   const prompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}
 
 Write a medium sized paragraph on the following BLOG TOPIC with valuable information.
 
-BLOG TOPIC: ${removeSpaces(topic)}
+BLOG TOPIC: ${removeSpaces(userText)}
 `;
 
   const openAPIInformationsList = [];
