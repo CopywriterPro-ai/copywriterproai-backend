@@ -215,7 +215,7 @@ Blog:
 ${intro}
 `;
 
-  const _blog = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 1.0, 1.4, 1.4, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT3('text-davinci-001', 1500, prompt, 1.0, 1.4, 1.4, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
 
