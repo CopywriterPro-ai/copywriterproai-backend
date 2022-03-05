@@ -108,6 +108,8 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.email.emailMarketingCampaignBody(_id, email, req.body);
     } else if (task === 'email-body') {
       generatedContent = await generator.email.emailBody(_id, email, req.body);
+    } else if (task === 'email-subject-from-body') {
+      generatedContent = await generator.email.emailSubjectsFromBody(_id, email, req.body);
     } else if (task === 'website-short-description') {
       generatedContent = await generator.website.websiteShortDescription(_id, email, req.body);
     } else if (task === 'website-keywords-from-text') {
