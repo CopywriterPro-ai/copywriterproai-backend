@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
+const BLOG_TYPE = ['WRITE_ALONG', 'GHOSTWRITER'];
+
 const blogSchema = mongoose.Schema(
   {
     userId: {
@@ -27,6 +29,11 @@ const blogSchema = mongoose.Schema(
     blogPost: {
       type: String,
       required: true,
+    },
+    blogType: {
+      type: String,
+      enum: BLOG_TYPE,
+      default: BLOG_TYPE[0],
     },
   },
   {
