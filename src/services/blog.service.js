@@ -19,8 +19,8 @@ const queryBlogs = async (filter, options) => {
   return blogs;
 };
 
-const createBlog = async (userId, userEmail, { blogAbout, headline, blogPost }) => {
-  const blog = await Blog.create({ userId, userEmail, blogAbout, headline, blogPost });
+const createBlog = async (userId, userEmail, body) => {
+  const blog = await Blog.create({ userId, userEmail, ...body });
   return blog;
 };
 
