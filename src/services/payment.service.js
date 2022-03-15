@@ -68,11 +68,17 @@ const createStripeCustomer = async ({ user }) => {
   }
 };
 
-const PricesList = async () => {
+const PricesList = async ({ activeProduct }) => {
   const prices = await stripe.prices.list({
     expand: ['data.product'],
     active: true,
   });
+
+  if (activeProduct) {
+    const ActivePrices = prices.data.filter((price) => price.product.active);
+    return { prices: ActivePrices };
+  }
+
   return {
     prices: prices.data,
   };
