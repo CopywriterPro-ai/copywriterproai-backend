@@ -150,7 +150,7 @@ ${userPrompt}
   const youtubeVideoScriptList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const youtubeVideoScrip = await generateContentUsingGPT3('text-davinci-002', 1500, prompt, 0.7, 0, 0, ['\n\n']);
+    const youtubeVideoScrip = await generateContentUsingGPT3('text-davinci-002', 2036, prompt, 0.7, 0, 0, ['\n\n\n\n']);
     const { id, object, created, model, choices } = youtubeVideoScrip;
 
     openAPIInformationsList.push({ id, object, created, model });
