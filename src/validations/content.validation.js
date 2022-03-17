@@ -396,6 +396,14 @@ const youtubeVideoIdeas = {
   }),
 };
 
+const youtubeVideoScript = {
+  body: Joi.object().keys({
+    task: Joi.valid('youtube-video-script').required(),
+    title: Joi.string().min(5).max(400).required(),
+    numberOfSuggestions: Joi.number().min(1).max(10).required(),
+  }),
+};
+
 const imageIdeasFromAdText = {
   body: Joi.object().keys({
     task: Joi.valid('image-idea-from-ad-text').required(),
@@ -697,4 +705,5 @@ module.exports = {
   problemAgitateSolutionOutcome,
   attentionInterestDesireAction,
   recipe,
+  youtubeVideoScript,
 };

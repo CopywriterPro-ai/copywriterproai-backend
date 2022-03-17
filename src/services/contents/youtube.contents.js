@@ -139,9 +139,43 @@ Keywords:`;
   return userResponse;
 };
 
+const generateYoutubeVideoScript = async (userId, userEmail, { title, numberOfSuggestions }) => {
+  const userPrompt = `Title: ${removeSpaces(title)}`;
+
+  const prompt = `Write a long between 600 to 800 words youtube video script for the following video Title:
+${userPrompt}
+`;
+
+  const openAPIInformationsList = [];
+  const youtubeVideoScriptList = [];
+
+  for (let i = 0; i < numberOfSuggestions; i++) {
+    const youtubeVideoScrip = await generateContentUsingGPT3('text-davinci-002', 839, prompt, 0.7, 0, 0, [
+      '\n',
+    ]);
+    const { id, object, created, model, choices } = youtubeVideoScrip;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    youtubeVideoScriptList.push(choices[0].text.trim());
+  }
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    'youtube-video-script',
+    userPrompt,
+    openAPIInformationsList,
+    youtubeVideoScriptList
+  );
+
+  const userResponse = formatResponse(_id, 'youtube-video-script', generatedContents);
+
+  return userResponse;
+};
+
 module.exports = {
   youtubeVideoIdeas,
   youtubeVideoTitleFromDescription,
   generateVideoTagsFromDescription,
   generateChannelTagsFromDescription,
+  generateYoutubeVideoScript,
 };
