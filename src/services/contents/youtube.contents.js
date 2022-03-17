@@ -143,15 +143,15 @@ const generateYoutubeVideoScript = async (userId, userEmail, { title, numberOfSu
   const userPrompt = `description: ${removeSpaces(title)}`;
 
   const prompt = `Write a long youtube video script for the following video description starting with "Hi, everyone, welcome to another brand new video"  between 800 to 1200 words:
-${userPrompt}
-Script:`;
+${userPrompt}\n
+`;
 
   const openAPIInformationsList = [];
   const youtubeVideoScriptList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
     const youtubeVideoScrip = await generateContentUsingGPT3('text-davinci-002', 1500, prompt, 0.7, 0, 0, [
-      '\n', 'Script',
+      '\n',
     ]);
     const { id, object, created, model, choices } = youtubeVideoScrip;
 
