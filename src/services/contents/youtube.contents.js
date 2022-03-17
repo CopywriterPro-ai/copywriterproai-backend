@@ -139,19 +139,19 @@ Keywords:`;
   return userResponse;
 };
 
-const generateYoutubeVideoScript = async (userId, userEmail, { title, numberOfSuggestions }) => {
-  const userPrompt = `Title: ${removeSpaces(title)}`;
+const generateYoutubeVideoScript = async (userId, userEmail, { videoAbout, numberOfSuggestions }) => {
+  const userPrompt = `description: ${removeSpaces(videoAbout)}`;
 
-  const prompt = `Write a long between 600 to 800 words youtube video script for the following video Title:
+  const prompt = `Write a long youtube video script for the following video description starting with "Hi, everyone, welcome to another brand new video"  between 800 to 1200 words:
 ${userPrompt}
-`;
+Script:`;
 
   const openAPIInformationsList = [];
   const youtubeVideoScriptList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const youtubeVideoScrip = await generateContentUsingGPT3('text-davinci-002', 839, prompt, 0.7, 0, 0, [
-      '\n',
+    const youtubeVideoScrip = await generateContentUsingGPT3('text-davinci-002', 1500, prompt, 0.7, 0, 0, [
+      '\n', 'Script',
     ]);
     const { id, object, created, model, choices } = youtubeVideoScrip;
 
