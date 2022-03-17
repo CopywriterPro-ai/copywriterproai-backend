@@ -149,6 +149,10 @@ router
   .post(auth('generateContent'), validate(contentValidation.youtubeVideoIdeas), contentController.generate);
 
 router
+  .route('/generate/youtube-video-script')
+  .post(auth('generateContent'), validate(contentValidation.youtubeVideoScript), contentController.generate);
+
+router
   .route('/generate/image-idea-from-ad-text')
   .post(auth('generateContent'), validate(contentValidation.imageIdeasFromAdText), contentController.generate);
 
