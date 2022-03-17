@@ -27,7 +27,8 @@ const checkoutSessions = catchAsync(async (req, res) => {
 });
 
 const priceList = catchAsync(async (req, res) => {
-  const { prices } = await paymentService.PricesList();
+  const activeProduct = req.query.activeProduct || true;
+  const { prices } = await paymentService.PricesList({ activeProduct: !!activeProduct });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, prices });
 });
 
