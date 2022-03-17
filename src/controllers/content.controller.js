@@ -101,7 +101,7 @@ const generate = catchAsync(async (req, res) => {
     } else if (task === 'youtube-video-ideas') {
       generatedContent = await generator.youtube.youtubeVideoIdeas(_id, email, req.body);
     } else if (task === 'youtube-video-script') {
-      generatedContent = await generator.youtube.youtubeVideoScript(_id, email, req.body);
+      generatedContent = await generator.youtube.generateYoutubeVideoScript(_id, email, req.body);
     } else if (task === 'image-idea-from-ad-text') {
       generatedContent = await generator.commonTask.imageIdeasFromAdText(_id, email, req.body);
     } else if (task === 'email-marketing-campaign-subject') {
