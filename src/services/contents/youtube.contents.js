@@ -139,8 +139,8 @@ Keywords:`;
   return userResponse;
 };
 
-const generateYoutubeVideoScript = async (userId, userEmail, { videoAbout, numberOfSuggestions }) => {
-  const userPrompt = `description: ${removeSpaces(videoAbout)}`;
+const generateYoutubeVideoScript = async (userId, userEmail, { title, numberOfSuggestions }) => {
+  const userPrompt = `description: ${removeSpaces(title)}`;
 
   const prompt = `Write a long youtube video script for the following video description starting with "Hi, everyone, welcome to another brand new video"  between 800 to 1200 words:
 ${userPrompt}
