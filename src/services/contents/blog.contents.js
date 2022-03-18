@@ -47,17 +47,17 @@ const blogIntro = async (userId, userEmail, { about, headline, numberOfSuggestio
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
-  const prompt = `Write a long, sweet and captivating BLOG INTRODUCTION maintaining context for following blog that can hook the readers.
+  const prompt = `Write a long descriptive, sweet and captivating BLOG INTRODUCTION.
 
 ${userPrompt}
-BLOG INTRODUCTION:
+BLOG INTRODUCTION (A brief description of what a blog is about and why someone might want to read it):
 `;
 
   const openAPIInformationsList = [];
   const blogIntrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogIntros = await generateContentUsingGPT3('text-davinci-002', 250, prompt, 1.0, 1.5, 1.5, ['\n\n\n']);
+    const blogIntros = await generateContentUsingGPT3('text-davinci-002', 300, prompt, 1.0, 1.5, 1.5, ['\n\n\n']);
     const { id, object, created, model, choices } = blogIntros;
     openAPIInformationsList.push({ id, object, created, model });
     blogIntrosList.push(choices[0].text.trim());
@@ -209,7 +209,7 @@ const blog = async (userId, userEmail, { about }) => {
 
   const prompt = `${userPrompt}
 
-Write a BLOG on the BLOG TOPIC in standard English, that can rank on google.
+Write a long descriptive BLOG on the BLOG TOPIC, that can rank on google. Write in standard English with proper formatting. 
 
 ${headline}
 
@@ -217,7 +217,7 @@ ${intro}
 
 `;
 
-  const _blog = await generateContentUsingGPT3('text-davinci-002', 1000, prompt, 1.0, 1.4, 1.4, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT3('text-davinci-002', 1500, prompt, 1.0, 1.4, 1.4, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
 
