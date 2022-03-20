@@ -32,8 +32,9 @@ const priceList = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ status: httpStatus.OK, prices });
 });
 
-const cancelSubscription = catchAsync(async (req, res) => {
-  const { subscription } = await paymentService.cancelSubscription(req.body.subscriptionId);
+const updateSubscriptionPlan = catchAsync(async (req, res) => {
+  const { subscriptionId, bool } = req.body;
+  const { subscription } = await paymentService.updateSubscriptionPlan({ subscriptionId, bool });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscription });
 });
 
@@ -52,9 +53,10 @@ const invoicePreview = catchAsync(async (req, res) => {
 const getSubscriptions = catchAsync(async (req, res) => {
   const customer = await paymentService.findCustomer(req.user.email);
   if (customer) {
-    const { subscriptions } = await paymentService.getSubscriptions(customer.customerStripeId);
+    const { subscriptions } = await paymentService.getSubscriptions(customer.customerStripeId, req.query.status);
     return res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriptions });
   }
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, subscription: { data: [] } });
 });
 
 const paymentWebhook = catchAsync(async (req, res) => {
@@ -95,7 +97,7 @@ module.exports = {
   createCheckoutSessions,
   checkoutSessions,
   priceList,
-  cancelSubscription,
+  updateSubscriptionPlan,
   updateSubscription,
   invoicePreview,
   getSubscriptions,
