@@ -32,14 +32,13 @@ const getInvoice = async (invoiceId) => {
   }
 };
 
-const getSubscriptions = async (customerId) => {
+const getSubscriptions = async (customerId, status = 'all') => {
   const subscriptions = await stripe.subscriptions.list({
-    customer: customerId,
-    status: 'all',
-    expand: ['data.default_payment_method'],
+    ...(customerId && { customer: customerId }),
+    status,
   });
 
-  return { subscriptions };
+  return { subscriptions: subscriptions.data };
 };
 
 const paymentUpdate = async ({ customerId, subscriptionId }) => {
@@ -150,13 +149,12 @@ const createSubscription = async ({ customerId, priceId }) => {
   }
 };
 
-const cancelSubscription = async ({ subscriptionId }) => {
+const updateSubscriptionPlan = async ({ subscriptionId, bool = true }) => {
   try {
-    const deletedSubscription = await stripe.subscriptions.del(subscriptionId);
-
+    const deletedSubscription = await stripe.subscriptions.update(subscriptionId, { cancel_at_period_end: bool });
     return { subscription: deletedSubscription };
   } catch (error) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not cancelled');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription cancelling failed');
   }
 };
 
@@ -246,7 +244,7 @@ module.exports = {
   checkoutSession,
   createSubscription,
   PricesList,
-  cancelSubscription,
+  updateSubscriptionPlan,
   updateSubscription,
   invoicePreview,
   getInvoice,

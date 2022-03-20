@@ -13,9 +13,18 @@ const checkoutSession = {
   }),
 };
 
-const cancelSubscription = {
+const getSubscriptions = {
+  query: Joi.object().keys({
+    status: Joi.string()
+      .valid('active', 'past_due', 'unpaid', 'canceled', 'incomplete', 'incomplete_expired', 'trialing', 'all', 'ended')
+      .required(),
+  }),
+};
+
+const updateSubscriptionPlan = {
   body: Joi.object().keys({
     subscriptionId: Joi.string().required(),
+    bool: Joi.boolean().required(),
   }),
 };
 
@@ -37,7 +46,8 @@ const invoicePreview = {
 module.exports = {
   createCheckoutSession,
   checkoutSession,
-  cancelSubscription,
+  updateSubscriptionPlan,
   updateSubscription,
   invoicePreview,
+  getSubscriptions,
 };
