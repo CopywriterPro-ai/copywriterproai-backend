@@ -158,23 +158,23 @@ const updateSubscriptionPlan = async ({ subscriptionId, bool = true }) => {
   }
 };
 
-const updateSubscription = async ({ subscriptionId, newPriceId }) => {
-  try {
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-    const updatedSubscription = await stripe.subscriptions.update(subscriptionId, {
-      items: [
-        {
-          id: subscription.items.data[0].id,
-          price: newPriceId,
-        },
-      ],
-    });
+// const updateSubscription = async ({ subscriptionId, newPriceId }) => {
+//   try {
+//     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+//     const updatedSubscription = await stripe.subscriptions.update(subscriptionId, {
+//       items: [
+//         {
+//           id: subscription.items.data[0].id,
+//           price: newPriceId,
+//         },
+//       ],
+//     });
 
-    return { subscription: updatedSubscription };
-  } catch (error) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not updated');
-  }
-};
+//     return { subscription: updatedSubscription };
+//   } catch (error) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not updated');
+//   }
+// };
 
 const invoicePreview = async ({ customerId, priceId, subscriptionId }) => {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
@@ -227,7 +227,7 @@ const handlePaymentSucceeded = async (dataObject) => {
         { new: true }
       );
 
-      const { email } = await Payment.findOneAndUpdate(
+      const { userId } = await Payment.findOneAndUpdate(
         { customerStripeId: customer },
         {
           $push: { customerSubscription },
@@ -235,7 +235,7 @@ const handlePaymentSucceeded = async (dataObject) => {
         { new: true }
       );
 
-      await subscriberService.updateOwnSubscribe(email, {
+      await subscriberService.updateOwnSubscribe(userId, {
         words,
         subscription: priceKey,
         subscriptionExpire,
@@ -261,7 +261,7 @@ module.exports = {
   createSubscription,
   PricesList,
   updateSubscriptionPlan,
-  updateSubscription,
+  // updateSubscription,
   invoicePreview,
   getInvoice,
   getSubscriptions,

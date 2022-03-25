@@ -8,7 +8,7 @@ const config = require('../config/config');
 const stripe = new Stripe(config.stripe.stripeSecretKey);
 
 const customerPortal = catchAsync(async (req, res) => {
-  const { customerStripeId } = await paymentService.findCustomer(req.user.email);
+  const { customerStripeId } = await paymentService.stripeCustomer({ user: req.user });
   if (customerStripeId) {
     const session = await stripe.billingPortal.sessions.create({
       customer: customerStripeId,
@@ -26,9 +26,9 @@ const createCustomer = catchAsync(async (req, res) => {
 });
 
 const createCheckoutSessions = catchAsync(async (req, res) => {
-  const customerEmail = req.user.email;
-  const { customerId, priceId } = req.body;
-  const { session } = await paymentService.createCheckoutSessions({ customerEmail, customerId, priceId });
+  const { priceId } = req.body;
+  const { customerStripeId: customerId } = await paymentService.stripeCustomer({ user: req.user });
+  const { session } = await paymentService.createCheckoutSessions({ customerId, priceId });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, session });
 });
 
@@ -50,17 +50,17 @@ const updateSubscriptionPlan = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscription });
 });
 
-const updateSubscription = catchAsync(async (req, res) => {
-  const { subscriptionId, newPriceId } = req.body;
-  const { subscription } = await paymentService.updateSubscription({ subscriptionId, newPriceId });
-  res.status(httpStatus.OK).send({ status: httpStatus.OK, subscription });
-});
+// const updateSubscription = catchAsync(async (req, res) => {
+//   const { subscriptionId, newPriceId } = req.body;
+//   const { subscription } = await paymentService.updateSubscription({ subscriptionId, newPriceId });
+//   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscription });
+// });
 
-const invoicePreview = catchAsync(async (req, res) => {
-  const { customerId, priceId, subscriptionId } = req.body;
-  const { invoice } = await paymentService.invoicePreview({ customerId, priceId, subscriptionId });
-  res.status(httpStatus.OK).send({ status: httpStatus.OK, invoice });
-});
+// const invoicePreview = catchAsync(async (req, res) => {
+//   const { customerId, priceId, subscriptionId } = req.body;
+//   const { invoice } = await paymentService.invoicePreview({ customerId, priceId, subscriptionId });
+//   res.status(httpStatus.OK).send({ status: httpStatus.OK, invoice });
+// });
 
 const getSubscriptions = catchAsync(async (req, res) => {
   const customer = await paymentService.findCustomer(req.user.userId);
@@ -111,8 +111,8 @@ module.exports = {
   checkoutSessions,
   priceList,
   updateSubscriptionPlan,
-  updateSubscription,
-  invoicePreview,
+  // updateSubscription,
+  // invoicePreview,
   getSubscriptions,
   paymentWebhook,
 };

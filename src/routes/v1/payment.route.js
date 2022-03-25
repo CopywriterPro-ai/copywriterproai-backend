@@ -16,19 +16,19 @@ router.post(
   paymentController.createCheckoutSessions
 );
 router.get('/checkout-session', auth(), validate(paymentValidation.checkoutSession), paymentController.checkoutSessions);
-router.get('/subscription-invoice', auth(), validate(paymentValidation.invoicePreview), paymentController.invoicePreview);
+// router.get('/subscription-invoice', auth(), validate(paymentValidation.invoicePreview), paymentController.invoicePreview);
 router.post(
   '/update-subscription-plan',
   auth(),
   validate(paymentValidation.updateSubscriptionPlan),
   paymentController.updateSubscriptionPlan
 );
-router.post(
-  '/update-subscription',
-  auth(),
-  validate(paymentValidation.updateSubscription),
-  paymentController.updateSubscription
-);
+// router.post(
+//   '/update-subscription',
+//   auth(),
+//   validate(paymentValidation.updateSubscription),
+//   paymentController.updateSubscription
+// );
 router.post('/create-customer-portal-session', auth(), paymentController.customerPortal);
 router.post('/payment-webhook', express.raw({ type: 'application/json' }), paymentController.paymentWebhook);
 
