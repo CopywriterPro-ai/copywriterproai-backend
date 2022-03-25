@@ -7,6 +7,18 @@ const config = require('../config/config');
 
 const stripe = new Stripe(config.stripe.stripeSecretKey);
 
+const customerPortal = catchAsync(async (req, res) => {
+  const { customerStripeId } = await paymentService.findCustomer(req.user.email);
+  if (customerStripeId) {
+    const session = await stripe.billingPortal.sessions.create({
+      customer: customerStripeId,
+      return_url: `${config.frontendUrl.web}/account`,
+    });
+    return res.status(httpStatus.OK).send(session.url);
+  }
+  res.status(httpStatus.BAD_REQUEST).send({ status: httpStatus.BAD_REQUEST, message: 'customer not found' });
+});
+
 // create or get stripe customer
 const createCustomer = catchAsync(async (req, res) => {
   const customer = await paymentService.stripeCustomer({ user: req.user });
@@ -51,7 +63,7 @@ const invoicePreview = catchAsync(async (req, res) => {
 });
 
 const getSubscriptions = catchAsync(async (req, res) => {
-  const customer = await paymentService.findCustomer(req.user.email);
+  const customer = await paymentService.findCustomer(req.user.userId);
   if (customer) {
     const { subscriptions } = await paymentService.getSubscriptions(customer.customerStripeId, req.query.status);
     return res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriptions });
@@ -93,6 +105,7 @@ const paymentWebhook = catchAsync(async (req, res) => {
 });
 
 module.exports = {
+  customerPortal,
   createCustomer,
   createCheckoutSessions,
   checkoutSessions,

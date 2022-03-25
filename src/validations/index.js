@@ -9,3 +9,4 @@ module.exports.blogValidation = require('./blog.validation');
 module.exports.demoValidation = require('./demo.validation');
 module.exports.extensionValidation = require('./extension.validation');
 module.exports.noticeValidation = require('./notice.validation');
+module.exports.subscriberValidation = require('./subscriber.validation');

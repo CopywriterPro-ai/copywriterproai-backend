@@ -14,14 +14,14 @@ const stripe = new Stripe(config.stripe.stripeSecretKey);
 //   return { product };
 // };
 
-const getCustomer = async (customerId) => {
-  try {
-    const customer = await Payment.findOne({ customerStripeId: customerId });
-    return customer;
-  } catch (error) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Customer not found');
-  }
-};
+// const getCustomer = async (customerId) => {
+//   try {
+//     const customer = await Payment.findOne({ customerStripeId: customerId });
+//     return customer;
+//   } catch (error) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Customer not found');
+//   }
+// };
 
 const getInvoice = async (invoiceId) => {
   try {
@@ -50,8 +50,8 @@ const paymentUpdate = async ({ customerId, subscriptionId }) => {
   return { payment };
 };
 
-const findCustomer = async (email) => {
-  const customer = await Payment.findOne({ email });
+const findCustomer = async (userId) => {
+  const customer = await Payment.findOne({ userId });
   return customer;
 };
 
@@ -59,8 +59,9 @@ const createStripeCustomer = async ({ user }) => {
   try {
     const stripeCustomer = await stripe.customers.create({
       email: user.email,
+      metadata: { userId: user.userId },
     });
-    const customer = await Payment.create({ user: user.id, email: user.email, customerStripeId: stripeCustomer.id });
+    const customer = await Payment.create({ userId: user.userId, customerStripeId: stripeCustomer.id });
     return customer;
   } catch (error) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Customer not created');
@@ -85,7 +86,7 @@ const PricesList = async ({ activeProduct }) => {
 
 const stripeCustomer = async ({ user }) => {
   try {
-    const customer = await findCustomer(user.email);
+    const customer = await findCustomer(user.userId);
     if (customer) {
       return customer;
     }
@@ -100,7 +101,6 @@ const createCheckoutSessions = async ({ customerId, priceId }) => {
   try {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      // customer_email: customerEmail,
       mode: 'subscription',
       payment_method_types: ['card'],
       line_items: [
@@ -199,7 +199,6 @@ const handlePaymentSucceeded = async (dataObject) => {
     const paymentIntentId = dataObject.payment_intent;
 
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-
     const subscription = await stripe.subscriptions.update(subscriptionId, {
       default_payment_method: paymentIntent.payment_method,
     });
@@ -207,23 +206,40 @@ const handlePaymentSucceeded = async (dataObject) => {
     // eslint-disable-next-line camelcase
     const { status, plan, customer, id, current_period_end } = subscription;
 
-    const { email } = await getCustomer(customer);
-
-    await Payment.findOneAndUpdate({ email }, { customerSubscriptionId: id }, { new: true });
-
     if (status === 'active') {
-      let oldWords = 0;
-      const planData = subscriptionPlan[plan.metadata.priceKey];
-      const subscriber = await subscriberService.getOwnSubscribe(email);
+      const { priceKey } = plan.metadata;
+      const planData = subscriptionPlan[priceKey];
+      const subscriptionExpire = moment.unix(current_period_end).format();
+      const { words } = planData;
 
-      if (subscriber.subscriberInfo.isPaidSubscribers === true) {
-        oldWords = subscriber.words * 1;
-      }
+      const customerSubscription = {
+        Subscription: priceKey,
+        subscriptionId: id,
+        subscriptionExpire,
+        words,
+      };
+
+      await Payment.findOneAndUpdate(
+        { customerStripeId: customer },
+        {
+          $pull: { customerSubscription: { subscriptionId: id } },
+        },
+        { new: true }
+      );
+
+      const { email } = await Payment.findOneAndUpdate(
+        { customerStripeId: customer },
+        {
+          $push: { customerSubscription },
+        },
+        { new: true }
+      );
 
       await subscriberService.updateOwnSubscribe(email, {
-        words: planData.words + oldWords,
-        subscription: planData.package,
-        subscriptionExpire: moment.unix(current_period_end).format(),
+        words,
+        subscription: priceKey,
+        subscriptionExpire,
+        subscriptionId: id,
       });
 
       return { message: 'success' };

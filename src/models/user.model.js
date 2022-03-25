@@ -22,6 +22,11 @@ const userSchema = new Schema(
     authType: {
       type: String,
       enum: authTypeEnum,
+      private: true,
+    },
+    strategyId: {
+      type: String,
+      private: true,
     },
     profileAvatar: {
       type: String,
@@ -29,12 +34,6 @@ const userSchema = new Schema(
     password: {
       type: String,
       trim: true,
-      // minlength: 8,
-      // validate(value) {
-      //   if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-      //     throw new Error('Password must contain at least one letter and one number');
-      //   }
-      // },
       private: true, // used by the toJSON plugin
     },
     email: {
@@ -76,12 +75,12 @@ const userSchema = new Schema(
  * @returns {Promise<boolean>}
  */
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
-  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  const user = await this.findOne({ email, authType: 'email', _id: { $ne: excludeUserId } });
   return !!user;
 };
 
-userSchema.statics.isVerifiedEmailTaken = async function (email, excludeUserId) {
-  const user = await this.findOne({ email, isVerified: true, _id: { $ne: excludeUserId } });
+userSchema.statics.isVerifiedEmailTaken = async function (email) {
+  const user = await this.findOne({ email, isVerified: true, authType: 'email' });
   return !!user;
 };
 
@@ -106,6 +105,9 @@ userSchema.pre('save', async function (next) {
 // add plugin that converts mongoose to json
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
+
+// Indexing
+userSchema.index({ userId: 1 });
 
 const User = mongoose.model('User', userSchema);
 

@@ -29,6 +29,7 @@ router.post(
   validate(paymentValidation.updateSubscription),
   paymentController.updateSubscription
 );
+router.post('/create-customer-portal-session', auth(), paymentController.customerPortal);
 router.post('/payment-webhook', express.raw({ type: 'application/json' }), paymentController.paymentWebhook);
 
 module.exports = router;
