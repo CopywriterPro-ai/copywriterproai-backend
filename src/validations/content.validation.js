@@ -146,14 +146,38 @@ const pointOfView = {
   }),
 };
 
-const blog = {
+const shortBlog = {
   body: Joi.object().keys({
-    task: Joi.valid('blog-writing').required(),
+    task: Joi.valid('short-blog').required(),
     about: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
       is: true,
       then: Joi.string().min(10).max(400).required(),
       otherwise: Joi.string().min(10).max(600).required(),
     }),
+    headline: Joi.string().min(10).max(150).required(),
+    keywords: Joi.array().items(Joi.string()).max(2),
+  }),
+};
+
+const longBlog = {
+  body: Joi.object().keys({
+    task: Joi.valid('long-blog').required(),
+    about: Joi.alternatives().conditional(Joi.ref('$inputLimit'), {
+      is: true,
+      then: Joi.string().min(10).max(400).required(),
+      otherwise: Joi.string().min(10).max(600).required(),
+    }),
+    headline: Joi.string().min(10).max(150).required(),
+    keywords: Joi.array().items(Joi.string()).max(4),
+  }),
+};
+
+const blogFromOutline = {
+  body: Joi.object().keys({
+    task: Joi.valid('blog-from-outline').required(),
+    headline: Joi.string().min(10).max(150).required(),
+    intro: Joi.string().min(10).max(1000).required(),
+    outline: Joi.array().items(Joi.string()).min(3).max(10).required(),
   }),
 };
 
@@ -658,7 +682,9 @@ module.exports = {
   changeTone,
   activePassive,
   pointOfView,
-  blog,
+  shortBlog,
+  longBlog,
+  blogFromOutline,
   blogIdea,
   blogHeadline,
   blogOutline,

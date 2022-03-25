@@ -50,7 +50,17 @@ router
   .route('/generate/point-of-view')
   .post(auth('generateContent'), validate(contentValidation.pointOfView), contentController.generate);
 
-router.route('/generate/blog').post(auth('generateContent'), validate(contentValidation.blog), contentController.generate);
+router
+  .route('/generate/short-blog')
+  .post(auth('generateContent'), validate(contentValidation.shortBlog), contentController.generate);
+
+router
+  .route('/generate/long-blog')
+  .post(auth('generateContent'), validate(contentValidation.longBlog), contentController.generate);
+
+router
+  .route('/generate/blog-from-outline')
+  .post(auth('generateContent'), validate(contentValidation.blogFromOutline), contentController.generate);
 
 router
   .route('/generate/blog-idea')

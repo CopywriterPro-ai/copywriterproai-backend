@@ -15,14 +15,11 @@ const paraphrase = async (userId, userEmail, { userText, numberOfSuggestions }) 
 
   const prompt = `Paraphrase the Original text.
 
-Original: Her life spanned years of incredible change for women as they gained more rights than ever before.
-Paraphrase: She lived through the exciting era of women's liberation.
-
 Original: ${userPrompt}
 ${numberOfSuggestions} unique way(s) to Paraphrase:
 1.`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.9, 0.9, 0.9, [
+  const paraphrasedContents = await generateContentUsingGPT3('text-davinci-001', 400, prompt, 0.9, 0.9, 0.9, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
@@ -54,7 +51,7 @@ Expanded with more words and information:
   const expandedContentsList = [];
 
   while (numberOfSuggestions--) {
-    const expandedContents = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 1, 0.2, 2, [
+    const expandedContents = await generateContentUsingGPT3('text-davinci-001', 400, prompt, 1, 0.2, 2, [
       '"""',
       'Original Text:',
     ]);
@@ -92,7 +89,7 @@ I rephrased it for him, in plain language a second grader can understand:
   const simplifiedContentsList = [];
 
   while (numberOfSuggestions--) {
-    const simplifiedContents = await generateContentUsingGPT3('text-davinci-001', 150, prompt, 0.7, 0.0, 0.0, ['"""']);
+    const simplifiedContents = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.7, 0.0, 0.0, ['"""']);
     const { id, object, created, model, choices } = simplifiedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -124,7 +121,7 @@ Tl;dr
   const summarizedContentsList = [];
 
   while (numberOfSuggestions--) {
-    const summarizedContents = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 0.7, 0.0, 0.0, ['\n\n']);
+    const summarizedContents = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.7, 0.0, 0.0, ['\n\n']);
     const { id, object, created, model, choices } = summarizedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -162,7 +159,7 @@ SHORT ABSTRACT:
   const abstractsList = [];
 
   while (numberOfSuggestions--) {
-    const abstract = await generateContentUsingGPT3('text-davinci-001', 150, prompt, 0.7, 0.0, 0.0, [
+    const abstract = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.7, 0.0, 0.0, [
       '"""',
       'ORIGINAL TEXT:',
     ]);
@@ -197,7 +194,7 @@ My students wrote ${numberOfPoints} points:
 
   let notes;
   while (1) {
-    notes = await generateContentUsingGPT3('text-davinci-001', 150, prompt, 0.7, 0.0, 0.0, ['"""', '\n\n']);
+    notes = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.7, 0.0, 0.0, ['"""', '\n\n']);
     if (notes.choices && notes.choices[0].text.trim() !== userPrompt) {
       notes.choices[0].text = `1. ${notes.choices[0].text.trim()}`;
       break;
@@ -225,7 +222,7 @@ const grammarFixer = async (userId, userEmail, { userText }) => {
 ${userPrompt}
 `;
 
-  const fixedContent = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  const fixedContent = await generateContentUsingGPT3('text-davinci-001', 400, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   fixedContent.choices[0].text = fixedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = fixedContent;
