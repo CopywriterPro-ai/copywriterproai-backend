@@ -19,6 +19,11 @@ const customerPortal = catchAsync(async (req, res) => {
   res.status(httpStatus.BAD_REQUEST).send({ status: httpStatus.BAD_REQUEST, message: 'customer not found' });
 });
 
+const getSubscriptionMe = catchAsync(async (req, res) => {
+  const subscriptions = await paymentService.getSubscriberMe(req.user.userId);
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriptions });
+});
+
 // create or get stripe customer
 const createCustomer = catchAsync(async (req, res) => {
   const customer = await paymentService.stripeCustomer({ user: req.user });
@@ -106,6 +111,7 @@ const paymentWebhook = catchAsync(async (req, res) => {
 
 module.exports = {
   customerPortal,
+  getSubscriptionMe,
   createCustomer,
   createCheckoutSessions,
   checkoutSessions,

@@ -97,6 +97,14 @@ const stripeCustomer = async ({ user }) => {
   }
 };
 
+const getSubscriberMe = async (userId) => {
+  const payment = await Payment.findOne({ userId });
+  if (payment) {
+    return payment.customerSubscription;
+  }
+  return [];
+};
+
 const createCheckoutSessions = async ({ customerId, priceId }) => {
   try {
     const session = await stripe.checkout.sessions.create({
@@ -255,6 +263,7 @@ const handlePaymentFailed = async () => {
 module.exports = {
   findCustomer,
   paymentUpdate,
+  getSubscriberMe,
   stripeCustomer,
   createCheckoutSessions,
   checkoutSession,

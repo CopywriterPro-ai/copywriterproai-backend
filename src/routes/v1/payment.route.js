@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('/product-prices', paymentController.priceList);
 router.get('/subscriptions', auth(), validate(paymentValidation.getSubscriptions), paymentController.getSubscriptions);
+router.get('/subscriptions/me', auth(), paymentController.getSubscriptionMe);
 router.post('/create-customer', auth(), paymentController.createCustomer);
 router.post(
   '/create-checkout-session',
