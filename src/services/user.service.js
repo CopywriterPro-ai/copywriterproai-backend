@@ -3,6 +3,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
 const httpStatus = require('http-status');
+const { v1: uuidv1 } = require('uuid');
 const { User, Content } = require('../models');
 const contentService = require('./content.service');
 const subscriberService = require('./subscriber.service');
@@ -202,11 +203,12 @@ const strategyValuesByAuthType = (strategy, profile) => {
 
 const strategyVerify = (authType) => async (accessToken, refreshToken, profile, done) => {
   try {
-    const user = await User.findOne({ userId: profile.id, authType });
+    const existingUser = await User.findOne({ strategyId: profile.id, authType });
     const userInfo = strategyValuesByAuthType(authType, profile);
-    if (user) {
+
+    if (existingUser) {
       await User.findOneAndUpdate(
-        { userId: profile.id, authType },
+        { strategyId: profile.id, authType },
         {
           profileAvatar: userInfo.profileAvatar,
           firstName: userInfo.firstName,
@@ -214,20 +216,23 @@ const strategyVerify = (authType) => async (accessToken, refreshToken, profile, 
         },
         { new: true }
       );
-      done(null, user);
+      done(null, existingUser);
     } else {
+      const uuid = uuidv1();
+      const findUserByEmail = await User.findOne({ email: userInfo.email, isVerified: true });
       const newUser = await User.create({
-        userId: profile.id,
+        userId: findUserByEmail ? findUserByEmail.userId : uuid,
+        strategyId: profile.id,
         isVerified: true,
         bookmarks: {},
         authType,
         ...userInfo,
       });
 
-      const subscriber = await Subscriber.findOne({ email: userInfo.email });
+      const subscriber = await Subscriber.findOne({ userId: newUser.userId });
 
       if (!subscriber) {
-        await subscriberService.createOwnSubscribe({ email: userInfo.email, subscription: subscription.FREEMIUM });
+        await subscriberService.createOwnSubscribe({ userId: newUser.userId, subscription: subscription.FREEMIUM });
       }
 
       done(null, newUser);

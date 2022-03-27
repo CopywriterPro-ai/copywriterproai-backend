@@ -4,8 +4,8 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const { Subscriber } = require('../models');
 
-const getSubscriberInfo = async ({ email }, next) => {
-  const subscriber = await Subscriber.findOne({ email });
+const getSubscriberInfo = async ({ userId }, next) => {
+  const subscriber = await Subscriber.findOne({ userId });
   if (!subscriber) {
     return next(new ApiError(httpStatus.NOT_FOUND, 'Subscriber not found'));
   }

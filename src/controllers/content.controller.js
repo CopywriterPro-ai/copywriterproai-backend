@@ -5,24 +5,32 @@ const { subscriberService } = require('../services');
 const { subscription } = require('../config/plan');
 
 const generate = catchAsync(async (req, res) => {
-  const { _id, email, role } = req.user;
+  const { _id, email, userId, role } = req.user;
   const {
     words,
     freeTrial,
     subscription: currentPackage,
     subscriberInfo: { isPaidSubscribers },
-  } = await subscriberService.getOwnSubscribe(email);
+  } = await subscriberService.getOwnSubscribe(userId);
 
   const isAdmin = role === 'admin';
 
   if (words === 0 && !isAdmin) {
-    res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Your trial period has been expired! You need to purchase product to continue using it.' });
+    res
+      .status(httpStatus.PAYMENT_REQUIRED)
+      .send({ message: 'Your trial period has been expired! You need to purchase product to continue using it.' });
   } else if (currentPackage === subscription.FREEMIUM && freeTrial.eligible === false && !isAdmin) {
-    res.status(httpStatus.BAD_REQUEST).send({ message: 'Your trial period has been expired! You need to purchase product to continue using it.' });
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send({ message: 'Your trial period has been expired! You need to purchase product to continue using it.' });
   } else if (freeTrial.eligible === true && freeTrial.dailyLimitExceeded === true && !isAdmin) {
-    res.status(httpStatus.BAD_REQUEST).send({ message: 'Free trial daily limit exceeded! You need to purchase product to continue using it.' });
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send({ message: 'Free trial daily limit exceeded! You need to purchase product to continue using it.' });
   } else if (freeTrial.eligible === false && isPaidSubscribers === false && !isAdmin) {
-    res.status(httpStatus.BAD_REQUEST).send({ message: 'Your trial period has been expired! You need to purchase product to continue using it.' });
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send({ message: 'Your trial period has been expired! You need to purchase product to continue using it.' });
   } else {
     const { task } = req.body;
 

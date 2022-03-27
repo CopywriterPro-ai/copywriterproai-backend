@@ -7,6 +7,12 @@ const { authTypes } = require('./auths');
 const { tokenTypes } = require('./tokens');
 const { User } = require('../models');
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+const googleCallbackURL = isDevelopment
+  ? 'http://localhost:8081/v1/auth/google/callback'
+  : 'https://api.copywriterpro.ai/v1/auth/google/callback';
+
 const jwtOptions = {
   secretOrKey: jwt.secret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -15,7 +21,7 @@ const jwtOptions = {
 const googleOptions = {
   clientID: googleOauth2.clientId,
   clientSecret: googleOauth2.secretId,
-  callbackURL: 'https://api.copywriterpro.ai/v1/auth/google/callback',
+  callbackURL: googleCallbackURL,
   userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
 };
 

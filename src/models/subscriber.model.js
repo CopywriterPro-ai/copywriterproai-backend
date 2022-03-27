@@ -8,13 +8,16 @@ const subscriptionEnum = Object.values(subscription);
 
 const subscriberSchema = mongoose.Schema(
   {
-    email: {
+    // email: {
+    //   type: String,
+    // },
+    userId: {
       type: String,
+      required: true,
     },
     words: {
       type: Number,
-      trim: true,
-      default: 700,
+      default: 3000,
     },
     dailyCreaditUsage: {
       date: { type: Date },
@@ -24,6 +27,10 @@ const subscriberSchema = mongoose.Schema(
       type: String,
       enum: subscriptionEnum,
       default: subscription.FREEMIUM,
+    },
+    subscriptionId: {
+      type: String,
+      // private: true,
     },
     subscriptionExpire: {
       type: Date,
@@ -73,13 +80,10 @@ subscriberSchema.virtual('subscriberInfo').get(function () {
 
   if (isPaidSubscribers) {
     switch (subs) {
-      case subscription.LIGHT_1MONTH:
-      case subscription.LIGHT_6MONTH:
-        inputLimit = true;
-        break;
-
       case subscription.BASIC_1MONTH:
       case subscription.BASIC_6MONTH:
+      case subscription.STANDARD_1MONTH:
+      case subscription.STANDARD_6MONTH:
         inputLimit = true;
         break;
 
@@ -90,6 +94,7 @@ subscriberSchema.virtual('subscriberInfo').get(function () {
 
       default:
         inputLimit = true;
+        break;
     }
   }
   return { isPaidSubscribers, inputLimit };
@@ -101,6 +106,9 @@ subscriberSchema.set('toJSON', { virtuals: true });
 // add plugin that converts mongoose to json
 subscriberSchema.plugin(toJSON);
 subscriberSchema.plugin(paginate);
+
+// Indexing
+subscriberSchema.index({ userId: 1 });
 
 /**
  * @typedef Subscription

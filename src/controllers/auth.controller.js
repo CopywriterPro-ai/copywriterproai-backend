@@ -1,9 +1,10 @@
 const httpStatus = require('http-status');
+const { v1: uuidv1 } = require('uuid');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService, interestService, emailService, subscriberService } = require('../services');
 const { frontendUrl } = require('../config/config');
 const { authTypes } = require('../config/auths');
-const { subscription, trial } = require('../config/plan');
+const { subscription } = require('../config/plan');
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -26,9 +27,16 @@ const verifyAccount = catchAsync(async (req, res) => {
       .status(httpStatus.BAD_REQUEST)
       .send({ status: httpStatus.BAD_REQUEST, message: 'User not found or already verified' });
   }
+  const uuid = uuidv1();
+  const verifiedUser = await userService.getUser({ email, isVerified: true });
+  const { userId: userID } = await userService.updateUserById(user, userId, {
+    userId: verifiedUser ? verifiedUser.userId : uuid,
+    isVerified: true,
+  });
   await interestService.createUserInterest(email);
-  await userService.updateUserById(user, userId, { isVerified: true });
-  await subscriberService.createOwnSubscribe({ email, subscription: subscription.FREEMIUM });
+  if (!verifiedUser) {
+    await subscriberService.createOwnSubscribe({ userId: userID, subscription: subscription.FREEMIUM });
+  }
   await userService.deleteunVerifiedUserByEmail(email);
   await emailService.sendWelcomeEmail(email, user.firstName);
   res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'Your account is verified, please sign in' });

@@ -5,25 +5,25 @@ const catchAsync = require('../utils/catchAsync');
 const { subscriberService } = require('../services');
 
 const getOwnSubscribe = catchAsync(async (req, res) => {
-  const subscriber = await subscriberService.getOwnSubscribe(req.user.email);
+  const subscriber = await subscriberService.getOwnSubscribe(req.user.userId);
   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });
 });
 
 const updateOwnSubscribe = catchAsync(async (req, res) => {
-  const subscriber = await subscriberService.updateOwnSubscribe(req.user.email, req.body);
+  const subscriber = await subscriberService.updateOwnSubscribe(req.user.userId, req.body);
   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });
 });
 
 const updateOwnCopyCounter = catchAsync(async (req, res) => {
-  await subscriberService.updateOwnCopyCounter(req.user.email);
+  await subscriberService.updateOwnCopyCounter(req.user.userId);
   res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'success' });
 });
 
 const generateUpdate = catchAsync(async (req, res) => {
   let calDailyCreaditUsage;
-  const { email, role } = req.user;
+  const { role, userId } = req.user;
   const { useWords = 0 } = req.body;
-  const { words, dailyCreaditUsage } = await subscriberService.getOwnSubscribe(email);
+  const { words, dailyCreaditUsage } = await subscriberService.getOwnSubscribe(userId);
 
   const todayDate = moment().startOf('day').format();
   const { date, usage } = dailyCreaditUsage;
@@ -45,11 +45,17 @@ const generateUpdate = catchAsync(async (req, res) => {
     remainingWords = subtractionWords;
   }
 
-  const subscriber = await subscriberService.updateOwnSubscribe(email, {
+  const subscriber = await subscriberService.updateOwnSubscribe(userId, {
     words: isAdmin ? words : remainingWords,
     dailyCreaditUsage: calDailyCreaditUsage,
   });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });
 });
 
-module.exports = { getOwnSubscribe, updateOwnSubscribe, updateOwnCopyCounter, generateUpdate };
+const subscriberSwitcher = catchAsync(async (req, res) => {
+  const currentSubscriber = await subscriberService.getOwnSubscribe(req.user.userId);
+  const subscriber = await subscriberService.subscriberSwitcher(currentSubscriber, req.body.subscriptionId);
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });
+});
+
+module.exports = { getOwnSubscribe, updateOwnSubscribe, updateOwnCopyCounter, generateUpdate, subscriberSwitcher };
