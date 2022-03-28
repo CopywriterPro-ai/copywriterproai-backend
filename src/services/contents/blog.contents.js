@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 const {
@@ -57,7 +58,7 @@ BLOG INTRODUCTION (A brief description of what a blog is about and why someone m
   const blogIntrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogIntros = await generateContentUsingGPT3('text-davinci-002', 300, prompt, 1.0, 1.0, 1.0, ['\n\n\n']);
+    const blogIntros = await generateContentUsingGPT3('text-davinci-002', 450, prompt, 1.0, 1.0, 1.0, ['\n\n\n']);
     const { id, object, created, model, choices } = blogIntros;
     openAPIInformationsList.push({ id, object, created, model });
     blogIntrosList.push(choices[0].text.trim());
@@ -80,16 +81,16 @@ const blogOutline = async (userId, userEmail, { about, headline, numberOfPoints,
   let userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
-  const prompt = `Create a BLOG OUTLINE for the following blog.
+  const prompt = `Example of BLOG OUTLINE.
 
-BLOG ABOUT: Slack
-BLOG HEADLINE: How Slack is disrupting the enterprise productivity tools market
 BLOG OUTLINE (5 points):
-1. What is Slack and How it is helping us?
+1. What is Slack and How is it helping us?
 2. How Flexible and Easy to use Slack is?
 3. Why did all of a sudden it is becoming highly popular?
 4. What makes it unique from other similar apps (if any)?
 5. What are the methods to integrate slack into current development process?
+
+Now write a BLOG OUTLINE for the following blog like Example.
 
 ${userPrompt}
 BLOG OUTLINE (${numberOfPoints} points):
@@ -99,7 +100,7 @@ BLOG OUTLINE (${numberOfPoints} points):
   const blogOutlinesList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogOutlines = await generateContentUsingGPT3('text-davinci-002', 150, prompt, 1, 0.5, 0.5, [
+    const blogOutlines = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 1, 0.5, 0.5, [
       '\n\n',
       `${numberOfPoints + 1}. `,
     ]);
@@ -148,7 +149,7 @@ BLOG TOPIC: ${removeSpaces(userText)}
   const blogTopicWritingsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogTopicWriting = await generateContentUsingGPT3('text-davinci-002', 300, prompt, 0.8, 0, 0, ['\n\n\n']);
+    const blogTopicWriting = await generateContentUsingGPT3('text-davinci-002', 500, prompt, 0.8, 0, 0, ['\n\n\n']);
     const { id, object, created, model, choices } = blogTopicWriting;
     openAPIInformationsList.push({ id, object, created, model });
     blogTopicWritingsList.push(choices[0].text.trim());
@@ -182,7 +183,7 @@ BLOG CONCLUSION:
   const blogOutrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogOutros = await generateContentUsingGPT3('text-davinci-002', 150, prompt, 0.7, 1.0, 1.0, ['\n\n']);
+    const blogOutros = await generateContentUsingGPT3('text-davinci-002', 200, prompt, 0.7, 1.0, 1.0, ['\n\n']);
     const { id, object, created, model, choices } = blogOutros;
     openAPIInformationsList.push({ id, object, created, model });
     blogOutrosList.push(choices[0].text.trim());
@@ -201,41 +202,120 @@ BLOG CONCLUSION:
   return userResponse;
 };
 
-const blog = async (userId, userEmail, { about }) => {
-  const headline = (await blogHeadline(userId, userEmail, { about })).generatedTexts[0];
-  const intro = (await blogIntro(userId, userEmail, { about, headline })).generatedTexts[0];
+const shortBlog = async (userId, userEmail, { about, headline }) => {
+  about = removeSpaces(about);
+  headline = removeSpaces(headline);
+  keywords = keywords.map((keyword) => removeSpaces(keyword));
 
-  const userPrompt = `BLOG TOPIC: ${removeSpaces(about)}`;
+  keywords = keywords ? keywords.join(', ') : '';
+  about += keywords ? `, ${keywords}` : '';
 
-  const prompt = `${userPrompt}
+  const userPrompt = `BLOG TOPIC: ${about}`;
 
-Write a long descriptive BLOG on the BLOG TOPIC, that can rank on google. Write in standard English with proper formatting.
+  const prompt = `Write a very short blog (300 to 400 words) on "${about}"
 
-${headline}
-
-${intro}
+Blog headline: ${headline}
 
 `;
 
-  const _blog = await generateContentUsingGPT3('text-davinci-002', 1500, prompt, 1.0, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT3('text-davinci-002', 600, prompt, 0.7, 0, 0, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
 
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
-    'blog-writing',
+    'short-blog',
     userPrompt,
     { id, object, created, model },
     choices[0].text
   );
 
-  const userResponse = {
-    id: _id,
-    task: 'blog-writing',
-    headline,
-    generatedBlog: `${intro}\n\n${generatedContents}`,
-  };
+  const userResponse = formatResponse(_id, 'short-blog', generatedContents);
+
+  return userResponse;
+};
+
+const longBlog = async (userId, userEmail, { about, headline, keywords }) => {
+  about = removeSpaces(about);
+  headline = removeSpaces(headline);
+  keywords = keywords.map((keyword) => removeSpaces(keyword));
+
+  keywords = keywords ? keywords.join(', ') : '';
+  about += keywords ? `, ${keywords}` : '';
+
+  const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}`;
+
+  const prompt = `Write a long descriptive BLOG on the BLOG ABOUT, that can rank on google.
+
+${userPrompt}
+
+Blog headline: ${headline}
+
+`;
+
+  const _blog = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n']);
+
+  const { id, object, created, model, choices } = _blog;
+
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    'long-blog',
+    userPrompt,
+    { id, object, created, model },
+    choices[0].text
+  );
+
+  const userResponse = formatResponse(_id, 'long-blog', generatedContents);
+
+  return userResponse;
+};
+
+const blogFromOutline = async (userId, userEmail, { headline, intro, outline }) => {
+  headline = removeSpaces(headline);
+  intro = removeSpaces(intro);
+
+  const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+  outline = outline.map((data, idx) => `${roman[idx]}. ${removeSpaces(data)}`);
+
+  let convertedOutline = '';
+  for (const data of outline) {
+    convertedOutline += `${data}\n`;
+  }
+
+  const userPrompt = `BLOG HEADLINE: ${headline}
+BLOG INTRO: ${intro}
+BLOG OUTLINE: ${convertedOutline}`;
+
+  const prompt = `BLOG HEADLINE: ${headline}
+
+BLOG:
+
+${intro}
+
+Now write on the following points.
+
+${convertedOutline}
+
+${outline[0]}
+
+`;
+
+  const _blog = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n']);
+
+  const { id, object, created, model, choices } = _blog;
+
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    'blog-from-outline',
+    userPrompt,
+    { id, object, created, model },
+    choices[0].text
+  );
+
+  const userResponse = formatResponse(_id, 'blog-from-outline', `${outline[0]}\n${generatedContents}`);
 
   return userResponse;
 };
@@ -247,5 +327,7 @@ module.exports = {
   blogOutline,
   blogTopic,
   blogOutro,
-  blog,
+  shortBlog,
+  longBlog,
+  blogFromOutline,
 };

@@ -58,8 +58,12 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.writing.activePassive(_id, email, req.body);
     } else if (task === 'point-of-view') {
       generatedContent = await generator.writing.pointOfView(_id, email, req.body);
-    } else if (task === 'blog-writing') {
-      generatedContent = await generator.blog.blog(_id, email, req.body);
+    } else if (task === 'short-blog') {
+      generatedContent = await generator.blog.shortBlog(_id, email, req.body);
+    } else if (task === 'long-blog') {
+      generatedContent = await generator.blog.longBlog(_id, email, req.body);
+    } else if (task === 'blog-from-outline') {
+      generatedContent = await generator.blog.blogFromOutline(_id, email, req.body);
     } else if (task === 'blog-idea') {
       generatedContent = await generator.blog.blogIdea(_id, email, req.body);
     } else if (task === 'blog-headline') {
