@@ -14,14 +14,14 @@ const stripe = new Stripe(config.stripe.stripeSecretKey);
 //   return { product };
 // };
 
-const getCustomer = async (customerId) => {
-  try {
-    const customer = await Payment.findOne({ customerStripeId: customerId });
-    return customer;
-  } catch (error) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Customer not found');
-  }
-};
+// const getCustomer = async (customerId) => {
+//   try {
+//     const customer = await Payment.findOne({ customerStripeId: customerId });
+//     return customer;
+//   } catch (error) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Customer not found');
+//   }
+// };
 
 const getInvoice = async (invoiceId) => {
   try {
@@ -32,14 +32,13 @@ const getInvoice = async (invoiceId) => {
   }
 };
 
-const getSubscriptions = async (customerId) => {
+const getSubscriptions = async (customerId, status = 'all') => {
   const subscriptions = await stripe.subscriptions.list({
-    customer: customerId,
-    status: 'all',
-    expand: ['data.default_payment_method'],
+    ...(customerId && { customer: customerId }),
+    status,
   });
 
-  return { subscriptions };
+  return { subscriptions: subscriptions.data };
 };
 
 const paymentUpdate = async ({ customerId, subscriptionId }) => {
@@ -51,8 +50,8 @@ const paymentUpdate = async ({ customerId, subscriptionId }) => {
   return { payment };
 };
 
-const findCustomer = async (email) => {
-  const customer = await Payment.findOne({ email });
+const findCustomer = async (userId) => {
+  const customer = await Payment.findOne({ userId });
   return customer;
 };
 
@@ -60,8 +59,9 @@ const createStripeCustomer = async ({ user }) => {
   try {
     const stripeCustomer = await stripe.customers.create({
       email: user.email,
+      metadata: { userId: user.userId },
     });
-    const customer = await Payment.create({ user: user.id, email: user.email, customerStripeId: stripeCustomer.id });
+    const customer = await Payment.create({ userId: user.userId, customerStripeId: stripeCustomer.id });
     return customer;
   } catch (error) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Customer not created');
@@ -86,7 +86,7 @@ const PricesList = async ({ activeProduct }) => {
 
 const stripeCustomer = async ({ user }) => {
   try {
-    const customer = await findCustomer(user.email);
+    const customer = await findCustomer(user.userId);
     if (customer) {
       return customer;
     }
@@ -97,11 +97,18 @@ const stripeCustomer = async ({ user }) => {
   }
 };
 
+const getSubscriberMe = async (userId) => {
+  const payment = await Payment.findOne({ userId });
+  if (payment) {
+    return payment.customerSubscription;
+  }
+  return [];
+};
+
 const createCheckoutSessions = async ({ customerId, priceId }) => {
   try {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      // customer_email: customerEmail,
       mode: 'subscription',
       payment_method_types: ['card'],
       line_items: [
@@ -150,33 +157,32 @@ const createSubscription = async ({ customerId, priceId }) => {
   }
 };
 
-const cancelSubscription = async ({ subscriptionId }) => {
+const updateSubscriptionPlan = async ({ subscriptionId, bool = true }) => {
   try {
-    const deletedSubscription = await stripe.subscriptions.del(subscriptionId);
-
+    const deletedSubscription = await stripe.subscriptions.update(subscriptionId, { cancel_at_period_end: bool });
     return { subscription: deletedSubscription };
   } catch (error) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not cancelled');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription cancelling failed');
   }
 };
 
-const updateSubscription = async ({ subscriptionId, newPriceId }) => {
-  try {
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-    const updatedSubscription = await stripe.subscriptions.update(subscriptionId, {
-      items: [
-        {
-          id: subscription.items.data[0].id,
-          price: newPriceId,
-        },
-      ],
-    });
+// const updateSubscription = async ({ subscriptionId, newPriceId }) => {
+//   try {
+//     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+//     const updatedSubscription = await stripe.subscriptions.update(subscriptionId, {
+//       items: [
+//         {
+//           id: subscription.items.data[0].id,
+//           price: newPriceId,
+//         },
+//       ],
+//     });
 
-    return { subscription: updatedSubscription };
-  } catch (error) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not updated');
-  }
-};
+//     return { subscription: updatedSubscription };
+//   } catch (error) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not updated');
+//   }
+// };
 
 const invoicePreview = async ({ customerId, priceId, subscriptionId }) => {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
@@ -201,7 +207,6 @@ const handlePaymentSucceeded = async (dataObject) => {
     const paymentIntentId = dataObject.payment_intent;
 
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-
     const subscription = await stripe.subscriptions.update(subscriptionId, {
       default_payment_method: paymentIntent.payment_method,
     });
@@ -209,23 +214,40 @@ const handlePaymentSucceeded = async (dataObject) => {
     // eslint-disable-next-line camelcase
     const { status, plan, customer, id, current_period_end } = subscription;
 
-    const { email } = await getCustomer(customer);
-
-    await Payment.findOneAndUpdate({ email }, { customerSubscriptionId: id }, { new: true });
-
     if (status === 'active') {
-      let oldWords = 0;
-      const planData = subscriptionPlan[plan.metadata.priceKey];
-      const subscriber = await subscriberService.getOwnSubscribe(email);
+      const { priceKey } = plan.metadata;
+      const planData = subscriptionPlan[priceKey];
+      const subscriptionExpire = moment.unix(current_period_end).format();
+      const { words } = planData;
 
-      if (subscriber.subscriberInfo.isPaidSubscribers === true) {
-        oldWords = subscriber.words * 1;
-      }
+      const customerSubscription = {
+        Subscription: priceKey,
+        subscriptionId: id,
+        subscriptionExpire,
+        words,
+      };
 
-      await subscriberService.updateOwnSubscribe(email, {
-        words: planData.words + oldWords,
-        subscription: planData.package,
-        subscriptionExpire: moment.unix(current_period_end).format(),
+      await Payment.findOneAndUpdate(
+        { customerStripeId: customer },
+        {
+          $pull: { customerSubscription: { subscriptionId: id } },
+        },
+        { new: true }
+      );
+
+      const { userId } = await Payment.findOneAndUpdate(
+        { customerStripeId: customer },
+        {
+          $push: { customerSubscription },
+        },
+        { new: true }
+      );
+
+      await subscriberService.updateOwnSubscribe(userId, {
+        words,
+        subscription: priceKey,
+        subscriptionExpire,
+        subscriptionId: id,
       });
 
       return { message: 'success' };
@@ -241,13 +263,14 @@ const handlePaymentFailed = async () => {
 module.exports = {
   findCustomer,
   paymentUpdate,
+  getSubscriberMe,
   stripeCustomer,
   createCheckoutSessions,
   checkoutSession,
   createSubscription,
   PricesList,
-  cancelSubscription,
-  updateSubscription,
+  updateSubscriptionPlan,
+  // updateSubscription,
   invoicePreview,
   getInvoice,
   getSubscriptions,

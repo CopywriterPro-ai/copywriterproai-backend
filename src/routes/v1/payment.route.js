@@ -7,7 +7,8 @@ const paymentController = require('../../controllers/payment.controller');
 const router = express.Router();
 
 router.get('/product-prices', paymentController.priceList);
-router.get('/subscriptions', auth(), paymentController.getSubscriptions);
+router.get('/subscriptions', auth(), validate(paymentValidation.getSubscriptions), paymentController.getSubscriptions);
+router.get('/subscriptions/me', auth(), paymentController.getSubscriptionMe);
 router.post('/create-customer', auth(), paymentController.createCustomer);
 router.post(
   '/create-checkout-session',
@@ -16,19 +17,20 @@ router.post(
   paymentController.createCheckoutSessions
 );
 router.get('/checkout-session', auth(), validate(paymentValidation.checkoutSession), paymentController.checkoutSessions);
-router.get('/subscription-invoice', auth(), validate(paymentValidation.invoicePreview), paymentController.invoicePreview);
+// router.get('/subscription-invoice', auth(), validate(paymentValidation.invoicePreview), paymentController.invoicePreview);
 router.post(
-  '/cancel-subscription',
+  '/update-subscription-plan',
   auth(),
-  validate(paymentValidation.cancelSubscription),
-  paymentController.cancelSubscription
+  validate(paymentValidation.updateSubscriptionPlan),
+  paymentController.updateSubscriptionPlan
 );
-router.post(
-  '/update-subscription',
-  auth(),
-  validate(paymentValidation.updateSubscription),
-  paymentController.updateSubscription
-);
+// router.post(
+//   '/update-subscription',
+//   auth(),
+//   validate(paymentValidation.updateSubscription),
+//   paymentController.updateSubscription
+// );
+router.post('/create-customer-portal-session', auth(), paymentController.customerPortal);
 router.post('/payment-webhook', express.raw({ type: 'application/json' }), paymentController.paymentWebhook);
 
 module.exports = router;
