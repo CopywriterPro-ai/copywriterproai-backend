@@ -236,7 +236,7 @@ Blog headline: ${headline}
   return userResponse;
 };
 
-const longBlog = async (userId, userEmail, { about, headline, keywords }) => {
+const longBlog = async (userId, userEmail, { about, headline, keywords, contents = '' }) => {
   about = removeSpaces(about);
   headline = removeSpaces(headline);
   keywords = keywords.map((keyword) => removeSpaces(keyword));
@@ -246,15 +246,15 @@ const longBlog = async (userId, userEmail, { about, headline, keywords }) => {
 
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}`;
 
-  const prompt = `Write a long descriptive BLOG on the BLOG ABOUT, that can rank on google.
+  const prompt = `Continue writing the following long long descriptive blog.
 
 ${userPrompt}
 
 Blog headline: ${headline}
 
-`;
+${contents}`;
 
-  const _blog = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT3('text-davinci-002', 256, prompt, 1.0, 0, 0, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
 
