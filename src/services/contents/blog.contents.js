@@ -202,7 +202,7 @@ BLOG CONCLUSION:
   return userResponse;
 };
 
-const shortBlog = async (userId, userEmail, { about, headline }) => {
+const shortBlog = async (userId, userEmail, { about, headline, keywords }) => {
   about = removeSpaces(about);
   headline = removeSpaces(headline);
   keywords = keywords.map((keyword) => removeSpaces(keyword));
