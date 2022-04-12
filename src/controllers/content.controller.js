@@ -6,10 +6,10 @@ const { subscription } = require('../config/plan');
 
 const generate = catchAsync(async (req, res) => {
   const { _id, email, userId, role } = req.user;
+
   const {
-    words,
+    activeSubscription: { words, subscription: currentPackage },
     freeTrial,
-    subscription: currentPackage,
     subscriberInfo: { isPaidSubscribers },
   } = await subscriberService.getOwnSubscribe(userId);
 

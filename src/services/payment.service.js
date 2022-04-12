@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const Stripe = require('stripe');
 const moment = require('moment-timezone');
-const { Payment } = require('../models');
+const { Subscriber } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
 const { subscriptionPlan } = require('../config/plan');
@@ -42,16 +42,16 @@ const getSubscriptions = async (customerId, status = 'all') => {
 };
 
 const paymentUpdate = async ({ customerId, subscriptionId }) => {
-  const payment = await Payment.findOneAndUpdate(
+  const payment = await Subscriber.findOneAndUpdate(
     { customerStripeId: customerId },
-    { customerSubscriptionId: subscriptionId },
+    { activeSubscription: { subscriptionId } },
     { new: true }
   );
   return { payment };
 };
 
 const findCustomer = async (userId) => {
-  const customer = await Payment.findOne({ userId });
+  const customer = await Subscriber.findOne({ userId, customerStripeId: { $ne: null } });
   return customer;
 };
 
@@ -61,7 +61,12 @@ const createStripeCustomer = async ({ user }) => {
       email: user.email,
       metadata: { userId: user.userId },
     });
-    const customer = await Payment.create({ userId: user.userId, customerStripeId: stripeCustomer.id });
+    // const customer = await Payment.create({ userId: user.userId, customerStripeId: stripeCustomer.id });
+    const customer = await Subscriber.findOneAndUpdate(
+      { userId: user.userId },
+      { customerStripeId: stripeCustomer.id },
+      { new: true }
+    );
     return customer;
   } catch (error) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Customer not created');
@@ -98,9 +103,9 @@ const stripeCustomer = async ({ user }) => {
 };
 
 const getSubscriberMe = async (userId) => {
-  const payment = await Payment.findOne({ userId });
+  const payment = await Subscriber.findOne({ userId });
   if (payment) {
-    return payment.customerSubscription;
+    return payment.subscriptionAll;
   }
   return [];
 };
@@ -221,33 +226,29 @@ const handlePaymentSucceeded = async (dataObject) => {
       const { words } = planData;
 
       const customerSubscription = {
-        Subscription: priceKey,
+        subscription: priceKey,
         subscriptionId: id,
         subscriptionExpire,
         words,
       };
 
-      await Payment.findOneAndUpdate(
+      await Subscriber.findOneAndUpdate(
         { customerStripeId: customer },
         {
-          $pull: { customerSubscription: { subscriptionId: id } },
+          $pull: { subscriptionAll: { subscriptionId: id } },
         },
         { new: true }
       );
 
-      const { userId } = await Payment.findOneAndUpdate(
+      const { userId } = await Subscriber.findOneAndUpdate(
         { customerStripeId: customer },
         {
-          $push: { customerSubscription },
-        },
-        { new: true }
+          $push: { subscriptionAll: customerSubscription },
+        }
       );
 
       await subscriberService.updateOwnSubscribe(userId, {
-        words,
-        subscription: priceKey,
-        subscriptionExpire,
-        subscriptionId: id,
+        activeSubscription: customerSubscription,
       });
 
       return { message: 'success' };
