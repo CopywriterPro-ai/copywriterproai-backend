@@ -1,44 +1,51 @@
-const mongoose = require('mongoose');
 const moment = require('moment-timezone');
+const mongoose = require('mongoose');
+
+const { Schema } = mongoose;
 
 const { toJSON, paginate } = require('./plugins');
 const { subscription, trial } = require('../config/plan');
 
 const subscriptionEnum = Object.values(subscription);
 
-const subscriberSchema = mongoose.Schema(
+// const activeSubscriptionSchema = new Schema({
+//   subscription: { type: String, enum: subscriptionEnum, default: subscription.FREEMIUM },
+//   subscriptionId: { type: String },
+//   subscriptionExpire: { type: Date },
+//   words: { type: Number, default: 3000 },
+// });
+
+const subscriptionAllSchema = new Schema({
+  subscription: { type: String, enum: subscriptionEnum },
+  subscriptionId: { type: String },
+  subscriptionExpire: { type: Date },
+  words: { type: Number },
+});
+
+const subscriberSchema = new Schema(
   {
-    // email: {
-    //   type: String,
-    // },
     userId: {
       type: String,
       required: true,
-    },
-    words: {
-      type: Number,
-      default: 3000,
     },
     dailyCreaditUsage: {
       date: { type: Date },
       usage: { type: Number, default: 0 },
     },
-    subscription: {
-      type: String,
-      enum: subscriptionEnum,
-      default: subscription.FREEMIUM,
-    },
-    subscriptionId: {
-      type: String,
-      // private: true,
-    },
-    subscriptionExpire: {
-      type: Date,
-    },
     copycounter: {
       type: Number,
       default: 0,
     },
+    customerStripeId: {
+      type: String,
+    },
+    activeSubscription: {
+      subscription: { type: String, enum: subscriptionEnum, default: subscription.FREEMIUM },
+      subscriptionId: { type: String },
+      subscriptionExpire: { type: Date },
+      words: { type: Number, default: trial.words },
+    },
+    subscriptionAll: [subscriptionAllSchema],
   },
   {
     timestamps: true,
@@ -46,32 +53,18 @@ const subscriberSchema = mongoose.Schema(
 );
 
 subscriberSchema.virtual('freeTrial').get(function () {
-  const subs = this.subscription;
+  const subs = this.activeSubscription.subscription;
   const dailyUsage = this.dailyCreaditUsage;
   const addSevenDays = moment(this.createdAt).add('7', 'days');
 
   if (subs === subscription.FREEMIUM && moment().isSameOrBefore(addSevenDays)) {
-    return { eligible: true, dailyLimitExceeded: dailyUsage.usage === trial.dailyLimit };
+    return { eligible: true, dailyLimitExceeded: dailyUsage.usage >= trial.dailyLimit };
   }
   return { eligible: false, dailyLimitExceeded: true };
 });
 
-// subscriberSchema.virtual('isPaidSubscribers').get(function () {
-//   const subs = this.subscription;
-//   const subsExpire = this.subscriptionExpire;
-//   const excludedFreeSubs = Object.values(subscription).filter((item) => item !== subscription.FREEMIUM);
-//   const isPaidSubscription = excludedFreeSubs.includes(subs);
-
-//   if (isPaidSubscription && subsExpire) {
-//     return moment().isSameOrBefore(subsExpire);
-//   }
-
-//   return false;
-// });
-
 subscriberSchema.virtual('subscriberInfo').get(function () {
-  const subs = this.subscription;
-  const subsExpire = this.subscriptionExpire;
+  const { subscription: subs, subscriptionExpire: subsExpire } = this.activeSubscription;
   const excludedFreeSubs = Object.values(subscription).filter((item) => item !== subscription.FREEMIUM);
   const isPaidSubscription = excludedFreeSubs.includes(subs);
 

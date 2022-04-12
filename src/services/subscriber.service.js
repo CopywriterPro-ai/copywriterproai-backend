@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Subscriber, Payment } = require('../models');
+const { Subscriber } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const createOwnSubscribe = async (data) => {
@@ -28,40 +28,27 @@ const updateOwnCopyCounter = async (userId) => {
   return update;
 };
 
-const updatePaymentSubscriber = async (subscriber) => {
-  const payment = await Payment.findOne({ userId: subscriber.userId });
-
-  const subscriberIndex = payment.customerSubscription
+const updatesubscriptionAll = async (userId) => {
+  const subscriber = await getOwnSubscribe(userId);
+  const subscriberIndex = subscriber.subscriptionAll
     .map((subscription) => subscription.subscriptionId)
-    .indexOf(subscriber.subscriptionId);
+    .indexOf(subscriber.activeSubscription.subscriptionId);
 
   if (subscriberIndex >= 0) {
-    const { Subscription, subscriptionId, subscriptionExpire } = payment.customerSubscription[subscriberIndex];
-
-    payment.customerSubscription.set(subscriberIndex, {
-      Subscription,
-      subscriptionId,
-      subscriptionExpire,
-      words: subscriber.words,
-    });
-    payment.save();
+    subscriber.subscriptionAll.set(subscriberIndex, { ...subscriber.activeSubscription });
+    subscriber.save();
   }
-
-  return payment;
+  return subscriber;
 };
 
-const subscriberSwitcher = async (subscriber, subId) => {
-  const payment = await updatePaymentSubscriber(subscriber);
-  const findSubscriber = payment.customerSubscription.find((sub) => sub.subscriptionId === subId);
-  if (findSubscriber) {
+const subscriberSwitcher = async (req) => {
+  const { user, body } = req;
+  const subscriber = await updatesubscriptionAll(user.userId);
+  const selectSubscriber = subscriber.subscriptionAll.find((sub) => sub.subscriptionId === body.subscriptionId);
+  if (selectSubscriber) {
     const updatedSubscription = await Subscriber.findOneAndUpdate(
-      { userId: payment.userId },
-      {
-        words: findSubscriber.words,
-        subscription: findSubscriber.Subscription,
-        subscriptionId: findSubscriber.subscriptionId,
-        subscriptionExpire: findSubscriber.subscriptionExpire,
-      },
+      { userId: user.userId },
+      { activeSubscription: { ...selectSubscriber } },
       { new: true }
     );
     return updatedSubscription;

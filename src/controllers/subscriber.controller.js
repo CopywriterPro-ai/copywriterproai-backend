@@ -23,7 +23,7 @@ const generateUpdate = catchAsync(async (req, res) => {
   let calDailyCreaditUsage;
   const { role, userId } = req.user;
   const { useWords = 0 } = req.body;
-  const { words, dailyCreaditUsage } = await subscriberService.getOwnSubscribe(userId);
+  const { activeSubscription, dailyCreaditUsage } = await subscriberService.getOwnSubscribe(userId);
 
   const todayDate = moment().startOf('day').format();
   const { date, usage } = dailyCreaditUsage;
@@ -37,7 +37,7 @@ const generateUpdate = catchAsync(async (req, res) => {
   }
 
   let remainingWords = 0;
-  const subtractionWords = words - useWords;
+  const subtractionWords = activeSubscription.words - useWords;
 
   if (subtractionWords < 0) {
     remainingWords = 0;
@@ -46,15 +46,17 @@ const generateUpdate = catchAsync(async (req, res) => {
   }
 
   const subscriber = await subscriberService.updateOwnSubscribe(userId, {
-    words: isAdmin ? words : remainingWords,
+    activeSubscription: {
+      ...activeSubscription,
+      words: isAdmin ? activeSubscription.words : remainingWords,
+    },
     dailyCreaditUsage: calDailyCreaditUsage,
   });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });
 });
 
 const subscriberSwitcher = catchAsync(async (req, res) => {
-  const currentSubscriber = await subscriberService.getOwnSubscribe(req.user.userId);
-  const subscriber = await subscriberService.subscriberSwitcher(currentSubscriber, req.body.subscriptionId);
+  const subscriber = await subscriberService.subscriberSwitcher(req);
   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });
 });
 
