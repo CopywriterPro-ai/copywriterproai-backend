@@ -44,13 +44,20 @@ const sendEmailWithAttachment = async (to, subject, html, filename, image) => {
 };
 
 const sendWelcomeEmail = async (to, name = '') => {
-  const subject = 'Welcome to copywriterpro';
+  const subject = 'Welcome to CopywriterPro';
 
   const html = `<div> Hi ${name}, <div><br>
-  <p>Welcome to CopywriterPro. Your free trial starts today.<br/>
-  What happens next?<br/>
-  Keep an eye on your inbox as we’ll be sending you the best tips for content writing and sales copy.<br/>
-  To learn more about CopywriterPro [Tutorial LInk]</p>
+  <p>Welcome to CopywriterPro! We're so excited to have you on board.<br/><br/>
+  CopywriterPro is the world's first AI powered copywriting tool. <br/><br/>
+  Here's what you can expect:<br/><br/>
+  - A user-friendly interface that makes writing copy a breeze<br/>
+  - Powerful AI technology that will help you write better copy, faster<br/>
+  - A community of like-minded copywriters to connect with and learn from<br/><br/>
+  We can't wait to see what you can do with CopywriterPro. If you have any questions, our team is always here to help.<br/><br/>
+  Thank you for joining us and Happy Writing!<br/><br/>
+  Cheers,<br/>
+  The CopywriterProAI Team
+ </p>
   `;
 
   await sendEmail(to, subject, html);
@@ -82,7 +89,7 @@ const sendResetPasswordEmailUsingToken = async (to) => {
 ">Reset Password</button></a><br><br>
   If you did not make this request then please ignore this email.</div>
   </div><br><br>
-  <div>Thank you, <br>CopywriterProAI Team</br></div>`;
+  <div>Thank you, <br>The CopywriterProAI Team</br></div>`;
 
   await sendEmail(to, subject, html);
 };
@@ -107,11 +114,14 @@ const sendVerifyAccountEmailUsingToken = async ({ id, email: to, name }) => {
   const subject = 'Verify CopywriterProAI Account Email';
   const token = tokenService.generateMailingToken({ sub: id, type: mailTypes.ACCOUNT_VERIFY, email: to });
 
-  const html = `<div>Hi ${name.firstName}, <div> <br>
-  <div>
-  Thank you so much for being our CopywriterPro.ai early adopters. We can't thank you enough for supporting us on this exciting journey. <br><br>
-  We need a little more information to complete your registration, including a confirmation of your email address. Click below to confirm your email address:<br><br>
-  <a href=${frontendUrl.web}/account-verification?token=${token}><button style="
+  const html = `<div>
+  <p>Hi ${name.firstName}<br/><br/>
+
+  Welcome to CopywriterPro! We're so glad you're here.<br/><br/>
+
+  To get started, we just need to verify your email address. Please click the link below to confirm your account and start using our AI-powered copywriting tool.<br/></br/>
+
+  Confirm My Account  <a href=${frontendUrl.web}/account-verification?token=${token}><button style="
   border: none;
   background: #0A7EFA;
   cursor: pointer;
@@ -119,10 +129,15 @@ const sendVerifyAccountEmailUsingToken = async ({ id, email: to, name }) => {
   color: white;
   min-width: 100px;
   border-radius: 5px;
-">Verify Account</button></a><br><br>
-  This link will be valid for 15 minutes.<br><br>
-  If you have problems, please paste the above URL into your web browser.<br><br>
-  <div>Thank you, <br>CopywriterProAI Team</br></div>`;
+">Verify Account</button></a><br/><br/>
+
+  We can't wait to help you write better copy, faster.<br/><br/>
+
+  Cheers,<br/><br/>
+
+  The CopywriterProAI Team
+</p>
+  </div>`;
 
   await sendEmail(to, subject, html);
 };

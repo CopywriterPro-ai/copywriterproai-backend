@@ -184,15 +184,15 @@ const strategyValuesByAuthType = (strategy, profile) => {
   switch (strategy) {
     case authTypes.GOOGLE:
       return {
-        firstName: profile._json.given_name,
-        lastName: profile._json.family_name,
+        firstName: profile._json.given_name || '',
+        lastName: profile._json.family_name || '',
         email: profile._json.email,
         profileAvatar: profile._json.picture,
       };
     case authTypes.FACEBOOK:
       return {
-        firstName: profile._json.first_name,
-        lastName: profile._json.last_name,
+        firstName: profile._json.first_name || '',
+        lastName: profile._json.last_name || '',
         email: profile._json.email,
         profileAvatar: profile.photos[0].value,
       };
