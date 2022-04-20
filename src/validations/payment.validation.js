@@ -4,6 +4,7 @@ const createCheckoutSession = {
   body: Joi.object().keys({
     // customerId: Joi.string().required(),
     priceId: Joi.string().required(),
+    referenceId: Joi.string(),
   }),
 };
 

@@ -31,9 +31,8 @@ const createCustomer = catchAsync(async (req, res) => {
 });
 
 const createCheckoutSessions = catchAsync(async (req, res) => {
-  const { priceId } = req.body;
   const { customerStripeId: customerId } = await paymentService.stripeCustomer({ user: req.user });
-  const { session } = await paymentService.createCheckoutSessions({ customerId, priceId });
+  const { session } = await paymentService.createCheckoutSessions({ ...req.body, customerId });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, session });
 });
 

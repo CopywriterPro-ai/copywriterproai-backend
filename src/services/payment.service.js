@@ -110,7 +110,7 @@ const getSubscriberMe = async (userId) => {
   return [];
 };
 
-const createCheckoutSessions = async ({ customerId, priceId }) => {
+const createCheckoutSessions = async ({ customerId, priceId, referenceId }) => {
   try {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -125,6 +125,7 @@ const createCheckoutSessions = async ({ customerId, priceId }) => {
       allow_promotion_codes: true,
       success_url: `${config.frontendUrl.web}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${config.frontendUrl.web}/payment/canceled`,
+      client_reference_id: referenceId,
     });
     return { session };
   } catch (error) {
