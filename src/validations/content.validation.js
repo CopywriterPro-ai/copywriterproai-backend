@@ -169,7 +169,7 @@ const longBlog = {
     }),
     headline: Joi.string().min(10).max(150).required(),
     keywords: Joi.array().items(Joi.string()).max(4),
-    contents: Joi.string().min(10).max(10000),
+    contents: Joi.string().min(10).max(12000),
   }),
 };
 

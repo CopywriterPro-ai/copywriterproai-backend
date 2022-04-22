@@ -3,6 +3,7 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const contentRoute = require('./content.route');
+const plagiarismCheckerRoute = require('./plagiarismChecker.routes');
 const paymentRoute = require('./payment.route');
 const interestRoute = require('./interest.route');
 const supportRoute = require('./support.route');
@@ -27,6 +28,10 @@ const defaultRoutes = [
   {
     path: '/contents',
     route: contentRoute,
+  },
+  {
+    path: '/plagiarism-checker',
+    route: plagiarismCheckerRoute,
   },
   {
     path: '/payments',
