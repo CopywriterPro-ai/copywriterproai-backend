@@ -16,6 +16,8 @@ const envVarsSchema = Joi.object()
       .default(6)
       .description('months after which extension access tokens expire'),
     OPENAI_API_KEY: Joi.string().required().description('OpenAI secret key'),
+    COPYSCAPE_USERNAME: Joi.string().required().description('Copyscape username'),
+    COPYSCAPE_API_KEY: Joi.string().required().description('OpenAI API key'),
     STRIPE_SECRET_KEY: Joi.string().required().description('Stripe secret key'),
     STRIPE_WEBHOOK_SECRET_KEY: Joi.string().description('Stripe webhook secret key'),
     SMTP_HOST: Joi.string().description('server that will send the emails'),
@@ -79,6 +81,10 @@ module.exports = {
   },
   openAI: {
     openAIAPIKey: envVars.OPENAI_API_KEY,
+  },
+  copyscape: {
+    copyscapeUsername: envVars.COPYSCAPE_USERNAME,
+    copyscapeAPIKey: envVars.COPYSCAPE_API_KEY,
   },
   stripe: {
     stripeSecretKey: envVars.STRIPE_SECRET_KEY,
