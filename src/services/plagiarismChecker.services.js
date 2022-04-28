@@ -56,6 +56,33 @@ const getRanges = async (text, copiedTextsInformations) => {
   return copiedTextsInformations;
 }
 
+/**
+ * To test plagiarism api
+ */
+
+// const testData = {
+//   "status": 200,
+//   "results": {
+//     "response": {
+//       "querywords": 38,
+//       "cost": 0.03,
+//       "count": 10,
+//       "result": [
+//         {
+//           "index": 1,
+//           "url": "https://www.facebook.com/SouthAsianMonitorCom/posts/3125497574433420",
+//           "title": "Let's start with the issue of... - South Asian Monitor ...",
+//           "textsnippet": "... Trade tensions, a pandemic, supply-chain snarls, inflation and war have together dealt them serious blows. Over the past three years more than half the population of the emerging world lived in countries where income growth, on a purchasing-power-parity basis, lagged behind that in America—the first such episode since the 1980s. See more",
+//           "htmlsnippet": "<font color=\"#777777\">... Trade tensions, a pandemic, supply-chain snarls, inflation and war have together dealt them serious blows. </font><font color=\"#000000\">Over the past three years more than half the population of the emerging world lived in countries where income growth, on a purchasing-power-parity basis, lagged behind that in America—the first such episode since the 1980s. </font><font color=\"#777777\">See more</font>",
+//           "minwordsmatched": 38,
+//           "viewurl": "http://view2.copyscape.com/compare/ra79j8zul3/1"
+//         }
+//       ],
+//       "allviewurl": "http://view2.copyscape.com/search/ra79j8zul3"
+//     }
+//   }
+// };
+
 const searchContent = async (text) => {
   text = removeSpaces(text);
 
@@ -64,6 +91,8 @@ const searchContent = async (text) => {
   }
 
   params.text = text;
+
+  // const response = testData;
 
   const response = await copyscape.searchFromText(params);
 
