@@ -8,3 +8,4 @@ module.exports.toolService = require('./tool.service');
 module.exports.blogService = require('./blog.service');
 module.exports.subscriberService = require('./subscriber.service');
 module.exports.plagiarismCheckerService = require('./plagiarismChecker.services');
+module.exports.utilsService = require('./utils.service');

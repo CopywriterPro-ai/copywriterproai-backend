@@ -20,6 +20,7 @@ const subscriptionAllSchema = new Schema({
   subscriptionId: { type: String },
   subscriptionExpire: { type: Date },
   words: { type: Number },
+  plagiarismCheckerWords: { type: Number },
 });
 
 const subscriberSchema = new Schema(
@@ -44,6 +45,7 @@ const subscriberSchema = new Schema(
       subscriptionId: { type: String },
       subscriptionExpire: { type: Date },
       words: { type: Number, default: trial.words },
+      plagiarismCheckerWords: { type: Number, default: trial.plagiarismCheckerWords },
     },
     subscriptionAll: [subscriptionAllSchema],
   },

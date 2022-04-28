@@ -36,8 +36,10 @@ const envVarsSchema = Joi.object()
     MAIL_VERIFY_TOKEN_EXPIRE: Joi.string().default('10m').description('Mail verify token expires'),
     CORS_WHITELIST: Joi.string().default('*').description('Cors whitelist'),
     SENTRY_DNS_URL: Joi.string().uri().required().description('sentry dns url'),
+    PLAGIARISM_CHECKER_ALLOWED_PACKAGES: Joi.string().default('').description('Plagiarism checker allowed packages'),
     TRIAL_DAYS: Joi.number().default(7).description('Trial days'),
     TRIAL_WORDS: Joi.number().default(700).description('Trial words'),
+    TRIAL_PLAGIARISM_CHECKER_WORDS: Joi.number().default(0).description('Trial plagiarism checker words'),
     IGNORE_CONTENT_SAVING_EMAIL: Joi.string().allow('').default('').description('Ignore content saving email'),
   })
   .unknown();
@@ -117,6 +119,10 @@ module.exports = {
   trial: {
     days: envVars.TRIAL_DAYS,
     words: envVars.TRIAL_WORDS,
+    plagiarismCheckerWords: envVars.TRIAL_PLAGIARISM_CHECKER_WORDS,
+  },
+  plagiarismChecker: {
+    allowedPackages: envVars.PLAGIARISM_CHECKER_ALLOWED_PACKAGES.split(','),
   },
   content: {
     ignoresavingdb: envVars.IGNORE_CONTENT_SAVING_EMAIL.split(','),
