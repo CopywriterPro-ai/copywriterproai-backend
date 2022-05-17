@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const httpStatus = require('http-status');
 const Stripe = require('stripe');
 const moment = require('moment-timezone');
@@ -231,6 +232,7 @@ const handlePaymentSucceeded = async (dataObject) => {
         subscriptionId: id,
         subscriptionExpire,
         words,
+        paymentMethod: 'stripe',
       };
 
       await Subscriber.findOneAndUpdate(
@@ -262,6 +264,43 @@ const handlePaymentFailed = async () => {
   console.log('Payment failed');
 };
 
+const handleUDPPaymentSucceeded = async (body) => {
+  const { invoice_id, metadata, amount } = body;
+  const { user_id, price_key } = metadata;
+
+  const planData = subscriptionPlan[price_key];
+  if (!planData || amount !== planData.price.bdt) {
+    return { message: 'failed' };
+  }
+  const { words, month } = planData;
+  const subscriptionExpire = moment().add(month, 'M');
+
+  const customerSubscription = {
+    subscription: price_key,
+    subscriptionId: invoice_id,
+    subscriptionExpire,
+    words,
+    paymentMethod: 'mobilebanking',
+  };
+
+  try {
+    const { userId } = await Subscriber.findOneAndUpdate(
+      { userId: user_id },
+      {
+        $push: { subscriptionAll: customerSubscription },
+      }
+    );
+
+    await subscriberService.updateOwnSubscribe(userId, {
+      activeSubscription: customerSubscription,
+    });
+
+    return { message: 'success' };
+  } catch (error) {
+    return { message: 'failed' };
+  }
+};
+
 module.exports = {
   findCustomer,
   paymentUpdate,
@@ -278,4 +317,5 @@ module.exports = {
   getSubscriptions,
   handlePaymentSucceeded,
   handlePaymentFailed,
+  handleUDPPaymentSucceeded,
 };

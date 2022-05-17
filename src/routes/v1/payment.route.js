@@ -32,5 +32,6 @@ router.post(
 // );
 router.post('/create-customer-portal-session', auth(), paymentController.customerPortal);
 router.post('/payment-webhook', express.raw({ type: 'application/json' }), paymentController.paymentWebhook);
+router.post('/udp-webhook', paymentController.udpWebhook);
 
 module.exports = router;

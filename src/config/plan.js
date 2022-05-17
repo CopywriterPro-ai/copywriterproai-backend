@@ -17,27 +17,47 @@ const subscription = {
 };
 
 const subscriptionPlan = {
-  [subscription.BASIC_1MONTH]: { words: 7000, plagiarismCheckerWords: 0, package: subscription.BASIC_1MONTH },
-  [subscription.BASIC_6MONTH]: { words: 7000 * 6, plagiarismCheckerWords: 0, package: subscription.BASIC_6MONTH },
+  [subscription.BASIC_1MONTH]: {
+    words: 7000,
+    plagiarismCheckerWords: 0,
+    package: subscription.BASIC_1MONTH,
+    month: 1,
+    price: { bdt: '399' },
+  },
+  [subscription.BASIC_6MONTH]: {
+    words: 7000 * 6,
+    plagiarismCheckerWords: 0,
+    package: subscription.BASIC_6MONTH,
+    month: 6,
+    price: { bdt: '1999' },
+  },
   [subscription.STANDARD_1MONTH]: {
     words: 50000,
     plagiarismCheckerWords: 10000,
     package: subscription.STANDARD_1MONTH,
+    month: 1,
+    price: { bdt: '1999' },
   },
   [subscription.STANDARD_6MONTH]: {
     words: 50000 * 6,
     plagiarismCheckerWords: 10000 * 6,
     package: subscription.STANDARD_6MONTH,
+    month: 6,
+    price: { bdt: '9999' },
   },
   [subscription.PROFESSIONAL_1MONTH]: {
     words: 200000,
     plagiarismCheckerWords: 50000,
     package: subscription.PROFESSIONAL_1MONTH,
+    month: 1,
+    price: { bdt: '4999' },
   },
   [subscription.PROFESSIONAL_6MONTH]: {
     words: 200000 * 6,
     plagiarismCheckerWords: 50000 * 6,
     package: subscription.PROFESSIONAL_6MONTH,
+    month: 6,
+    price: { bdt: '24999' },
   },
 };
 

@@ -7,6 +7,7 @@ const { toJSON, paginate } = require('./plugins');
 const { subscription, trial } = require('../config/plan');
 
 const subscriptionEnum = Object.values(subscription);
+const paymentMethods = ['stripe', 'mobilebanking'];
 
 // const activeSubscriptionSchema = new Schema({
 //   subscription: { type: String, enum: subscriptionEnum, default: subscription.FREEMIUM },
@@ -21,6 +22,7 @@ const subscriptionAllSchema = new Schema({
   subscriptionExpire: { type: Date },
   words: { type: Number },
   plagiarismCheckerWords: { type: Number },
+  paymentMethod: { type: String, enum: paymentMethods, default: paymentMethods[0] },
 });
 
 const subscriberSchema = new Schema(
@@ -46,6 +48,7 @@ const subscriberSchema = new Schema(
       subscriptionExpire: { type: Date },
       words: { type: Number, default: trial.words },
       plagiarismCheckerWords: { type: Number, default: trial.plagiarismCheckerWords },
+      paymentMethod: { type: String, enum: paymentMethods, default: paymentMethods[0] },
     },
     subscriptionAll: [subscriptionAllSchema],
   },
