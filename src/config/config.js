@@ -41,6 +41,7 @@ const envVarsSchema = Joi.object()
     TRIAL_WORDS: Joi.number().default(700).description('Trial words'),
     TRIAL_PLAGIARISM_CHECKER_WORDS: Joi.number().default(0).description('Trial plagiarism checker words'),
     IGNORE_CONTENT_SAVING_EMAIL: Joi.string().allow('').default('').description('Ignore content saving email'),
+    UDDOKTAPAY_API_KEY: Joi.string().required().description('Uddoktapay api key'),
   })
   .unknown();
 
@@ -126,5 +127,8 @@ module.exports = {
   },
   content: {
     ignoresavingdb: envVars.IGNORE_CONTENT_SAVING_EMAIL.split(','),
+  },
+  uddoktapay: {
+    apikey: envVars.UDDOKTAPAY_API_KEY,
   },
 };
