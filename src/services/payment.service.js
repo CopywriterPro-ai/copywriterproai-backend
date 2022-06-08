@@ -5,24 +5,11 @@ const moment = require('moment-timezone');
 const { Subscriber } = require('../models');
 const ApiError = require('../utils/ApiError');
 const config = require('../config/config');
+const { subscription: subscriptionConst } = require('../config/plan');
 const { subscriptionPlan } = require('../config/plan');
 const subscriberService = require('./subscriber.service');
 
 const stripe = new Stripe(config.stripe.stripeSecretKey);
-
-// const getProduct = async (productId) => {
-//   const product = await stripe.products.retrieve(productId);
-//   return { product };
-// };
-
-// const getCustomer = async (customerId) => {
-//   try {
-//     const customer = await Payment.findOne({ customerStripeId: customerId });
-//     return customer;
-//   } catch (error) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Customer not found');
-//   }
-// };
 
 const getInvoice = async (invoiceId) => {
   try {
@@ -111,7 +98,7 @@ const getSubscriberMe = async (userId) => {
   return [];
 };
 
-const createCheckoutSessions = async ({ customerId, priceId, referenceId }) => {
+const createCheckoutSessions = async ({ customerId, priceId, referenceId, trialEligible }) => {
   try {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -127,6 +114,12 @@ const createCheckoutSessions = async ({ customerId, priceId, referenceId }) => {
       success_url: `${config.frontendUrl.web}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${config.frontendUrl.web}/payment/canceled`,
       client_reference_id: referenceId,
+
+      ...(trialEligible && {
+        subscription_data: {
+          trial_period_days: config.trial.days,
+        },
+      }),
     });
     return { session };
   } catch (error) {
@@ -143,27 +136,6 @@ const checkoutSession = async ({ sessionId }) => {
   }
 };
 
-const createSubscription = async ({ customerId, priceId }) => {
-  try {
-    const subscription = await stripe.subscriptions.create({
-      customer: customerId,
-      items: [
-        {
-          price: priceId,
-        },
-      ],
-      payment_behavior: 'default_incomplete',
-      expand: ['latest_invoice.payment_intent'],
-    });
-    return {
-      subscriptionId: subscription.id,
-      clientSecret: subscription.latest_invoice.payment_intent.client_secret,
-    };
-  } catch (error) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not created');
-  }
-};
-
 const updateSubscriptionPlan = async ({ subscriptionId, bool = true }) => {
   try {
     const deletedSubscription = await stripe.subscriptions.update(subscriptionId, { cancel_at_period_end: bool });
@@ -172,24 +144,6 @@ const updateSubscriptionPlan = async ({ subscriptionId, bool = true }) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription cancelling failed');
   }
 };
-
-// const updateSubscription = async ({ subscriptionId, newPriceId }) => {
-//   try {
-//     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-//     const updatedSubscription = await stripe.subscriptions.update(subscriptionId, {
-//       items: [
-//         {
-//           id: subscription.items.data[0].id,
-//           price: newPriceId,
-//         },
-//       ],
-//     });
-
-//     return { subscription: updatedSubscription };
-//   } catch (error) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription not updated');
-//   }
-// };
 
 const invoicePreview = async ({ customerId, priceId, subscriptionId }) => {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
@@ -212,6 +166,27 @@ const handlePaymentSucceeded = async (dataObject) => {
   if (dataObject.billing_reason === 'subscription_create') {
     const subscriptionId = dataObject.subscription;
     const paymentIntentId = dataObject.payment_intent;
+
+    if (!paymentIntentId) {
+      const expire = dataObject.lines.data[0].period.end;
+      const subscriptionExpire = moment.unix(expire).format();
+
+      const customerSubscription = {
+        subscription: subscriptionConst.FREEMIUM,
+        subscriptionExpire,
+        words: config.trial.words,
+        paymentMethod: 'stripe',
+      };
+
+      await Subscriber.findOneAndUpdate(
+        { customerStripeId: dataObject.customer },
+        {
+          activeSubscription: customerSubscription,
+        }
+      );
+
+      return { message: 'success' };
+    }
 
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
     const subscription = await stripe.subscriptions.update(subscriptionId, {
@@ -308,10 +283,8 @@ module.exports = {
   stripeCustomer,
   createCheckoutSessions,
   checkoutSession,
-  createSubscription,
   PricesList,
   updateSubscriptionPlan,
-  // updateSubscription,
   invoicePreview,
   getInvoice,
   getSubscriptions,

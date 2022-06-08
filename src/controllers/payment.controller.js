@@ -31,8 +31,15 @@ const createCustomer = catchAsync(async (req, res) => {
 });
 
 const createCheckoutSessions = catchAsync(async (req, res) => {
-  const { customerStripeId: customerId } = await paymentService.stripeCustomer({ user: req.user });
-  const { session } = await paymentService.createCheckoutSessions({ ...req.body, customerId });
+  const { customerStripeId: customerId, activeSubscription } = await paymentService.stripeCustomer({ user: req.user });
+  const { subscriptionExpire } = activeSubscription;
+  const expireEligible = Boolean(subscriptionExpire);
+
+  const { session } = await paymentService.createCheckoutSessions({
+    ...req.body,
+    customerId,
+    trialEligible: !expireEligible,
+  });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, session });
 });
 
