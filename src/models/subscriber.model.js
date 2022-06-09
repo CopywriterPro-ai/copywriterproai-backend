@@ -46,7 +46,7 @@ const subscriberSchema = new Schema(
       subscription: { type: String, enum: subscriptionEnum, default: subscription.FREEMIUM },
       subscriptionId: { type: String },
       subscriptionExpire: { type: Date },
-      words: { type: Number, default: trial.words },
+      words: { type: Number, default: 0 },
       plagiarismCheckerWords: { type: Number, default: trial.plagiarismCheckerWords },
       paymentMethod: { type: String, enum: paymentMethods, default: paymentMethods[0] },
     },

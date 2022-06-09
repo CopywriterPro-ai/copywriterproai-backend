@@ -171,8 +171,9 @@ const handlePaymentSucceeded = async (dataObject) => {
       const expire = dataObject.lines.data[0].period.end;
       const subscriptionExpire = moment.unix(expire).format();
 
-      const customerSubscription = {
+      const customerTrailSubscription = {
         subscription: subscriptionConst.FREEMIUM,
+        subscriptionId,
         subscriptionExpire,
         words: config.trial.words,
         paymentMethod: 'stripe',
@@ -181,7 +182,7 @@ const handlePaymentSucceeded = async (dataObject) => {
       await Subscriber.findOneAndUpdate(
         { customerStripeId: dataObject.customer },
         {
-          activeSubscription: customerSubscription,
+          activeSubscription: customerTrailSubscription,
         }
       );
 
@@ -276,6 +277,17 @@ const handleUDPPaymentSucceeded = async (body) => {
   }
 };
 
+const handleTrialEnd = async ({ subscriptionId }) => {
+  try {
+    await stripe.subscriptions.update(subscriptionId, {
+      trial_end: 'now',
+    });
+    return { message: 'success' };
+  } catch (error) {
+    return { message: 'failed' };
+  }
+};
+
 module.exports = {
   findCustomer,
   paymentUpdate,
@@ -291,4 +303,5 @@ module.exports = {
   handlePaymentSucceeded,
   handlePaymentFailed,
   handleUDPPaymentSucceeded,
+  handleTrialEnd,
 };

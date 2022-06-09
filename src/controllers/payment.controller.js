@@ -136,6 +136,18 @@ const udpWebhook = catchAsync(async (req, res) => {
   }
 });
 
+const handleTrialEnd = catchAsync(async (req, res) => {
+  const customer = await paymentService.findCustomer(req.user.userId);
+  const { freeTrial, activeSubscription } = customer;
+  const { subscriptionId } = activeSubscription;
+
+  if (freeTrial.eligible && subscriptionId) {
+    await paymentService.handleTrialEnd({ subscriptionId });
+    return res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'trial cancelled' });
+  }
+  res.status(httpStatus.BAD_REQUEST).send({ status: httpStatus.BAD_REQUEST, message: 'trial canceling failed' });
+});
+
 module.exports = {
   customerPortal,
   getSubscriptionMe,
@@ -149,4 +161,5 @@ module.exports = {
   getSubscriptions,
   paymentWebhook,
   udpWebhook,
+  handleTrialEnd,
 };

@@ -24,6 +24,7 @@ router.post(
   validate(paymentValidation.updateSubscriptionPlan),
   paymentController.updateSubscriptionPlan
 );
+router.post('/trial-end', auth(), paymentController.handleTrialEnd);
 // router.post(
 //   '/update-subscription',
 //   auth(),
