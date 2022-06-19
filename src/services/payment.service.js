@@ -163,7 +163,7 @@ const invoicePreview = async ({ customerId, priceId, subscriptionId }) => {
 };
 
 const handlePaymentSucceeded = async (dataObject) => {
-  if (dataObject.billing_reason === 'subscription_create') {
+  if (dataObject.billing_reason === 'subscription_create' || dataObject.billing_reason === 'subscription_update') {
     const subscriptionId = dataObject.subscription;
     const paymentIntentId = dataObject.payment_intent;
 
