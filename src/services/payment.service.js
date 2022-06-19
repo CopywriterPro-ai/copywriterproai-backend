@@ -100,6 +100,7 @@ const getSubscriberMe = async (userId) => {
 
 const createCheckoutSessions = async ({ customerId, priceId, referenceId, trialEligible }) => {
   try {
+    const enableTrial = false;
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
@@ -115,11 +116,12 @@ const createCheckoutSessions = async ({ customerId, priceId, referenceId, trialE
       cancel_url: `${config.frontendUrl.web}/payment/canceled`,
       client_reference_id: referenceId,
 
-      ...(trialEligible && {
-        subscription_data: {
-          trial_period_days: config.trial.days,
-        },
-      }),
+      ...(enableTrial &&
+        trialEligible && {
+          subscription_data: {
+            trial_period_days: config.trial.days,
+          },
+        }),
     });
     return { session };
   } catch (error) {
@@ -163,7 +165,7 @@ const invoicePreview = async ({ customerId, priceId, subscriptionId }) => {
 };
 
 const handlePaymentSucceeded = async (dataObject) => {
-  if (dataObject.billing_reason === 'subscription_create') {
+  if (dataObject.billing_reason === 'subscription_create' || dataObject.billing_reason === 'subscription_update') {
     const subscriptionId = dataObject.subscription;
     const paymentIntentId = dataObject.payment_intent;
 

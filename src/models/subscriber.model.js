@@ -46,7 +46,7 @@ const subscriberSchema = new Schema(
       subscription: { type: String, enum: subscriptionEnum, default: subscription.FREEMIUM },
       subscriptionId: { type: String },
       subscriptionExpire: { type: Date },
-      words: { type: Number, default: 0 },
+      words: { type: Number, default: trial.words },
       plagiarismCheckerWords: { type: Number, default: trial.plagiarismCheckerWords },
       paymentMethod: { type: String, enum: paymentMethods, default: paymentMethods[0] },
     },
@@ -60,7 +60,8 @@ const subscriberSchema = new Schema(
 subscriberSchema.virtual('freeTrial').get(function () {
   const { subscription: subs, subscriptionExpire } = this.activeSubscription;
   const dailyUsage = this.dailyCreaditUsage;
-  const expireDate = subscriptionExpire || null;
+  const addSevenDays = moment(this.createdAt).add('7', 'days');
+  const expireDate = subscriptionExpire || addSevenDays;
 
   if (subs === subscription.FREEMIUM && moment(expireDate).isValid() && moment().isSameOrBefore(expireDate)) {
     return { eligible: true, dailyLimitExceeded: dailyUsage.usage >= trial.dailyLimit };
