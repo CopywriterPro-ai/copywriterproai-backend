@@ -51,7 +51,7 @@ BLOG HEADLINE: ${removeSpaces(headline)}`;
   const prompt = `Write a long descriptive, sweet and captivating BLOG INTRODUCTION.
 
 ${userPrompt}
-BLOG INTRODUCTION (A brief description of what a blog is about and why someone might want to read it):
+BLOG INTRODUCTION (A brief description of what the blog is about and why someone might want to read it):
 `;
 
   const openAPIInformationsList = [];

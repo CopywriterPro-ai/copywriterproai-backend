@@ -1,12 +1,10 @@
 module.exports.authValidation = require('./auth.validation');
 module.exports.userValidation = require('./user.validation');
 module.exports.paymentValidation = require('./payment.validation');
-module.exports.contentValidation = require('./content.validation');
 module.exports.interestValidation = require('./interest.validation');
 module.exports.supportValidation = require('./support.validation');
 module.exports.toolValidation = require('./tool.validation');
 module.exports.blogValidation = require('./blog.validation');
-module.exports.demoValidation = require('./demo.validation');
 module.exports.extensionValidation = require('./extension.validation');
 module.exports.noticeValidation = require('./notice.validation');
 module.exports.subscriberValidation = require('./subscriber.validation');
