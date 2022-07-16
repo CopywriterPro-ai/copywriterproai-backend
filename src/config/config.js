@@ -40,6 +40,8 @@ const envVarsSchema = Joi.object()
     TRIAL_DAYS: Joi.number().default(7).description('Trial days'),
     TRIAL_WORDS: Joi.number().default(700).description('Trial words'),
     TRIAL_PLAGIARISM_CHECKER_WORDS: Joi.number().default(0).description('Trial plagiarism checker words'),
+    PACKAGES: Joi.string().default('').description('Current packages'),
+    INPUT_CHARACTER_RATE: Joi.string().default('').description('Per package input character rate'),
     IGNORE_CONTENT_SAVING_EMAIL: Joi.string().allow('').default('').description('Ignore content saving email'),
     UDDOKTAPAY_API_KEY: Joi.string().required().description('Uddoktapay api key'),
   })
@@ -121,6 +123,10 @@ module.exports = {
     days: envVars.TRIAL_DAYS,
     words: envVars.TRIAL_WORDS,
     plagiarismCheckerWords: envVars.TRIAL_PLAGIARISM_CHECKER_WORDS,
+  },
+  inputLimit: {
+    packages: envVars.PACKAGES.split(', '),
+    inputCharacterRate: envVars.PER_PACKAGE_INPUT_CHARACTER_RATE.split(',').map(Number),
   },
   plagiarismChecker: {
     allowedPackages: envVars.PLAGIARISM_CHECKER_ALLOWED_PACKAGES.split(','),

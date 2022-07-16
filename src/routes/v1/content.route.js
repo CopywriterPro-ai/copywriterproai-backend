@@ -1,253 +1,247 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/content.validate');
-const { contentValidation } = require('../../validations');
+const {
+  amazon,
+  blog,
+  business,
+  common,
+  cv,
+  email,
+  facebook,
+  features,
+  fiverr,
+  google,
+  headline,
+  instagram,
+  linkedIn,
+  product,
+  recipe,
+  sales,
+  website,
+  youtube,
+  writing,
+} = require('../../validations/contents');
 const { contentController } = require('../../controllers');
 
 const router = express.Router();
 
 router
   .route('/generate/paraphrasing')
-  .post(auth('generateContent'), validate(contentValidation.paraphrase), contentController.generate);
+  .post(auth('generateContent'), validate(writing.paraphrase), contentController.generate);
 
-router
-  .route('/generate/expander')
-  .post(auth('generateContent'), validate(contentValidation.expander), contentController.generate);
+router.route('/generate/expander').post(auth('generateContent'), validate(writing.expander), contentController.generate);
 
-router
-  .route('/generate/simplifier')
-  .post(auth('generateContent'), validate(contentValidation.simplifier), contentController.generate);
+router.route('/generate/simplifier').post(auth('generateContent'), validate(writing.simplifier), contentController.generate);
 
-router
-  .route('/generate/summarizer')
-  .post(auth('generateContent'), validate(contentValidation.summarizer), contentController.generate);
+router.route('/generate/summarizer').post(auth('generateContent'), validate(writing.summarizer), contentController.generate);
 
 router
   .route('/generate/abstract')
-  .post(auth('generateContent'), validate(contentValidation.abstractGenerator), contentController.generate);
+  .post(auth('generateContent'), validate(writing.abstractGenerator), contentController.generate);
 
 router
   .route('/generate/notes-from-passage')
-  .post(auth('generateContent'), validate(contentValidation.notesFromPassage), contentController.generate);
+  .post(auth('generateContent'), validate(writing.notesFromPassage), contentController.generate);
 
 router
   .route('/generate/grammar-fixer')
-  .post(auth('generateContent'), validate(contentValidation.grammarFixer), contentController.generate);
-
-router
-  .route('/generate/proofread')
-  .post(auth('generateContent'), validate(contentValidation.proofread), contentController.generate);
+  .post(auth('generateContent'), validate(writing.grammarFixer), contentController.generate);
 
 router
   .route('/generate/change-tone')
-  .post(auth('generateContent'), validate(contentValidation.changeTone), contentController.generate);
+  .post(auth('generateContent'), validate(writing.changeTone), contentController.generate);
 
 router
   .route('/generate/active-passive')
-  .post(auth('generateContent'), validate(contentValidation.activePassive), contentController.generate);
+  .post(auth('generateContent'), validate(writing.activePassive), contentController.generate);
 
 router
   .route('/generate/point-of-view')
-  .post(auth('generateContent'), validate(contentValidation.pointOfView), contentController.generate);
+  .post(auth('generateContent'), validate(writing.pointOfView), contentController.generate);
 
-router
-  .route('/generate/short-blog')
-  .post(auth('generateContent'), validate(contentValidation.shortBlog), contentController.generate);
+router.route('/generate/proofread').post(auth('generateContent'), validate(features.proofread), contentController.generate);
 
-router
-  .route('/generate/long-blog')
-  .post(auth('generateContent'), validate(contentValidation.longBlog), contentController.generate);
+router.route('/generate/short-blog').post(auth('generateContent'), validate(blog.shortBlog), contentController.generate);
+
+router.route('/generate/long-blog').post(auth('generateContent'), validate(blog.longBlog), contentController.generate);
 
 router
   .route('/generate/blog-from-outline')
-  .post(auth('generateContent'), validate(contentValidation.blogFromOutline), contentController.generate);
+  .post(auth('generateContent'), validate(blog.blogFromOutline), contentController.generate);
 
-router
-  .route('/generate/blog-idea')
-  .post(auth('generateContent'), validate(contentValidation.blogIdea), contentController.generate);
+router.route('/generate/blog-idea').post(auth('generateContent'), validate(blog.blogIdea), contentController.generate);
 
 router
   .route('/generate/blog-headline')
-  .post(auth('generateContent'), validate(contentValidation.blogHeadline), contentController.generate);
+  .post(auth('generateContent'), validate(blog.blogHeadline), contentController.generate);
 
-router
-  .route('/generate/blog-outline')
-  .post(auth('generateContent'), validate(contentValidation.blogOutline), contentController.generate);
+router.route('/generate/blog-outline').post(auth('generateContent'), validate(blog.blogOutline), contentController.generate);
 
-router
-  .route('/generate/blog-intro')
-  .post(auth('generateContent'), validate(contentValidation.blogIntro), contentController.generate);
+router.route('/generate/blog-intro').post(auth('generateContent'), validate(blog.blogIntro), contentController.generate);
 
-router
-  .route('/generate/blog-topic')
-  .post(auth('generateContent'), validate(contentValidation.blogTopic), contentController.generate);
+router.route('/generate/blog-topic').post(auth('generateContent'), validate(blog.blogTopic), contentController.generate);
 
-router
-  .route('/generate/blog-outro')
-  .post(auth('generateContent'), validate(contentValidation.blogOutro), contentController.generate);
+router.route('/generate/blog-outro').post(auth('generateContent'), validate(blog.blogOutro), contentController.generate);
 
 router
   .route('/generate/product-description')
-  .post(auth('generateContent'), validate(contentValidation.productDescription), contentController.generate);
+  .post(auth('generateContent'), validate(product.productDescription), contentController.generate);
 
 router
   .route('/generate/seo-friendly-product-description')
-  .post(auth('generateContent'), validate(contentValidation.makeProductDescriptionSEOFriendly), contentController.generate);
+  .post(auth('generateContent'), validate(product.makeProductDescriptionSEOFriendly), contentController.generate);
 
 router
   .route('/generate/product-review')
-  .post(auth('generateContent'), validate(contentValidation.productReview), contentController.generate);
+  .post(auth('generateContent'), validate(product.productReview), contentController.generate);
 
 router
   .route('/generate/catchy-headline')
-  .post(auth('generateContent'), validate(contentValidation.catchyHeadline), contentController.generate);
+  .post(auth('generateContent'), validate(headline.catchyHeadline), contentController.generate);
 
 router
   .route('/generate/attention-grabbing-headline')
-  .post(auth('generateContent'), validate(contentValidation.attentionGrabbingHeadline), contentController.generate);
+  .post(auth('generateContent'), validate(headline.attentionGrabbingHeadline), contentController.generate);
 
 router
   .route('/generate/newspaper-headline')
-  .post(auth('generateContent'), validate(contentValidation.newspaperHeadline), contentController.generate);
+  .post(auth('generateContent'), validate(headline.newspaperHeadline), contentController.generate);
 
 router
   .route('/generate/resume-headline')
-  .post(auth('generateContent'), validate(contentValidation.resumeHeadline), contentController.generate);
+  .post(auth('generateContent'), validate(headline.resumeHeadline), contentController.generate);
 
 router
   .route('/generate/campaign-post-idea')
-  .post(auth('generateContent'), validate(contentValidation.campaignPostIdeaFromBusinessType), contentController.generate);
+  .post(auth('generateContent'), validate(facebook.campaignPostIdeaFromBusinessType), contentController.generate);
 
 router
   .route('/generate/ads-facebook-primary-texts')
-  .post(auth('generateContent'), validate(contentValidation.facebookAdPrimaryTexts), contentController.generate);
+  .post(auth('generateContent'), validate(facebook.facebookAdPrimaryTexts), contentController.generate);
 
 router
   .route('/generate/ads-facebook-headlines')
-  .post(auth('generateContent'), validate(contentValidation.facebookAdHeadlines), contentController.generate);
+  .post(auth('generateContent'), validate(facebook.facebookAdHeadlines), contentController.generate);
 
 router
   .route('/generate/ads-facebook-link-descriptions')
-  .post(auth('generateContent'), validate(contentValidation.facebookAdLinkDescription), contentController.generate);
+  .post(auth('generateContent'), validate(facebook.facebookAdLinkDescription), contentController.generate);
 
 router
   .route('/generate/facebook-ads-from-product-description')
-  .post(auth('generateContent'), validate(contentValidation.facebookAdsFromProductDescription), contentController.generate);
+  .post(auth('generateContent'), validate(facebook.facebookAdsFromProductDescription), contentController.generate);
 
 router
   .route('/generate/instagram-ad-texts')
-  .post(auth('generateContent'), validate(contentValidation.instagramAdTexts), contentController.generate);
+  .post(auth('generateContent'), validate(instagram.instagramAdTexts), contentController.generate);
 
 router
   .route('/generate/linkedin-ad-texts')
-  .post(auth('generateContent'), validate(contentValidation.linkedinAdTexts), contentController.generate);
+  .post(auth('generateContent'), validate(linkedIn.linkedinAdTexts), contentController.generate);
 
 router
   .route('/generate/ads-google-headlines')
-  .post(auth('generateContent'), validate(contentValidation.googleAdHeadlines), contentController.generate);
+  .post(auth('generateContent'), validate(google.googleAdHeadlines), contentController.generate);
 
 router
   .route('/generate/ads-google-descriptions')
-  .post(auth('generateContent'), validate(contentValidation.googleAdDescriptions), contentController.generate);
+  .post(auth('generateContent'), validate(google.googleAdDescriptions), contentController.generate);
 
 router
   .route('/generate/youtube-video-titles-from-description')
-  .post(auth('generateContent'), validate(contentValidation.youtubeVideoTitleFromDescription), contentController.generate);
+  .post(auth('generateContent'), validate(youtube.youtubeVideoTitleFromDescription), contentController.generate);
 
 router
   .route('/generate/youtube-video-ideas')
-  .post(auth('generateContent'), validate(contentValidation.youtubeVideoIdeas), contentController.generate);
+  .post(auth('generateContent'), validate(youtube.youtubeVideoIdeas), contentController.generate);
 
 router
   .route('/generate/youtube-video-script')
-  .post(auth('generateContent'), validate(contentValidation.youtubeVideoScript), contentController.generate);
+  .post(auth('generateContent'), validate(youtube.youtubeVideoScript), contentController.generate);
 
 router
   .route('/generate/image-idea-from-ad-text')
-  .post(auth('generateContent'), validate(contentValidation.imageIdeasFromAdText), contentController.generate);
+  .post(auth('generateContent'), validate(common.imageIdeasFromAdText), contentController.generate);
 
 router
   .route('/generate/email-marketing-campaign-subject')
-  .post(auth('generateContent'), validate(contentValidation.emailMarketingCampaignSubject), contentController.generate);
+  .post(auth('generateContent'), validate(email.emailMarketingCampaignSubject), contentController.generate);
 
 router
   .route('/generate/email-marketing-campaign-body')
-  .post(auth('generateContent'), validate(contentValidation.emailMarketingCampaignBody), contentController.generate);
+  .post(auth('generateContent'), validate(email.emailMarketingCampaignBody), contentController.generate);
 
 router
   .route('/generate/email-body')
-  .post(auth('generateContent'), validate(contentValidation.emailBody), contentController.generate);
+  .post(auth('generateContent'), validate(email.generateEmailBody), contentController.generate);
 
 router
   .route('/generate/email-subject-from-body')
-  .post(auth('generateContent'), validate(contentValidation.generatedSubjectFromBody), contentController.generate);
+  .post(auth('generateContent'), validate(email.generatedSubjectFromBody), contentController.generate);
 
 router
   .route('/generate/website-short-description')
-  .post(auth('generateContent'), validate(contentValidation.websiteShortDescription), contentController.generate);
+  .post(auth('generateContent'), validate(website.websiteShortDescription), contentController.generate);
 
 router
   .route('/generate/website-keywords-from-text')
-  .post(auth('generateContent'), validate(contentValidation.keywordsFromText), contentController.generate);
+  .post(auth('generateContent'), validate(website.keywordsFromText), contentController.generate);
 
 router
   .route('/generate/youtube-video-tags-from-description')
-  .post(auth('generateContent'), validate(contentValidation.videoTagsFromDescription), contentController.generate);
+  .post(auth('generateContent'), validate(youtube.videoTagsFromDescription), contentController.generate);
 
 router
   .route('/generate/youtube-channel-tags-from-description')
-  .post(auth('generateContent'), validate(contentValidation.channelTagsFromDescription), contentController.generate);
+  .post(auth('generateContent'), validate(youtube.channelTagsFromDescription), contentController.generate);
 
 router
   .route('/generate/website-seo-friendly-blog-ideas')
-  .post(auth('generateContent'), validate(contentValidation.seoFriendlyBlogIdeas), contentController.generate);
+  .post(auth('generateContent'), validate(website.seoFriendlyBlogIdeas), contentController.generate);
 
 router
   .route('/generate/website-landing-page-headline')
-  .post(auth('generateContent'), validate(contentValidation.landingPageHeadline), contentController.generate);
+  .post(auth('generateContent'), validate(website.landingPageHeadline), contentController.generate);
 
 router
   .route('/generate/product-name')
-  .post(auth('generateContent'), validate(contentValidation.productName), contentController.generate);
+  .post(auth('generateContent'), validate(product.productName), contentController.generate);
 
 router
   .route('/generate/linkedin-summary')
-  .post(auth('generateContent'), validate(contentValidation.linkedInSummary), contentController.generate);
+  .post(auth('generateContent'), validate(linkedIn.linkedInSummary), contentController.generate);
 
 router
   .route('/generate/catchy-business-taglines')
-  .post(auth('generateContent'), validate(contentValidation.catchyBusinessTaglines), contentController.generate);
+  .post(auth('generateContent'), validate(business.catchyBusinessTaglines), contentController.generate);
 
 router
   .route('/generate/fiverr-profile-description')
-  .post(auth('generateContent'), validate(contentValidation.fiverrProfileDescription), contentController.generate);
+  .post(auth('generateContent'), validate(fiverr.fiverrProfileDescription), contentController.generate);
 
 router
   .route('/generate/fiverr-categories-headline')
-  .post(auth('generateContent'), validate(contentValidation.fiverrCategoriesHeadline), contentController.generate);
+  .post(auth('generateContent'), validate(fiverr.fiverrCategoriesHeadline), contentController.generate);
 
-router
-  .route('/generate/cv-summary')
-  .post(auth('generateContent'), validate(contentValidation.CVSummary), contentController.generate);
+router.route('/generate/cv-summary').post(auth('generateContent'), validate(cv.CVSummary), contentController.generate);
 
 router
   .route('/generate/amazon-product-listings')
-  .post(auth('generateContent'), validate(contentValidation.amazonProductListings), contentController.generate);
+  .post(auth('generateContent'), validate(amazon.amazonProductListings), contentController.generate);
 
 router
   .route('/generate/problem-agitate-solution')
-  .post(auth('generateContent'), validate(contentValidation.problemAgitateSolution), contentController.generate);
+  .post(auth('generateContent'), validate(sales.problemAgitateSolution), contentController.generate);
 
 router
   .route('/generate/problem-agitate-solution-outcome')
-  .post(auth('generateContent'), validate(contentValidation.problemAgitateSolutionOutcome), contentController.generate);
+  .post(auth('generateContent'), validate(sales.problemAgitateSolutionOutcome), contentController.generate);
 
 router
   .route('/generate/attention-interest-desire-action')
-  .post(auth('generateContent'), validate(contentValidation.attentionInterestDesireAction), contentController.generate);
+  .post(auth('generateContent'), validate(sales.attentionInterestDesireAction), contentController.generate);
 
-router
-  .route('/generate/generate-recipe')
-  .post(auth('generateContent'), validate(contentValidation.recipe), contentController.generate);
+router.route('/generate/generate-recipe').post(auth('generateContent'), validate(recipe.recipe), contentController.generate);
 
 module.exports = router;
