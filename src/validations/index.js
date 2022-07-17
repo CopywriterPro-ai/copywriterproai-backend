@@ -5,7 +5,6 @@ module.exports.interestValidation = require('./interest.validation');
 module.exports.supportValidation = require('./support.validation');
 module.exports.toolValidation = require('./tool.validation');
 module.exports.blogValidation = require('./blog.validation');
-module.exports.extensionValidation = require('./extension.validation');
 module.exports.noticeValidation = require('./notice.validation');
 module.exports.subscriberValidation = require('./subscriber.validation');
 module.exports.plagiarismCheckerValidation = require('./plagiarismChecker.validation');
