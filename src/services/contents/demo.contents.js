@@ -15,27 +15,44 @@ const storeData = async (documentType, prompt, openAPIInformation, generatedCont
   return content;
 };
 
+const formatResponse = (id, task, generatedTexts) => {
+  return {
+    id,
+    task,
+    generatedTexts,
+  };
+};
+
 const paraphrase = async ({ userText }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Paraphrase the Original text.
+  const prompt = `Paraphrase the following text.
 
-Original: Her life spanned years of incredible change for women as they gained more rights than ever before.
-Paraphrase: She lived through the exciting era of women's liberation.
+"""
+${userPrompt}
+"""
+`;
 
-Original: ${userPrompt}
-3 unique ways to Paraphrase:
-1.`;
+  const openAPIInformationsList = [];
+  const paraphrasedContentsList = [];
 
-  const paraphrasedContents = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 0.9, 0.9, 0.9, [
-    '\n\n',
-    '4. ',
-  ]);
+  for (let i = 0; i < 3; i++) {
+    const paraphrasedContents = await generateContentUsingGPT3('text-davinci-002', 300, prompt, 1, 0.5, 0, ['"""']);
+    const { id, object, created, model, choices } = paraphrasedContents;
 
-  const cleanedContents = cleanAllTexts(paraphrasedContents.choices[0].text.split('\n'));
-  const { generatedContents } = await storeData('paraphrasing', userPrompt, paraphrasedContents, cleanedContents);
+    openAPIInformationsList.push({ id, object, created, model });
+    paraphrasedContentsList.push(choices[0].text.trim());
+  }
 
-  return generatedContents;
+  const { _id, generatedContents } = await storeData(
+    'paraphrasing',
+    userPrompt,
+    openAPIInformationsList,
+    paraphrasedContentsList
+  );
+  const userResponse = formatResponse(_id, 'paraphrasing', generatedContents);
+
+  return userResponse;
 };
 
 const blogHeadline = async ({ blogAbout }) => {
