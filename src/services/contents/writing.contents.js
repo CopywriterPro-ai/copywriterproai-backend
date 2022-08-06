@@ -68,7 +68,7 @@ Expanded with more words and information:
   const expandedContentsList = [];
 
   while (numberOfSuggestions--) {
-    const expandedContents = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 1, 0.2, 2, [
+    const expandedContents = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 1, 0.2, 2, [
       '"""',
       'Original Text:',
     ]);
