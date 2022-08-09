@@ -23,6 +23,12 @@ const formatResponse = (id, task, generatedTexts) => {
   };
 };
 
+const processListContents = async (task, prompt, { id, object, created, model, choices }) => {
+  const contents = cleanAllTexts(choices[0].text.split('\n'));
+  const { _id, generatedContents } = await storeData(task, prompt, { id, object, created, model }, contents);
+  return formatResponse(_id, task, generatedContents);
+};
+
 const paraphrase = async ({ userText }) => {
   const userPrompt = removeSpaces(userText);
 
@@ -65,12 +71,8 @@ BLOG ABOUT: ${userPrompt}
 List of 3 BLOG HEADLINES:
 1.`;
 
-  const blogHeadlines = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 1, 0.2, 0.1, ['\n\n']);
-
-  const cleanedContents = cleanAllTexts(blogHeadlines.choices[0].text.split('\n'));
-  const { generatedContents } = await storeData('blog-headline', userPrompt, blogHeadlines, cleanedContents);
-
-  return generatedContents;
+  const blogHeadlines = await generateContentUsingGPT3('text-davinci-002', 100, prompt, 1.0, 1.0, 1.0, ['\n\n', '4. ']);
+  return processListContents('blog-headline', userPrompt, blogHeadlines);
 };
 
 module.exports = {
