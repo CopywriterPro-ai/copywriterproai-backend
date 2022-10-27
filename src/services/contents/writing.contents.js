@@ -13,10 +13,22 @@ const {
 const paraphrase = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Paraphrase the following text.
+  const prompt = `Rewrite the following paragraph.
 
+Paragraph
 """
-${userPrompt}
+The 8 best places of natural beauty in the world.
+"""
+Paraphrased content
+"""
+8 natural locations around the world that are especially beautiful.
+"""
+
+Paragraph
+"""
+${userText}
+"""
+Paraphrased content
 """
 `;
 
@@ -24,7 +36,7 @@ ${userPrompt}
   const paraphrasedContentsList = [];
 
   while (numberOfSuggestions--) {
-    const paraphrasedContents = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 1, 0.5, 0, ['"""']);
+    const paraphrasedContents = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 1, 0, 0, ['"""']);
     const { id, object, created, model, choices } = paraphrasedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -106,7 +118,7 @@ I rephrased it for him, in plain language a second grader can understand:
   const simplifiedContentsList = [];
 
   while (numberOfSuggestions--) {
-    const simplifiedContents = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 0.7, 0.0, 0.0, ['"""']);
+    const simplifiedContents = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 0.7, 0.0, 0.0, ['"""']);
     const { id, object, created, model, choices } = simplifiedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -138,7 +150,7 @@ Tl;dr
   const summarizedContentsList = [];
 
   while (numberOfSuggestions--) {
-    const summarizedContents = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 0.7, 0.0, 0.0, ['\n\n']);
+    const summarizedContents = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 0.7, 0.0, 0.0, ['\n\n']);
     const { id, object, created, model, choices } = summarizedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -176,7 +188,7 @@ SHORT ABSTRACT:
   const abstractsList = [];
 
   while (numberOfSuggestions--) {
-    const abstract = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 0.7, 0.0, 0.0, [
+    const abstract = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 0.7, 0.0, 0.0, [
       '"""',
       'ORIGINAL TEXT:',
     ]);
@@ -211,7 +223,7 @@ My students wrote ${numberOfPoints} points:
 
   let notes;
   while (1) {
-    notes = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 0.7, 0.0, 0.0, ['"""', '\n\n']);
+    notes = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 0.7, 0.0, 0.0, ['"""', '\n\n']);
     if (notes.choices && notes.choices[0].text.trim() !== userPrompt) {
       notes.choices[0].text = `1. ${notes.choices[0].text.trim()}`;
       break;
@@ -239,7 +251,7 @@ const grammarFixer = async (userId, userEmail, { userText }) => {
 ${userPrompt}
 `;
 
-  const fixedContent = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  const fixedContent = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   fixedContent.choices[0].text = fixedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = fixedContent;
@@ -274,7 +286,7 @@ Original: ${userPrompt}
 ${tone} (${numberOfSuggestions} unique ways):
 1.`;
 
-  const fixedContent = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 0.8, 0.0, 0.0, [
+  const fixedContent = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 0.8, 0.0, 0.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
@@ -293,7 +305,7 @@ ${convertFrom}: ${userPrompt}
 
 ${convertTo}:`;
 
-  const convertedContent = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  const convertedContent = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   convertedContent.choices[0].text = convertedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = convertedContent;
@@ -321,7 +333,7 @@ const pointOfView = async (userId, userEmail, { userText, from, to, gender }) =>
 ${userPrompt}
 `;
 
-  const convertedContent = await generateContentUsingGPT3('text-davinci-001', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  const convertedContent = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   convertedContent.choices[0].text = convertedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = convertedContent;
