@@ -7,7 +7,7 @@ const trialInfo = {
 };
 
 const subscription = {
-  FREEMIUM: 'Freemium',
+  FREEMIUM: 'FREEMIUM',
   BASIC_1MONTH: 'BASIC_1MONTH',
   BASIC_6MONTH: 'BASIC_6MONTH',
   STANDARD_1MONTH: 'STANDARD_1MONTH',
