@@ -1,8 +1,10 @@
 const nodemailer = require('nodemailer');
+const httpStatus = require('http-status');
 const { email, env, frontendUrl } = require('../config/config');
 const logger = require('../config/logger');
 const tokenService = require('./token.service');
 const { mailTypes } = require('../config/mailtype');
+const ApiError = require('../utils/ApiError');
 
 const supportMail = 'support@copywriterpro.ai';
 
@@ -142,22 +144,64 @@ const sendVerifyAccountEmailUsingToken = async ({ id, email: to, name }) => {
   await sendEmail(to, subject, html);
 };
 
-const featureRequest = async (subject, { email, feature }) => {
-  const html = `<div> <b>From: </b>${email} </div><br>
-  <div><b>${feature}</b></div>`;
+const checkImageType = async (image) => {
+  console.log(image[0]);
+  try {
+    if (image.length && !['image/jpeg', 'image/png'].includes(image[0].type)) {
+      throw new Error();
+    }
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Image type not allowed!');
+  }
+}
+
+const featureRequest = async (subject, { name, email: _email, feature, image } ) => {
+  // await checkImageType(image);
+
+  const html = `
+  <div>
+    <div>
+      <b>From: ${name}, ${_email}</b>
+    </div>
+    <br/>
+    <div>
+      <p>${feature}</p>
+    </div>
+  </div>`;
 
   await sendEmail(supportMail, subject, html);
 };
 
-const bugReport = async (subject, { email, report }, image) => {
-  const html = `<div> <b>From: </b>${email} </div><br>
-  <div><b>${report}</b></div>`;
-  await sendEmailWithAttachment(supportMail, subject, html, image.originalname, image);
+const bugReport = async (subject, { name, email: _email, report, image } ) => {
+  // await checkImageType(image);
+
+  const html = `
+  <div>
+    <div>
+      <b>From: ${name}, ${_email}</b>
+    </div>
+    <br/>
+    <div>
+      <p>${report}</p>
+    </div>
+  </div>`;
+
+  await sendEmail(supportMail, subject, html);
 };
 
-const userMessage = async (subject, { email, message }) => {
-  const html = `<div> <b>From: </b>${email} </div><br>
-  <div><b>${message}</b></div>`;
+const userMessage = async (subject, { name, email: _email, message, image }) => {
+  // await checkImageType(image);
+
+  const html = `
+  <div>
+    <div>
+      <b>From: ${name}, ${_email}</b>
+    </div>
+    <br/>
+    <div>
+      <p>${message}</p>
+    </div>
+  </div>`;
 
   await sendEmail(supportMail, subject, html);
 };

@@ -4,20 +4,19 @@ const { emailService } = require('../services');
 
 const featureRequest = catchAsync(async (req, res) => {
   const subject = 'Feature Request!';
-  await emailService.featureRequest(subject, req.body);
+  await emailService.userMessage(subject, req.body);
   res.status(httpStatus.CREATED).send({
     status: httpStatus.CREATED,
-    message:
-      'Thank you for submitting your request. We will reach out to you as soon as we are done with analyzing your request.',
+    message: 'Thank you for your suggestion!',
   });
 });
 
 const bugReport = catchAsync(async (req, res) => {
   const subject = 'Bug Report!';
-  await emailService.bugReport(subject, req.body, req.file);
+  await emailService.userMessage(subject, req.body);
   res.status(httpStatus.CREATED).send({
     status: httpStatus.CREATED,
-    message: 'Thank you for reporting. We are looking into it.',
+    message: 'Thank you for reporting! We are looking into it.',
   });
 });
 
@@ -26,7 +25,7 @@ const userMessage = catchAsync(async (req, res) => {
   await emailService.userMessage(subject, req.body);
   res.status(httpStatus.CREATED).send({
     status: httpStatus.CREATED,
-    message: 'Thank you for reaching out. We are looking into it.',
+    message: 'Thank you for reaching out. We will get back to you soon.',
   });
 });
 
