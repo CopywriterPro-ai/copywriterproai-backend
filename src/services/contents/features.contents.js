@@ -12,7 +12,7 @@ const proofread = async (userId, userEmail, { userText }) => {
 ${userPrompt}
 `;
 
-  const fixedContent = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  const fixedContent = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   fixedContent.choices[0].text = fixedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = fixedContent;

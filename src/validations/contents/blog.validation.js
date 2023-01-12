@@ -3,43 +3,6 @@ const inputLimit = require('../../config/inputLimit');
 const { blogValidation } = require('./validationData');
 const getLimits = require('./helper.validation');
 
-const shortBlog = (subscription) => {
-  const { task, about, headline, keywords } = getLimits(blogValidation.shortBlog, inputLimit[subscription]);
-  return {
-    body: Joi.object().keys({
-      task: Joi.valid(task).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
-      headline: Joi.string().min(headline.min).max(headline.max).required(),
-      keywords: Joi.array().items(Joi.string()).min(keywords.min).max(keywords.max),
-    }),
-  };
-};
-
-const longBlog = (subscription) => {
-  const { task, about, headline, keywords, contents } = getLimits(blogValidation.longBlog, inputLimit[subscription]);
-  return {
-    body: Joi.object().keys({
-      task: Joi.valid(task).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
-      headline: Joi.string().min(headline.min).max(headline.max).required(),
-      keywords: Joi.array().items(Joi.string()).min(keywords.min).max(keywords.max),
-      contents: Joi.string().min(contents.min).max(contents.max),
-    }),
-  };
-};
-
-const blogFromOutline = (subscription) => {
-  const { task, headline, intro, outline } = getLimits(blogValidation.blogFromOutline, inputLimit[subscription]);
-  return {
-    body: Joi.object().keys({
-      task: Joi.valid(task).required(),
-      headline: Joi.string().min(headline.min).max(headline.max).required(),
-      intro: Joi.string().min(intro.min).max(intro.max).required(),
-      outline: Joi.array().items(Joi.string()).min(outline.min).max(outline.max).required(),
-    }),
-  };
-};
-
 const blogIdea = (subscription) => {
   const { task, productName, productDescription, numberOfSuggestions } = getLimits(
     blogValidation.blogIdea,
@@ -122,14 +85,62 @@ const blogOutro = (subscription) => {
   };
 };
 
+const shortBlog = (subscription) => {
+  const { task, about, headline, keywords } = getLimits(blogValidation.shortBlog, inputLimit[subscription]);
+  return {
+    body: Joi.object().keys({
+      task: Joi.valid(task).required(),
+      about: Joi.string().min(about.min).max(about.max).required(),
+      headline: Joi.string().min(headline.min).max(headline.max).required(),
+      keywords: Joi.array().items(Joi.string()).min(keywords.min).max(keywords.max),
+    }),
+  };
+};
+
+const longBlog = (subscription) => {
+  const { task, about, headline, keywords, contents } = getLimits(blogValidation.longBlog, inputLimit[subscription]);
+  return {
+    body: Joi.object().keys({
+      task: Joi.valid(task).required(),
+      about: Joi.string().min(about.min).max(about.max).required(),
+      headline: Joi.string().min(headline.min).max(headline.max).required(),
+      keywords: Joi.array().items(Joi.string()).min(keywords.min).max(keywords.max),
+      contents: Joi.string().min(contents.min).max(contents.max),
+    }),
+  };
+};
+
+const blogFromOutline = (subscription) => {
+  const { task, headline, intro, outline } = getLimits(blogValidation.blogFromOutline, inputLimit[subscription]);
+  return {
+    body: Joi.object().keys({
+      task: Joi.valid(task).required(),
+      headline: Joi.string().min(headline.min).max(headline.max).required(),
+      intro: Joi.string().min(intro.min).max(intro.max).required(),
+      outline: Joi.array().items(Joi.string()).min(outline.min).max(outline.max).required(),
+    }),
+  };
+};
+
+const blogRewriter = (subscription) => {
+  const { task, blog } = getLimits(blogValidation.blogRewriter, inputLimit[subscription]);
+  return {
+    body: Joi.object().keys({
+      task: Joi.valid(task).required(),
+      blog: Joi.string().min(blog.min).max(blog.max).required(),
+    }),
+  };
+};
+
 module.exports = {
+  blogIdea,
+  blogHeadline,
+  blogIntro,
+  blogOutline,
+  blogTopic,
+  blogOutro,
   shortBlog,
   longBlog,
   blogFromOutline,
-  blogIdea,
-  blogHeadline,
-  blogOutline,
-  blogIntro,
-  blogTopic,
-  blogOutro,
+  blogRewriter,
 };

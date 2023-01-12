@@ -21,7 +21,7 @@ Original: ${userPrompt}
 3 unique way(s) to Paraphrase:
 1.`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.9, 0.9, 0.9, ['\n\n']);
+  const paraphrasedContents = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 0.9, 0.9, 0.9, ['\n\n']);
 
   return processListContents(userId, userEmail, 'paraphrasing', userPrompt, paraphrasedContents);
 };
@@ -34,7 +34,7 @@ const grammarFixer = async (userId, userEmail, { userText }) => {
 ${userPrompt}
 `;
 
-  const fixedContent = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  const fixedContent = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   fixedContent.choices[0].text = fixedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = fixedContent;
@@ -67,7 +67,7 @@ I rephrased it for him, in plain language a second grader can understand:
 
   let numberOfSuggestions = 3;
   while (numberOfSuggestions--) {
-    const simplifiedContents = await generateContentUsingGPT3('text-davinci-001', 150, prompt, 0.7, 0.0, 0.0, ['"""']);
+    const simplifiedContents = await generateContentUsingGPT3('text-davinci-003', 150, prompt, 0.7, 0.0, 0.0, ['"""']);
     const { id, object, created, model, choices } = simplifiedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -100,7 +100,7 @@ Tl;dr
 
   let numberOfSuggestions = 3;
   while (numberOfSuggestions--) {
-    const summarizedContents = await generateContentUsingGPT3('text-davinci-001', 100, prompt, 0.7, 0.0, 0.0, ['\n\n']);
+    const summarizedContents = await generateContentUsingGPT3('text-davinci-003', 100, prompt, 0.7, 0.0, 0.0, ['\n\n']);
     const { id, object, created, model, choices } = summarizedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -138,7 +138,7 @@ Original: ${userPrompt}
 ${tone} (3 unique ways):
 1.`;
 
-  const fixedContent = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 0.8, 0.0, 0.0, ['\n\n']);
+  const fixedContent = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 0.8, 0.0, 0.0, ['\n\n']);
 
   return processListContents(userId, userEmail, 'change-tone', userPrompt, fixedContent);
 };

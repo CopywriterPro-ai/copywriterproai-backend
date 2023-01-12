@@ -66,6 +66,10 @@ router.route('/generate/short-blog').post(auth('generateContent'), validate(blog
 
 router.route('/generate/long-blog').post(auth('generateContent'), validate(blog.longBlog), contentController.generate);
 
+// router
+//   .route('/generate/blog-rewriter')
+//   .post(auth('generateContent'), validate(blog.blogRewriter), contentController.generate);
+
 router
   .route('/generate/blog-from-outline')
   .post(auth('generateContent'), validate(blog.blogFromOutline), contentController.generate);
