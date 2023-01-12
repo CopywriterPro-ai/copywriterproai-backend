@@ -64,6 +64,8 @@ const generate = catchAsync(async (req, res) => {
       generatedContent = await generator.blog.longBlog(_id, email, req.body);
     } else if (task === 'blog-from-outline') {
       generatedContent = await generator.blog.blogFromOutline(_id, email, req.body);
+    // } else if (task === 'blog-rewriter') {
+    //   generatedContent = await generator.blog.blogRewriter(_id, email, req.body);
     } else if (task === 'blog-idea') {
       generatedContent = await generator.blog.blogIdea(_id, email, req.body);
     } else if (task === 'blog-headline') {

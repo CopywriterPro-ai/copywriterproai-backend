@@ -26,7 +26,7 @@ PROFILE DESCRIPTION:`;
   const profileDescriptionsList = [];
 
   while (numberOfSuggestions--) {
-    const profileDescriptions = await generateContentUsingGPT3('text-davinci-001', 150, prompt, 1.0, 1.0, 1.0, ['\n\n']);
+    const profileDescriptions = await generateContentUsingGPT3('text-davinci-003', 150, prompt, 1.0, 1.0, 1.0, ['\n\n']);
     const { id, object, created, model, choices } = profileDescriptions;
 
     openAPIInformationsList.push({ id, object, created, model });

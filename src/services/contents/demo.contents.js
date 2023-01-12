@@ -32,10 +32,22 @@ const processListContents = async (task, prompt, { id, object, created, model, c
 const paraphrase = async ({ userText }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Paraphrase the following text.
+  const prompt = `Rewrite the following paragraph.
 
+Paragraph
 """
-${userPrompt}
+The 8 best places of natural beauty in the world.
+"""
+Paraphrased content
+"""
+8 natural locations around the world that are especially beautiful.
+"""
+
+Paragraph
+"""
+${userText}
+"""
+Paraphrased content
 """
 `;
 
@@ -43,7 +55,7 @@ ${userPrompt}
   const paraphrasedContentsList = [];
 
   for (let i = 0; i < 3; i++) {
-    const paraphrasedContents = await generateContentUsingGPT3('text-davinci-002', 300, prompt, 1, 0.5, 0, ['"""']);
+    const paraphrasedContents = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 1, 0, 0, ['"""']);
     const { id, object, created, model, choices } = paraphrasedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -71,7 +83,7 @@ BLOG ABOUT: ${userPrompt}
 List of 3 BLOG HEADLINES:
 1.`;
 
-  const blogHeadlines = await generateContentUsingGPT3('text-davinci-002', 100, prompt, 1.0, 1.0, 1.0, ['\n\n', '4. ']);
+  const blogHeadlines = await generateContentUsingGPT3('text-davinci-003', 100, prompt, 1.0, 1.0, 1.0, ['\n\n', '4. ']);
   return processListContents('blog-headline', userPrompt, blogHeadlines);
 };
 

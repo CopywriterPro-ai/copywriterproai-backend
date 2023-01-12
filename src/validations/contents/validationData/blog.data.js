@@ -1,58 +1,4 @@
 module.exports = {
-  shortBlog: {
-    task: 'short-blog',
-    about: {
-      min: 10,
-      max: 400,
-      variable: true,
-    },
-    headline: {
-      min: 10,
-      max: 150,
-    },
-    keywords: {
-      min: 0,
-      max: 2,
-    },
-  },
-
-  longBlog: {
-    task: 'long-blog',
-    about: {
-      min: 10,
-      max: 400,
-      variable: true,
-    },
-    headline: {
-      min: 10,
-      max: 150,
-    },
-    keywords: {
-      min: 0,
-      max: 4,
-    },
-    contents: {
-      min: 10,
-      max: 12000,
-    },
-  },
-
-  blogFromOutline: {
-    task: 'blog-from-outline',
-    headline: {
-      min: 10,
-      max: 150,
-    },
-    intro: {
-      min: 10,
-      max: 1000,
-    },
-    outline: {
-      min: 3,
-      max: 10,
-    },
-  },
-
   blogIdea: {
     task: 'blog-idea',
     productName: {
@@ -150,6 +96,68 @@ module.exports = {
     numberOfSuggestions: {
       min: 1,
       max: 10,
+    },
+  },
+
+  shortBlog: {
+    task: 'short-blog',
+    about: {
+      min: 10,
+      max: 400,
+      variable: true,
+    },
+    headline: {
+      min: 10,
+      max: 150,
+    },
+    keywords: {
+      min: 0,
+      max: 2,
+    },
+  },
+
+  longBlog: {
+    task: 'long-blog',
+    about: {
+      min: 10,
+      max: 400,
+      variable: true,
+    },
+    headline: {
+      min: 10,
+      max: 150,
+    },
+    keywords: {
+      min: 0,
+      max: 4,
+    },
+    contents: {
+      min: 10,
+      max: 12000,
+    },
+  },
+
+  blogFromOutline: {
+    task: 'blog-from-outline',
+    headline: {
+      min: 10,
+      max: 150,
+    },
+    intro: {
+      min: 10,
+      max: 1000,
+    },
+    outline: {
+      min: 3,
+      max: 10,
+    },
+  },
+
+  blogRewriter: {
+    task: 'blog-rewriter',
+    blog: {
+      min: 100,
+      max: 3000,
     },
   },
 };

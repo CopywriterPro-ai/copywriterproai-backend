@@ -20,7 +20,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} BLOG IDEAS:
 1.`;
 
-  const blogIdeas = await generateContentUsingGPT3('text-davinci-002', 100, prompt, 1.0, 1.0, 1.0, [
+  const blogIdeas = await generateContentUsingGPT3('text-davinci-003', 100, prompt, 1.0, 1.0, 1.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
@@ -37,7 +37,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} BLOG HEADLINES:
 1.`;
 
-  const blogHeadlines = await generateContentUsingGPT3('text-davinci-002', 100, prompt, 1.0, 1.0, 1.0, [
+  const blogHeadlines = await generateContentUsingGPT3('text-davinci-003', 100, prompt, 1.0, 1.0, 1.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
@@ -58,7 +58,7 @@ BLOG INTRODUCTION (A brief description of what the blog is about and why someone
   const blogIntrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogIntros = await generateContentUsingGPT3('text-davinci-002', 450, prompt, 1.0, 1.0, 1.0, ['\n\n\n']);
+    const blogIntros = await generateContentUsingGPT3('text-davinci-003', 450, prompt, 1.0, 1.0, 1.0, ['\n\n\n']);
     const { id, object, created, model, choices } = blogIntros;
     openAPIInformationsList.push({ id, object, created, model });
     blogIntrosList.push(choices[0].text.trim());
@@ -100,7 +100,7 @@ BLOG OUTLINE (${numberOfPoints} points):
   const blogOutlinesList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogOutlines = await generateContentUsingGPT3('text-davinci-001', 200, prompt, 1, 0.5, 0.5, [
+    const blogOutlines = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 1, 0.5, 0.5, [
       '\n\n',
       `${numberOfPoints + 1}. `,
     ]);
@@ -149,7 +149,7 @@ BLOG TOPIC: ${removeSpaces(userText)}
   const blogTopicWritingsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogTopicWriting = await generateContentUsingGPT3('text-davinci-002', 500, prompt, 0.8, 0, 0, ['\n\n\n']);
+    const blogTopicWriting = await generateContentUsingGPT3('text-davinci-003', 500, prompt, 0.8, 0, 0, ['\n\n\n']);
     const { id, object, created, model, choices } = blogTopicWriting;
     openAPIInformationsList.push({ id, object, created, model });
     blogTopicWritingsList.push(choices[0].text.trim());
@@ -183,7 +183,7 @@ BLOG CONCLUSION:
   const blogOutrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogOutros = await generateContentUsingGPT3('text-davinci-002', 200, prompt, 0.7, 1.0, 1.0, ['\n\n']);
+    const blogOutros = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 0.7, 1.0, 1.0, ['\n\n']);
     const { id, object, created, model, choices } = blogOutros;
     openAPIInformationsList.push({ id, object, created, model });
     blogOutrosList.push(choices[0].text.trim());
@@ -218,7 +218,7 @@ Blog headline: ${headline}
 
 `;
 
-  const _blog = await generateContentUsingGPT3('text-davinci-002', 600, prompt, 0.7, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT3('text-davinci-003', 600, prompt, 0.7, 0, 0, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
 
@@ -254,7 +254,7 @@ Blog headline: ${headline}
 
 ${contents}`;
 
-  const _blog = await generateContentUsingGPT3('text-davinci-002', 256, prompt, 1.0, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT3('text-davinci-003', 256, prompt, 1.0, 0, 0, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
 
@@ -302,7 +302,7 @@ ${outline[0]}
 
 `;
 
-  const _blog = await generateContentUsingGPT3('text-davinci-002', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
 
@@ -330,4 +330,5 @@ module.exports = {
   shortBlog,
   longBlog,
   blogFromOutline,
+  // blogRewriter,
 };
