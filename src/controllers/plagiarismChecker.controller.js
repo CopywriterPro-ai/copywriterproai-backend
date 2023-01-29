@@ -24,7 +24,7 @@ const searchContent = catchAsync(async (req, res) => {
 
   if (isPaidSubscribers && isUserPackageAllowed && isWordsAvailable) {
     const results = await plagiarismCheckerService.searchContent(text);
-    res.status(httpStatus.OK).send({ status: httpStatus.OK, results });
+    res.status(httpStatus.OK).send({ status: httpStatus.OK, data: results });
 
     await subscriberService.updateOwnSubscribe(userId, {
       activeSubscription: {
@@ -33,7 +33,7 @@ const searchContent = catchAsync(async (req, res) => {
       },
     });
   } else if (isPaidSubscribers && !isUserPackageAllowed) {
-    res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Plagiarism checker is not available for your package.' });
+    res.status(httpStatus.PAYMENT_REQUIRED).send({ message: 'Please upgrade to Premium package!' });
   } else if (isPaidSubscribers && isUserPackageAllowed && !isWordsAvailable) {
     res.status(httpStatus.PAYMENT_REQUIRED).send({ message: "You don't have enough words to check plagiarism!" });
   } else {
