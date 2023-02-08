@@ -8,7 +8,8 @@ const catchyHeadline = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      content: Joi.string().min(content.min).max(content.max).required(),
+      // content: Joi.string().min(content.min).max(content.max).required(),
+      content: Joi.string().max(content.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -22,7 +23,8 @@ const attentionGrabbingHeadline = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      content: Joi.string().min(content.min).max(content.max).required(),
+      // content: Joi.string().min(content.min).max(content.max).required(),
+      content: Joi.string().max(content.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -33,7 +35,8 @@ const newspaperHeadline = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      content: Joi.string().min(content.min).max(content.max).required(),
+      // content: Joi.string().min(content.min).max(content.max).required(),
+      content: Joi.string().max(content.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -44,7 +47,8 @@ const resumeHeadline = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      profession: Joi.string().min(profession.min).max(profession.max).required(),
+      // profession: Joi.string().min(profession.min).max(profession.max).required(),
+      profession: Joi.string().max(profession.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };

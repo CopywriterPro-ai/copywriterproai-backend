@@ -11,7 +11,8 @@ const emailMarketingCampaignSubject = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      productDescription: Joi.string().min(productDescription.min).max(productDescription.max).required(),
+      // productDescription: Joi.string().min(productDescription.min).max(productDescription.max).required(),
+      productDescription: Joi.string().max(productDescription.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -25,9 +26,12 @@ const emailMarketingCampaignBody = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      productDescription: Joi.string().min(productDescription.min).max(productDescription.max).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
-      subjectLine: Joi.string().min(subjectLine.min).max(subjectLine.max).required(),
+      // productDescription: Joi.string().min(productDescription.min).max(productDescription.max).required(),
+      // about: Joi.string().min(about.min).max(about.max).required(),
+      // subjectLine: Joi.string().min(subjectLine.min).max(subjectLine.max).required(),
+      productDescription: Joi.string().max(productDescription.max).required(),
+      about: Joi.string().max(about.max).required(),
+      subjectLine: Joi.string().max(subjectLine.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -38,8 +42,10 @@ const generateEmailBody = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
-      to: Joi.string().min(to.min).max(to.max).required(),
+      // about: Joi.string().min(about.min).max(about.max).required(),
+      // to: Joi.string().min(to.min).max(to.max).required(),
+      about: Joi.string().max(about.max).required(),
+      to: Joi.string().max(to.max).required(),
       tone: Joi.string()
         .required()
         .valid(...tone),
@@ -56,7 +62,8 @@ const generatedSubjectFromBody = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      emailBody: Joi.string().min(emailBody.min).max(emailBody.max).required(),
+      // emailBody: Joi.string().min(emailBody.min).max(emailBody.max).required(),
+      emailBody: Joi.string().max(emailBody.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };

@@ -11,7 +11,8 @@ const youtubeVideoTitleFromDescription = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      description: Joi.string().min(description.min).max(description.nax).required(),
+      // description: Joi.string().min(description.min).max(description.nax).required(),
+      description: Joi.string().max(description.nax).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -22,7 +23,8 @@ const youtubeVideoIdeas = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      topic: Joi.string().min(topic.min).max(topic.max).required(),
+      // topic: Joi.string().min(topic.min).max(topic.max).required(),
+      topic: Joi.string().max(topic.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -33,7 +35,8 @@ const youtubeVideoScript = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      title: Joi.string().min(title.min).max(title.max).required(),
+      // title: Joi.string().min(title.min).max(title.max).required(),
+      title: Joi.string().max(title.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -47,7 +50,8 @@ const videoTagsFromDescription = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      primaryText: Joi.string().min(primaryText.min).max(primaryText.max).required(),
+      // primaryText: Joi.string().min(primaryText.min).max(primaryText.max).required(),
+      primaryText: Joi.string().max(primaryText.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -61,7 +65,8 @@ const channelTagsFromDescription = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      primaryText: Joi.string().min(primaryText.min).max(primaryText.max).required(),
+      // primaryText: Joi.string().min(primaryText.min).max(primaryText.max).required(),
+      primaryText: Joi.string().max(primaryText.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };

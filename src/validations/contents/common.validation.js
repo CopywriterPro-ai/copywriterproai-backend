@@ -11,8 +11,10 @@ const imageIdeasFromAdText = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      product: Joi.string().min(product.min).max(product.max).required(),
-      adText: Joi.string().min(adText.min).max(adText.max).required(),
+      // product: Joi.string().min(product.min).max(product.max).required(),
+      // adText: Joi.string().min(adText.min).max(adText.max).required(),
+      product: Joi.string().max(product.max).required(),
+      adText: Joi.string().max(adText.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };

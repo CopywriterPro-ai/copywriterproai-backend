@@ -8,7 +8,8 @@ const proofread = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
     }),
   };
 };

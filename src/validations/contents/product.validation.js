@@ -11,8 +11,10 @@ const productDescription = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      productName: Joi.string().min(productName.min).max(productName.max).required(),
-      productType: Joi.string().min(productType.min).max(productType.max).required(),
+      // productName: Joi.string().min(productName.min).max(productName.max).required(),
+      // productType: Joi.string().min(productType.min).max(productType.max).required(),
+      productName: Joi.string().max(productName.max).required(),
+      productType: Joi.string().max(productType.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -24,11 +26,16 @@ const makeProductDescriptionSEOFriendly = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      productName: Joi.string().min(productName.min).max(productName.max).required(),
-      productType: Joi.string().min(productType.min).max(productType.max).required(),
-      productFeatures: Joi.string().min(productFeatures.min).max(productFeatures.max).required(),
-      productBenefits: Joi.string().min(productBenefits.min).max(productBenefits.max).required(),
-      targetAudience: Joi.string().min(targetAudience.min).max(targetAudience.max).required(),
+      // productName: Joi.string().min(productName.min).max(productName.max).required(),
+      // productType: Joi.string().min(productType.min).max(productType.max).required(),
+      // productFeatures: Joi.string().min(productFeatures.min).max(productFeatures.max).required(),
+      // productBenefits: Joi.string().min(productBenefits.min).max(productBenefits.max).required(),
+      // targetAudience: Joi.string().min(targetAudience.min).max(targetAudience.max).required(),
+      productName: Joi.string().max(productName.max).required(),
+      productType: Joi.string().max(productType.max).required(),
+      productFeatures: Joi.string().max(productFeatures.max).required(),
+      productBenefits: Joi.string().max(productBenefits.max).required(),
+      targetAudience: Joi.string().max(targetAudience.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -42,11 +49,13 @@ const productReview = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      product: Joi.string().min(product.min).max(product.max).required(),
+      // product: Joi.string().min(product.min).max(product.max).required(),
+      product: Joi.string().max(product.max).required(),
       rating: Joi.string()
         .required()
         .valid(...rating),
-      comment: Joi.string().min(comment.min).max(comment.max).required(),
+      // comment: Joi.string().min(comment.min).max(comment.max).required(),
+      comment: Joi.string().max(comment.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -60,8 +69,10 @@ const productName = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      productDescription: Joi.string().min(productDescription.min).max(productDescription.max).required(),
-      keywords: Joi.string().min(keywords.min).max(keywords.max).required(),
+      // productDescription: Joi.string().min(productDescription.min).max(productDescription.max).required(),
+      // keywords: Joi.string().min(keywords.min).max(keywords.max).required(),
+      productDescription: Joi.string().max(productDescription.max).required(),
+      keywords: Joi.string().max(keywords.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };

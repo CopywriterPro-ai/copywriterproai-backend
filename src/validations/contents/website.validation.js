@@ -11,8 +11,10 @@ const websiteShortDescription = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      businessName: Joi.string().min(businessName.min).max(businessName.max).required(),
-      industryType: Joi.string().min(industryType.min).max(industryType.max).required(),
+      // businessName: Joi.string().min(businessName.min).max(businessName.max).required(),
+      // industryType: Joi.string().min(industryType.min).max(industryType.max).required(),
+      businessName: Joi.string().max(businessName.max).required(),
+      industryType: Joi.string().max(industryType.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -23,7 +25,8 @@ const keywordsFromText = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      primaryText: Joi.string().min(primaryText.min).max(primaryText.max).required(),
+      // primaryText: Joi.string().min(primaryText.min).max(primaryText.max).required(),
+      primaryText: Joi.string().max(primaryText.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -37,10 +40,14 @@ const seoFriendlyBlogIdeas = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      content: Joi.string().min(content.min).max(content.max).required(),
-      desiredOutcome: Joi.string().min(desiredOutcome.min).max(desiredOutcome.max).required(),
-      industry: Joi.string().min(industry.min).max(industry.max).required(),
-      targetAudience: Joi.string().min(targetAudience.min).max(targetAudience.max).required(),
+      // content: Joi.string().min(content.min).max(content.max).required(),
+      // desiredOutcome: Joi.string().min(desiredOutcome.min).max(desiredOutcome.max).required(),
+      // industry: Joi.string().min(industry.min).max(industry.max).required(),
+      // targetAudience: Joi.string().min(targetAudience.min).max(targetAudience.max).required(),
+      content: Joi.string().max(content.max).required(),
+      desiredOutcome: Joi.string().max(desiredOutcome.max).required(),
+      industry: Joi.string().max(industry.max).required(),
+      targetAudience: Joi.string().max(targetAudience.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -54,7 +61,8 @@ const landingPageHeadline = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      businessType: Joi.string().min(businessType.min).max(businessType.max).required(),
+      // businessType: Joi.string().min(businessType.min).max(businessType.max).required(),
+      businessType: Joi.string().max(businessType.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   }

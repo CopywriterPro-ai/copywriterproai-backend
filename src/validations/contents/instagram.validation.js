@@ -11,11 +11,13 @@ const instagramAdTexts = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      platformType: Joi.string().min(platformType.min).max(platformType.max).required(),
-      context: Joi.string().min(context.min).max(context.max).required(),
+      // platformType: Joi.string().min(platformType.min).max(platformType.max).required(),
+      // context: Joi.string().min(context.min).max(context.max).required(),
+      platformType: Joi.string().max(platformType.max).required(),
+      context: Joi.string().max(context.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
-  }
+  };
 };
 
 module.exports = {

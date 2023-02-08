@@ -11,8 +11,10 @@ const CVSummary = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      yourJobTitle: Joi.string().min(yourJobTitle.min).max(yourJobTitle.max).required(),
-      keyAchievements: Joi.string().min(keyAchievements.min).max(keyAchievements.max).required(),
+      // yourJobTitle: Joi.string().min(yourJobTitle.min).max(yourJobTitle.max).required(),
+      // keyAchievements: Joi.string().min(keyAchievements.min).max(keyAchievements.max).required(),
+      yourJobTitle: Joi.string().max(yourJobTitle.max).required(),
+      keyAchievements: Joi.string().max(keyAchievements.max).required(),
       yearsOfExperience: Joi.number().min(yearsOfExperience.min).max(yearsOfExperience.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
