@@ -32,45 +32,40 @@ const processListContents = async (task, prompt, { id, object, created, model, c
 const paraphrase = async ({ userText }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Rewrite the following paragraph.
+  const prompt = `Paraphrase the following Paragraphs.
 
 Paragraph
 """
 The 8 best places of natural beauty in the world.
 """
-Paraphrased content
+Paraphrase in 2 creative way(s).
 """
-8 natural locations around the world that are especially beautiful.
+1. 8 natural locations around the world that are especially beautiful.
+2. World's most beautiful 8 natural beauties that will amaze you.
 """
 
 Paragraph
 """
+How are you?
+"""
+Paraphrase in 3 creative way(s).
+"""
+1. Is everything going well for you?
+2. I hope you are doing well.
+3. Do you feel well?
+"""
+
+Content
+"""
 ${userText}
 """
-Paraphrased content
+Paraphrase in 3 creative way(s).
 """
-`;
+1.`;
 
-  const openAPIInformationsList = [];
-  const paraphrasedContentsList = [];
+  const paraphrasedContents = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 1, 0, 0, ['"""', '4. ']);
 
-  for (let i = 0; i < 3; i++) {
-    const paraphrasedContents = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 1, 0, 0, ['"""']);
-    const { id, object, created, model, choices } = paraphrasedContents;
-
-    openAPIInformationsList.push({ id, object, created, model });
-    paraphrasedContentsList.push(choices[0].text.trim());
-  }
-
-  const { _id, generatedContents } = await storeData(
-    'paraphrasing',
-    userPrompt,
-    openAPIInformationsList,
-    paraphrasedContentsList
-  );
-  const userResponse = formatResponse(_id, 'paraphrasing', generatedContents);
-
-  return userResponse;
+  return processListContents('paraphrasing', userPrompt, paraphrasedContents);
 };
 
 const blogHeadline = async ({ blogAbout }) => {
@@ -83,7 +78,7 @@ BLOG ABOUT: ${userPrompt}
 List of 3 BLOG HEADLINES:
 1.`;
 
-  const blogHeadlines = await generateContentUsingGPT3('text-davinci-003', 100, prompt, 1.0, 1.0, 1.0, ['\n\n', '4. ']);
+  const blogHeadlines = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 1.0, 1.0, 1.0, ['\n\n', '4. ']);
   return processListContents('blog-headline', userPrompt, blogHeadlines);
 };
 

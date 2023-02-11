@@ -8,7 +8,8 @@ const paraphrase = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -19,7 +20,8 @@ const expander = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -30,7 +32,8 @@ const simplifier = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -41,7 +44,8 @@ const summarizer = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -52,7 +56,8 @@ const abstractGenerator = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -63,7 +68,8 @@ const notesFromPassage = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       numberOfPoints: Joi.number().min(numberOfPoints.min).max(numberOfPoints.max).required(),
     }),
   };
@@ -74,7 +80,8 @@ const grammarFixer = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
     }),
   };
 };
@@ -84,7 +91,8 @@ const changeTone = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       tone: Joi.string()
         .required()
         .valid(...tone),
@@ -98,7 +106,8 @@ const activePassive = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       from: Joi.string()
         .required()
         .valid(...voice),
@@ -114,7 +123,8 @@ const pointOfView = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       from: Joi.string()
         .required()
         .valid(...person),

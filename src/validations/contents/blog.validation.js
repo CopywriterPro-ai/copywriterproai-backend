@@ -11,8 +11,10 @@ const blogIdea = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      productName: Joi.string().min(productName.min).max(productName.max).required(),
-      productDescription: Joi.string().min(productDescription.min).max(productDescription.max).required(),
+      // productName: Joi.string().min(productName.min).max(productName.max).required(),
+      // productDescription: Joi.string().min(productDescription.min).max(productDescription.max).required(),
+      productName: Joi.string().max(productName.max).required(),
+      productDescription: Joi.string().max(productDescription.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -23,7 +25,8 @@ const blogHeadline = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
+      // about: Joi.string().min(about.min).max(about.max).required(),
+      about: Joi.string().max(about.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -34,8 +37,10 @@ const blogIntro = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
-      headline: Joi.string().min(headline.min).max(headline.max).required(),
+      // about: Joi.string().min(about.min).max(about.max).required(),
+      // headline: Joi.string().min(headline.min).max(headline.max).required(),
+      about: Joi.string().max(about.max).required(),
+      headline: Joi.string().max(headline.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -49,8 +54,10 @@ const blogOutline = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
-      headline: Joi.string().min(headline.min).max(headline.max).required(),
+      // about: Joi.string().min(about.min).max(about.max).required(),
+      // headline: Joi.string().min(headline.min).max(headline.max).required(),
+      about: Joi.string().max(about.max).required(),
+      headline: Joi.string().max(headline.max).required(),
       numberOfPoints: Joi.number().min(numberOfPoints.min).max(numberOfPoints.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
@@ -65,9 +72,12 @@ const blogTopic = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
-      headline: Joi.string().min(headline.min).max(headline.max).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // about: Joi.string().min(about.min).max(about.max).required(),
+      // headline: Joi.string().min(headline.min).max(headline.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      about: Joi.string().max(about.max).required(),
+      headline: Joi.string().max(headline.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -78,8 +88,10 @@ const blogOutro = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
-      headline: Joi.string().min(headline.min).max(headline.max).required(),
+      // about: Joi.string().min(about.min).max(about.max).required(),
+      // headline: Joi.string().min(headline.min).max(headline.max).required(),
+      about: Joi.string().max(about.max).required(),
+      headline: Joi.string().max(headline.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -90,8 +102,10 @@ const shortBlog = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
-      headline: Joi.string().min(headline.min).max(headline.max).required(),
+      // about: Joi.string().min(about.min).max(about.max).required(),
+      // headline: Joi.string().min(headline.min).max(headline.max).required(),
+      about: Joi.string().max(about.max).required(),
+      headline: Joi.string().max(headline.max).required(),
       keywords: Joi.array().items(Joi.string()).min(keywords.min).max(keywords.max),
     }),
   };
@@ -102,8 +116,10 @@ const longBlog = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      about: Joi.string().min(about.min).max(about.max).required(),
-      headline: Joi.string().min(headline.min).max(headline.max).required(),
+      // about: Joi.string().min(about.min).max(about.max).required(),
+      // headline: Joi.string().min(headline.min).max(headline.max).required(),
+      about: Joi.string().max(about.max).required(),
+      headline: Joi.string().max(headline.max).required(),
       keywords: Joi.array().items(Joi.string()).min(keywords.min).max(keywords.max),
       contents: Joi.string().min(contents.min).max(contents.max),
     }),
@@ -115,8 +131,10 @@ const blogFromOutline = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      headline: Joi.string().min(headline.min).max(headline.max).required(),
-      intro: Joi.string().min(intro.min).max(intro.max).required(),
+      // headline: Joi.string().min(headline.min).max(headline.max).required(),
+      // intro: Joi.string().min(intro.min).max(intro.max).required(),
+      headline: Joi.string().max(headline.max).required(),
+      intro: Joi.string().max(intro.max).required(),
       outline: Joi.array().items(Joi.string()).min(outline.min).max(outline.max).required(),
     }),
   };
@@ -127,7 +145,8 @@ const blogRewriter = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      blog: Joi.string().min(blog.min).max(blog.max).required(),
+      // blog: Joi.string().min(blog.min).max(blog.max).required(),
+      blog: Joi.string().max(blog.max).required(),
     }),
   };
 };

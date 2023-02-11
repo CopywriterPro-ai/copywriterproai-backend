@@ -8,8 +8,10 @@ const recipe = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      recipeName: Joi.string().min(recipeName.min).max(recipeName.max).required(),
-      ingredients: Joi.string().min(ingredients.min).max(ingredients.max).required(),
+      // recipeName: Joi.string().min(recipeName.min).max(recipeName.max).required(),
+      // ingredients: Joi.string().min(ingredients.min).max(ingredients.max).required(),
+      recipeName: Joi.string().max(recipeName.max).required(),
+      ingredients: Joi.string().max(ingredients.max).required(),
     }),
   };
 };

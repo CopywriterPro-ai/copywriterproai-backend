@@ -11,7 +11,8 @@ const campaignPostIdeaFromBusinessType = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      platformType: Joi.string().min(platformType.min).max(platformType.max).required(),
+      // platformType: Joi.string().min(platformType.min).max(platformType.max).required(),
+      platformType: Joi.string().max(platformType.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -25,9 +26,12 @@ const facebookAdPrimaryTexts = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      companyName: Joi.string().min(companyName.min).max(companyName.max).required(),
-      businessType: Joi.string().min(businessType.min).max(businessType.max).required(),
-      benefits: Joi.string().min(benefits.min).max(benefits.max).required(),
+      // companyName: Joi.string().min(companyName.min).max(companyName.max).required(),
+      // businessType: Joi.string().min(businessType.min).max(businessType.max).required(),
+      // benefits: Joi.string().min(benefits.min).max(benefits.max).required(),
+      companyName: Joi.string().max(companyName.max).required(),
+      businessType: Joi.string().max(businessType.max).required(),
+      benefits: Joi.string().max(benefits.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -41,9 +45,12 @@ const facebookAdHeadlines = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      productName: Joi.string().min(productName.min).max(productName.max).required(),
-      businessType: Joi.string().min(businessType.min).max(businessType.max).required(),
-      customerBenefit: Joi.string().min(customerBenefit.min).max(customerBenefit.max).required(),
+      // productName: Joi.string().min(productName.min).max(productName.max).required(),
+      // businessType: Joi.string().min(businessType.min).max(businessType.max).required(),
+      // customerBenefit: Joi.string().min(customerBenefit.min).max(customerBenefit.max).required(),
+      productName: Joi.string().max(productName.max).required(),
+      businessType: Joi.string().max(businessType.max).required(),
+      customerBenefit: Joi.string().max(customerBenefit.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -57,8 +64,10 @@ const facebookAdLinkDescription = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      companyName: Joi.string().min(companyName.min).max(companyName.max).required(),
-      platformType: Joi.string().min(platformType.min).max(platformType.max).required(),
+      // companyName: Joi.string().min(companyName.min).max(companyName.max).required(),
+      // platformType: Joi.string().min(platformType.min).max(platformType.max).required(),
+      companyName: Joi.string().max(companyName.max).required(),
+      platformType: Joi.string().max(platformType.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };
@@ -72,7 +81,8 @@ const facebookAdsFromProductDescription = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      product: Joi.string().min(product.min).max(product.max).required(),
+      // product: Joi.string().min(product.min).max(product.max).required(),
+      product: Joi.string().max(product.max).required(),
       numberOfSuggestions: Joi.number().min(numberOfSuggestions.min).max(numberOfSuggestions.max).required(),
     }),
   };

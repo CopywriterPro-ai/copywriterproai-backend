@@ -8,7 +8,8 @@ const paraphrase = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
     }),
   };
 };
@@ -18,7 +19,8 @@ const grammarFixer = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
     }),
   };
 };
@@ -28,7 +30,8 @@ const simplifier = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
     }),
   };
 };
@@ -38,7 +41,8 @@ const summarizer = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
     }),
   };
 };
@@ -48,7 +52,8 @@ const changeTone = (subscription) => {
   return {
     body: Joi.object().keys({
       task: Joi.valid(task).required(),
-      userText: Joi.string().min(userText.min).max(userText.max).required(),
+      // userText: Joi.string().min(userText.min).max(userText.max).required(),
+      userText: Joi.string().max(userText.max).required(),
       tone: Joi.string()
         .required()
         .valid(...tone),
