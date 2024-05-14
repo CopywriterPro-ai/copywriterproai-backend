@@ -64,7 +64,7 @@ const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, 
 
 const filterContents = async (content) => {
   const response = await openai.complete({
-    engine: 'content-filter-alpha-c4',
+    engine: 'gpt-4-turbo-2024-04-09',
     prompt: `${content}\n--\nLabel:`,
     max_tokens: 1,
     temperature: 0,
