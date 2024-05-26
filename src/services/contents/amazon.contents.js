@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
+const { generateContentUsingGPT4, removeSpaces, storeData, formatResponse } = require('../content.service');
 
 const generateAmazonProductListings = async (
   userId,
@@ -8,10 +8,24 @@ const generateAmazonProductListings = async (
 ) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Product Categories: ${removeSpaces(productCategories)}
-productFeatures: ${removeSpaces(productFeatures)}`;
+Product Features: ${removeSpaces(productFeatures)}`;
 
-  const prompt = `Write Amazon Product Description
+  const prompt = `You are an expert in creating Amazon product descriptions. Your task is to write a compelling, SEO-friendly product description for the given product. Please follow the guidelines below to ensure the highest quality.
 
+Guidelines:
+1. **Product Name:** Include the product name at the beginning.
+2. **Product Categories:** List the product categories.
+3. **Product Features:** Highlight key features, focusing on benefits and unique selling points.
+4. **Description:**
+   - Start with a strong opening statement that grabs attention.
+   - Provide detailed descriptions of the product features.
+   - Use bullet points for clarity and readability.
+   - Include any specifications, dimensions, and other relevant details.
+   - Ensure the content is engaging and persuasive, encouraging potential customers to purchase.
+   - Maintain a professional and informative tone.
+   - Optimize the description with relevant keywords for SEO.
+
+Example:
 Product Name: ZINUS Shalini Upholstered Platform Bed
 Product Categories: Beds
 Product Features: Twin size supports a maximum weight capacity of 350 pounds, slats are spaced 2.7 inches apart, 2-person assembly in under an hour, Wooden slats
@@ -30,14 +44,14 @@ Description:`;
   const openAPIInformationsList = [];
   const amazonProductListingsList = [];
 
-  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const amazonProductListings = await generateContentUsingGPT3('davinci-instruct-beta', 500, prompt, 0.9, 0, 0, ['\n\n']);
+    const amazonProductListings = await generateContentUsingGPT4('gpt-4o', 500, prompt, 0.9, 0, 0, ['\n\n']);
     const { id, object, created, model, choices } = amazonProductListings;
 
     openAPIInformationsList.push({ id, object, created, model });
-    amazonProductListingsList.push(choices[0].text.trim());
+    amazonProductListingsList.push(choices[0].message.content.trim());
   }
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,

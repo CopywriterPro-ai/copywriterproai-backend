@@ -10,7 +10,7 @@ const { User } = require('../models');
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 const googleCallbackURL = isDevelopment
-  ? 'http://localhost:8081/v1/auth/google/callback'
+  ? 'http://localhost:8080/v1/auth/google/callback'
   : 'https://api.copywriterpro.ai/v1/auth/google/callback';
 
 const jwtOptions = {

@@ -2,25 +2,33 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 const {
-  generateContentUsingGPT3,
+  generateContentUsingGPT4,
   removeSpaces,
   processListContents,
   storeData,
   formatResponse,
 } = require('../content.service');
 
+// Blog Contents
 const blogIdea = async (userId, userEmail, { productName, productDescription, numberOfSuggestions = 1 }) => {
-  const userPrompt = `Name: ${removeSpaces(productName)}
-Description: ${removeSpaces(productDescription)}`;
+  const userPrompt = `Product Name: ${removeSpaces(productName)}
+Product Description: ${removeSpaces(productDescription)}`;
 
-  const prompt = `Generate 5 BLOG IDEAS for following Product that can generate leads.
+  const prompt = `You are a creative and insightful blog writer. Your task is to generate high-quality blog ideas that can generate leads for the given product. Use your expertise to create engaging, innovative, and relevant content that effectively communicates the intended message to the target audience.
+
+Guidelines:
+1. **Relevance:** Each blog idea should be directly related to the product and its features.
+2. **Engagement:** Ideas should be designed to capture the reader’s interest and encourage them to read further.
+3. **Innovation:** Propose ideas that are not just informative but also entertaining or thought-provoking.
+4. **Lead Generation:** Focus on how each blog idea can help generate leads, such as including calls to action or highlighting benefits that solve customer pain points.
+5. **Clarity and Conciseness:** Ensure each idea is clear and concise, providing a brief explanation for each idea.
 
 ${userPrompt}
 
 List of ${numberOfSuggestions} BLOG IDEAS:
 1.`;
 
-  const blogIdeas = await generateContentUsingGPT3('text-davinci-003', 100, prompt, 1.0, 1.0, 1.0, [
+  const blogIdeas = await generateContentUsingGPT4('gpt-4o', 100, prompt, 1.0, 1.0, 1.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
@@ -30,14 +38,21 @@ List of ${numberOfSuggestions} BLOG IDEAS:
 const blogHeadline = async (userId, userEmail, { about, numberOfSuggestions = 1 }) => {
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}`;
 
-  const prompt = `Generate attention-grabbing blog headlines relevant to BLOG ABOUT that can persuade and hook people to the following Blog -
+  const prompt = `You are a skilled and creative blog writer. Your task is to generate attention-grabbing blog headlines relevant to the given topic. Use your expertise to create engaging, clear, and compelling headlines that effectively communicate the intended message to the target audience.
+
+Guidelines:
+1. **Relevance:** Each headline should accurately reflect the blog content.
+2. **Engagement:** Headlines should be catchy and encourage clicks.
+3. **Clarity:** Headlines should be clear and concise.
+4. **Emotional Appeal:** Use words that evoke curiosity or strong emotions.
+5. **Unique Value:** Ensure each headline stands out from the competition.
 
 ${userPrompt}
 
 List of ${numberOfSuggestions} BLOG HEADLINES:
 1.`;
 
-  const blogHeadlines = await generateContentUsingGPT3('text-davinci-003', 100, prompt, 1.0, 1.0, 1.0, [
+  const blogHeadlines = await generateContentUsingGPT4('gpt-4o', 100, prompt, 1.0, 1.0, 1.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
@@ -48,7 +63,14 @@ const blogIntro = async (userId, userEmail, { about, headline, numberOfSuggestio
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
-  const prompt = `Write a long descriptive, sweet and captivating BLOG INTRODUCTION.
+  const prompt = `You are a proficient and engaging blog writer. Your task is to write a long descriptive, captivating BLOG INTRODUCTION. The introduction should draw the reader in, provide an overview of what the blog will cover, and explain why the reader should care about the topic.
+
+Guidelines:
+1. **Engagement:** Start with a hook to grab the reader’s attention.
+2. **Relevance:** Clearly state what the blog is about.
+3. **Value Proposition:** Explain the benefit to the reader.
+4. **Clarity and Conciseness:** Be clear and concise while providing enough detail to set the stage for the rest of the blog.
+5. **Tone and Style:** Maintain a professional and engaging tone that resonates with the target audience.
 
 ${userPrompt}
 BLOG INTRODUCTION (A brief description of what the blog is about and why someone might want to read it):
@@ -58,10 +80,10 @@ BLOG INTRODUCTION (A brief description of what the blog is about and why someone
   const blogIntrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogIntros = await generateContentUsingGPT3('text-davinci-003', 450, prompt, 1.0, 1.0, 1.0, ['\n\n\n']);
+    const blogIntros = await generateContentUsingGPT4('gpt-4o', 450, prompt, 1.0, 1.0, 1.0, ['\n\n\n']);
     const { id, object, created, model, choices } = blogIntros;
     openAPIInformationsList.push({ id, object, created, model });
-    blogIntrosList.push(choices[0].text.trim());
+    blogIntrosList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(
@@ -81,34 +103,43 @@ const blogOutline = async (userId, userEmail, { about, headline, numberOfPoints,
   let userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
-  const prompt = `Example of BLOG OUTLINE.
+  const prompt = `You are an experienced blog writer. Your task is to create a comprehensive BLOG OUTLINE for the following topic. Ensure each point is clear, concise, and logically organized. Highlight the main topics and subtopics that will be covered in the blog.
+
+Guidelines:
+1. **Structure:** Use a logical and easy-to-follow structure.
+2. **Clarity:** Each point should be clear and specific.
+3. **Relevance:** Ensure all points are relevant to the blog topic.
+4. **Detail:** Provide enough detail to give a clear direction for the blog.
+5. **Engagement:** Ensure the outline will help create engaging and informative content.
+
+Example of BLOG OUTLINE:
 
 BLOG OUTLINE (5 points):
 1. What is Slack and How is it helping us?
 2. How Flexible and Easy to use Slack is?
 3. Why did all of a sudden it is becoming highly popular?
 4. What makes it unique from other similar apps (if any)?
-5. What are the methods to integrate slack into current development process?
+5. What are the methods to integrate Slack into current development processes?
 
-Now write a BLOG OUTLINE for the following blog like Example.
+Now write a BLOG OUTLINE for the following blog like the example.
 
 ${userPrompt}
 BLOG OUTLINE (${numberOfPoints} points):
 1.`;
-  // console.log(prompt);
+
   const openAPIInformationsList = [];
   const blogOutlinesList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogOutlines = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 1, 0.5, 0.5, [
+    const blogOutlines = await generateContentUsingGPT4('gpt-4o', 200, prompt, 1, 0.5, 0.5, [
       '\n\n',
       `${numberOfPoints + 1}. `,
     ]);
     const { id, object, created, model, choices } = blogOutlines;
     openAPIInformationsList.push({ id, object, created, model });
-    choices[0].text = `1. ${choices[0].text}`;
+    choices[0].message.content = `1. ${choices[0].message.content}`;
 
-    const cleanedBlogOutline = choices[0].text
+    const cleanedBlogOutline = choices[0].message.content
       .split('\n')
       .map((text) => text.substr(text.indexOf('. ') + 2, text.length))
       .join('\n');
@@ -137,22 +168,25 @@ const blogTopic = async (userId, userEmail, { about, headline, userText, numberO
 BLOG HEADLINE: ${removeSpaces(headline)}
 BLOG TOPIC: ${removeSpaces(userText)}`;
 
-  const prompt = `BLOG ABOUT: ${removeSpaces(about)}
-BLOG HEADLINE: ${removeSpaces(headline)}
+  const prompt = `You are a knowledgeable blog writer. Your task is to write a medium-sized paragraph on the following BLOG TOPIC with valuable information. Ensure the paragraph is informative, engaging, and provides clear insights or actionable advice.
 
-Write a medium sized paragraph on the following BLOG TOPIC with valuable information.
+Guidelines:
+1. **Engagement:** Capture the reader’s interest from the start.
+2. **Clarity:** Be clear and concise.
+3. **Value:** Provide valuable information or insights.
+4. **Relevance:** Ensure the content is directly related to the blog topic.
 
-BLOG TOPIC: ${removeSpaces(userText)}
+${userPrompt}
 `;
 
   const openAPIInformationsList = [];
   const blogTopicWritingsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogTopicWriting = await generateContentUsingGPT3('text-davinci-003', 500, prompt, 0.8, 0, 0, ['\n\n\n']);
+    const blogTopicWriting = await generateContentUsingGPT4('gpt-4o', 500, prompt, 0.8, 0, 0, ['\n\n\n']);
     const { id, object, created, model, choices } = blogTopicWriting;
     openAPIInformationsList.push({ id, object, created, model });
-    blogTopicWritingsList.push(choices[0].text.trim());
+    blogTopicWritingsList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(
@@ -173,7 +207,14 @@ const blogOutro = async (userId, userEmail, { about, headline, numberOfSuggestio
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
-  const prompt = `Write a short, sweet, and engaging BLOG CONCLUSION maintaining context for the following blog.
+  const prompt = `You are a skilled blog writer. Your task is to write a short, sweet, and engaging BLOG CONCLUSION maintaining context for the following blog. The conclusion should summarize the main points, reinforce the value of the content, and provide a clear call to action.
+
+Guidelines:
+1. **Summarize:** Briefly summarize the main points of the blog.
+2. **Reinforce Value:** Reinforce the value of the content.
+3. **Call to Action:** Include a clear and compelling call to action.
+4. **Clarity:** Be clear and concise.
+5. **Engagement:** End on an engaging note to leave a lasting impression.
 
 ${userPrompt}
 BLOG CONCLUSION:
@@ -183,10 +224,10 @@ BLOG CONCLUSION:
   const blogOutrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogOutros = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 0.7, 1.0, 1.0, ['\n\n']);
+    const blogOutros = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.7, 1.0, 1.0, ['\n\n']);
     const { id, object, created, model, choices } = blogOutros;
     openAPIInformationsList.push({ id, object, created, model });
-    blogOutrosList.push(choices[0].text.trim());
+    blogOutrosList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(
@@ -212,13 +253,20 @@ const shortBlog = async (userId, userEmail, { about, headline, keywords }) => {
 
   const userPrompt = `BLOG TOPIC: ${about}`;
 
-  const prompt = `Write a very short blog (300 to 400 words) on "${about}"
+  const prompt = `You are a proficient blog writer. Your task is to write a very short blog (300 to 400 words) on the given topic. Ensure the blog is concise, engaging, and provides valuable insights. Use the following guidelines to optimize the content for readability.
+
+Guidelines:
+1. **Conciseness:** Keep the blog within 300 to 400 words.
+2. **Engagement:** Write in a way that captures and retains the reader’s interest.
+3. **Value:** Provide valuable information or insights.
+4. **Clarity:** Ensure the content is clear and easy to read.
+5. **Structure:** Use short paragraphs and bullet points where appropriate.
 
 Blog headline: ${headline}
 
 `;
 
-  const _blog = await generateContentUsingGPT3('text-davinci-003', 600, prompt, 0.7, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT4('gpt-4o', 600, prompt, 0.7, 0, 0, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
 
@@ -228,7 +276,7 @@ Blog headline: ${headline}
     'short-blog',
     userPrompt,
     { id, object, created, model },
-    choices[0].text
+    choices[0].message.content
   );
 
   const userResponse = formatResponse(_id, 'short-blog', generatedContents);
@@ -246,7 +294,13 @@ const longBlog = async (userId, userEmail, { about, headline, keywords, contents
 
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}`;
 
-  const prompt = `Continue writing the following long long descriptive blog.
+  const prompt = `You are an experienced blog writer. Your task is to continue writing the following long descriptive blog. Ensure the continuation maintains the same tone and style, and provides valuable insights or information.
+
+Guidelines:
+1. **Consistency:** Maintain the same tone and style as the initial content.
+2. **Engagement:** Keep the reader engaged with compelling content.
+3. **Value:** Provide valuable insights or information.
+4. **Clarity:** Ensure the content is clear and easy to read.
 
 ${userPrompt}
 
@@ -254,7 +308,7 @@ Blog headline: ${headline}
 
 ${contents}`;
 
-  const _blog = await generateContentUsingGPT3('text-davinci-003', 256, prompt, 1.0, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT4('gpt-4o', 256, prompt, 1.0, 0, 0, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
 
@@ -264,7 +318,7 @@ ${contents}`;
     'long-blog',
     userPrompt,
     { id, object, created, model },
-    choices[0].text
+    choices[0].message.content
   );
 
   const userResponse = formatResponse(_id, 'long-blog', generatedContents);
@@ -288,21 +342,22 @@ const blogFromOutline = async (userId, userEmail, { headline, intro, outline }) 
 BLOG INTRO: ${intro}
 BLOG OUTLINE: ${convertedOutline}`;
 
-  const prompt = `BLOG HEADLINE: ${headline}
+  const prompt = `You are a skilled blog writer. Your task is to write a blog based on the given outline. Ensure the content is engaging, informative, and follows the structure provided by the outline.
 
-BLOG:
+Guidelines:
+1. **Structure:** Follow the provided outline closely.
+2. **Engagement:** Keep the reader engaged with compelling content.
+3. **Value:** Provide valuable insights or information.
+4. **Clarity:** Ensure the content is clear and easy to read.
+5. **Consistency:** Maintain a consistent tone and style throughout the blog.
 
-${intro}
-
-Now write on the following points.
-
-${convertedOutline}
+${userPrompt}
 
 ${outline[0]}
 
 `;
 
-  const _blog = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT4('gpt-4o', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
 
@@ -312,7 +367,7 @@ ${outline[0]}
     'blog-from-outline',
     userPrompt,
     { id, object, created, model },
-    choices[0].text
+    choices[0].message.content
   );
 
   const userResponse = formatResponse(_id, 'blog-from-outline', `${outline[0]}\n${generatedContents}`);
@@ -330,5 +385,4 @@ module.exports = {
   shortBlog,
   longBlog,
   blogFromOutline,
-  // blogRewriter,
 };

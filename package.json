@@ -44,7 +44,7 @@
     "multer": "^1.4.2",
     "node-cache": "^5.1.2",
     "nodemailer": "^6.5.0",
-    "openai-api": "^1.1.2",
+    "openai": "^4.47.1",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
@@ -63,6 +63,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
     "lint-staged": "^10.5.4",
+    "nodemon": "^3.1.1",
     "prettier": "^2.2.1"
   },
   "nodemonConfig": {

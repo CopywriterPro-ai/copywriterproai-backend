@@ -2,7 +2,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 const {
-  generateContentUsingGPT3,
+  generateContentUsingGPT4,
   removeSpaces,
   storeData,
   processListContents,
@@ -12,16 +12,23 @@ const {
 const paraphrase = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Paraphrase the Original text.
+  const prompt = `You are a professional writer with expertise in paraphrasing content. Your task is to paraphrase the original text in multiple creative ways while retaining the original meaning.
 
+Guidelines:
+1. **Maintain Meaning:** Ensure the paraphrased content retains the original meaning.
+2. **Creativity:** Provide creative and varied phrasings.
+3. **Clarity:** Ensure the paraphrased content is clear and easy to understand.
+4. **Variety:** Offer different structures and wording for each paraphrase.
+
+Examples:
 Original: Her life spanned years of incredible change for women as they gained more rights than ever before.
 Paraphrase: She lived through the exciting era of women's liberation.
 
 Original: ${userPrompt}
-3 unique way(s) to Paraphrase:
+3 unique ways to Paraphrase:
 1.`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 0.9, 0.9, 0.9, ['\n\n']);
+  const paraphrasedContents = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.9, 0.9, 0.9, ['\n\n']);
 
   return processListContents(userId, userEmail, 'paraphrasing', userPrompt, paraphrasedContents);
 };
@@ -29,12 +36,18 @@ Original: ${userPrompt}
 const grammarFixer = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Correct this to standard English:
+  const prompt = `You are an expert in English grammar. Your task is to correct the given text to standard English.
 
+Guidelines:
+1. **Correct Grammar:** Fix any grammatical errors.
+2. **Clarity:** Ensure the text is clear and easy to understand.
+3. **Conciseness:** Keep the text concise and to the point.
+
+Original Text:
 ${userPrompt}
-`;
+Corrected Text:`;
 
-  const fixedContent = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  const fixedContent = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   fixedContent.choices[0].text = fixedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = fixedContent;
@@ -54,11 +67,18 @@ ${userPrompt}
 const simplifier = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `My second grader asked me what this passage means:
+  const prompt = `You are a professional writer with expertise in simplifying complex texts. Your task is to rephrase the given passage in plain language that a second grader can understand.
+
+Guidelines:
+1. **Maintain Meaning:** Ensure the simplified content retains the original meaning.
+2. **Clarity:** Use simple and clear language.
+3. **Engagement:** Make the text engaging and easy to read for young readers.
+
+Original Text:
 """
 ${userPrompt}
 """
-I rephrased it for him, in plain language a second grader can understand:
+Simplified Text for a Second Grader:
 """
 `;
 
@@ -67,7 +87,7 @@ I rephrased it for him, in plain language a second grader can understand:
 
   let numberOfSuggestions = 3;
   while (numberOfSuggestions--) {
-    const simplifiedContents = await generateContentUsingGPT3('text-davinci-003', 150, prompt, 0.7, 0.0, 0.0, ['"""']);
+    const simplifiedContents = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.0, 0.0, ['"""']);
     const { id, object, created, model, choices } = simplifiedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -90,9 +110,16 @@ I rephrased it for him, in plain language a second grader can understand:
 const summarizer = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `${userPrompt}
+  const prompt = `You are a professional writer with expertise in summarizing content. Your task is to summarize the given text into a concise and clear summary.
 
-Tl;dr
+Guidelines:
+1. **Maintain Meaning:** Ensure the summary retains the original meaning.
+2. **Clarity:** Use clear and concise language.
+3. **Conciseness:** Keep the summary brief and to the point.
+
+Original Text:
+${userPrompt}
+Summary:
 `;
 
   const openAPIInformationsList = [];
@@ -100,7 +127,7 @@ Tl;dr
 
   let numberOfSuggestions = 3;
   while (numberOfSuggestions--) {
-    const summarizedContents = await generateContentUsingGPT3('text-davinci-003', 100, prompt, 0.7, 0.0, 0.0, ['\n\n']);
+    const summarizedContents = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.7, 0.0, 0.0, ['\n\n']);
     const { id, object, created, model, choices } = summarizedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -123,8 +150,14 @@ Tl;dr
 const changeTone = async (userId, userEmail, { userText, tone }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Change the tone -
+  const prompt = `You are a professional writer with expertise in changing the tone of text. Your task is to change the tone of the given text into the specified tone in multiple unique ways.
 
+Guidelines:
+1. **Maintain Meaning:** Ensure the changed text retains the original meaning.
+2. **Clarity:** Use clear and concise language.
+3. **Tone Appropriateness:** Ensure the changed tone matches the specified tone.
+
+Examples:
 Original: The company really needs to work on its customer service.
 Humorous: Company management should take a look at their customer service.
 
@@ -138,7 +171,7 @@ Original: ${userPrompt}
 ${tone} (3 unique ways):
 1.`;
 
-  const fixedContent = await generateContentUsingGPT3('text-davinci-003', 200, prompt, 0.8, 0.0, 0.0, ['\n\n']);
+  const fixedContent = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.8, 0.0, 0.0, ['\n\n']);
 
   return processListContents(userId, userEmail, 'change-tone', userPrompt, fixedContent);
 };

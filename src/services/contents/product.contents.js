@@ -1,19 +1,21 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT3, removeSpaces, storeData, formatResponse } = require('../content.service');
+const { generateContentUsingGPT4, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const productDescription = async (userId, userEmail, { productName, productType, numberOfSuggestions  }) => {
+const productDescription = async (userId, userEmail, { productName, productType, numberOfSuggestions }) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Product Type: ${removeSpaces(productType)}`;
 
-  const prompt = `Make the following Text SEO-friendly and engaging.
+  const prompt = `You are an expert in writing SEO-friendly and engaging product descriptions. Your task is to craft a compelling short description based on the given product name and type. Ensure the description is concise, highlights key features, and includes SEO keywords.
+
+Examples:
 Product Name: LG KS-Q18ENZA air conditioner
 Product Type: Air Conditioner
-Short Description: LG KS-Q18ENZA 5 star rated split air conditioner with auto clean that's prevent bacteria or mould from breeding and eliminate potential odours from your features include - micro dust protection filter, dual inverter compressor, gold fin condenser, ocean black protection and many more. LG's DUAL Inverter Compressor with Varied Speed Dual Rotary Motor has a wider rotational frequency which saves more energy along with higher speed cooling range than conventional compressors. This ensures that our DUAL Inverter ACs cool faster, last longer and run quieter.
+Short Description: LG KS-Q18ENZA 5 star rated split air conditioner with auto clean that prevents bacteria or mold from breeding and eliminates potential odors. Features include a micro dust protection filter, dual inverter compressor, gold fin condenser, and ocean black protection. LG's DUAL Inverter Compressor with Varied Speed Dual Rotary Motor has a wider rotational frequency, saving more energy while providing faster and quieter cooling. This ensures that our DUAL Inverter ACs cool faster, last longer, and run quieter.
 
 Product Name: Kennedy Barrel Chair
 Product Type: Chair, Barrel Chair
-Short Description:: The Kennedy Barrel Chair is one of Sean and Catherine's favorite pieces. This oversized chair is perfect for those looking t pend hours sprawled out reading their favorite book or for those who just want to cuddle with the one they I. The Kennedy Barrel Chair's handpicked fabric has a special sheen that creates a look of total elegance.
+Short Description: The Kennedy Barrel Chair is a favorite for its oversized design, perfect for hours of reading or cuddling. Handpicked fabric with a special sheen creates a look of total elegance. Ideal for those who appreciate comfort and style.
 
 ${userPrompt}
 Short Description:`;
@@ -22,15 +24,13 @@ Short Description:`;
   const productDescriptionSEOFriendlyList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const productDescriptionSEOFriendly = await generateContentUsingGPT3('davinci', 50, prompt, 0.5, 0, 0, [
-      '\n',
-      'Short Description:',
-    ]);
+    const productDescriptionSEOFriendly = await generateContentUsingGPT4('davinci', 50, prompt, 0.5, 0, 0, ['\n', 'Short Description:']);
     const { id, object, created, model, choices } = productDescriptionSEOFriendly;
 
     openAPIInformationsList.push({ id, object, created, model });
     productDescriptionSEOFriendlyList.push(choices[0].text.trim());
   }
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
@@ -45,40 +45,35 @@ Short Description:`;
   return userResponse;
 };
 
-const makeProductDescriptionSEOFriendly = async (
-  userId,
-  userEmail,
-  { productName, productType, targetAudience, productBenefits, productFeatures, numberOfSuggestions }
-) => {
+const makeProductDescriptionSEOFriendly = async (userId, userEmail, { productName, productType, targetAudience, productBenefits, productFeatures, numberOfSuggestions }) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Product Type: ${removeSpaces(productType)}
-Product Features:${removeSpaces(productFeatures)}
+Product Features: ${removeSpaces(productFeatures)}
 Product Benefits: ${removeSpaces(productBenefits)}
 Target Audience: ${removeSpaces(targetAudience)}`;
 
-  const prompt = `Write Product description for following Product details
-Product Name: LG KS-Q18ENZA air conditioner\n
-Product Type: Air conditioner, Home Appliance\n
-Product Features: DUAL Inverter | High Temperature cooling Score of 5\n100% Copper with Ocean Black Protection\nHi Grooved Copper\nActive Energy Control\nLow Refrigerant Detection
-Product Benefits: Better Sleep\nPrevents Electronics From Overheating\nmproves Work Performance\nReduces the Risk of Dehydration\n
-Target Audience: Everyone, Job Holders, Businessman
-Description: LG KS-Q18ENZA 5 star rated split air conditioner with auto clean that's prevent bacteria or mould from breeding and eliminate potential odours from your features include - micro dust protection filter, dual inverter compressor, gold fin condenser, ocean black protection and many more. LG's DUAL Inverter Compressor with Varied Speed Dual Rotary Motor has a wider rotational frequency which saves more energy along with higher speed cooling range than conventional compressors. This ensures that our DUAL Inverter ACs cool faster, last longer and run quieter.\n
+  const prompt = `You are an expert in writing SEO-friendly product descriptions. Your task is to write a detailed product description based on the given product name, type, features, benefits, and target audience. Ensure the description is engaging, highlights key features, and includes SEO keywords.
+
+Examples:
+Product Name: LG KS-Q18ENZA air conditioner
+Product Type: Air Conditioner, Home Appliance
+Product Features: DUAL Inverter | High Temperature cooling Score of 5, 100% Copper with Ocean Black Protection, Hi Grooved Copper, Active Energy Control, Low Refrigerant Detection
+Product Benefits: Better Sleep, Prevents Electronics From Overheating, Improves Work Performance, Reduces the Risk of Dehydration
+Target Audience: Everyone, Job Holders, Businessmen
+Description: LG KS-Q18ENZA 5 star rated split air conditioner with auto clean that prevents bacteria or mold from breeding and eliminates potential odors. Features include a micro dust protection filter, dual inverter compressor, gold fin condenser, ocean black protection, and many more. LG's DUAL Inverter Compressor with Varied Speed Dual Rotary Motor has a wider rotational frequency, saving more energy while providing faster and quieter cooling. This ensures that our DUAL Inverter ACs cool faster, last longer, and run quieter.
 
 ${userPrompt}
 Description:`;
 
   const openAPIInformationsList = [];
-  const roductDescriptionSEOFriendlyList = [];
+  const productDescriptionSEOFriendlyList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedProductDescription = await generateContentUsingGPT3('davinci-instruct-beta', 300, prompt, 0.7, 0.2, 0.3, [
-      '\n',
-      'Description:',
-    ]);
+    const generatedProductDescription = await generateContentUsingGPT4('gpt-4oo', 300, prompt, 0.7, 0.2, 0.3, ['\n', 'Description:']);
     const { id, object, created, model, choices } = generatedProductDescription;
 
     openAPIInformationsList.push({ id, object, created, model });
-    roductDescriptionSEOFriendlyList.push(choices[0].text.trim());
+    productDescriptionSEOFriendlyList.push(choices[0].text.trim());
   }
 
   const { _id, generatedContents } = await storeData(
@@ -87,8 +82,9 @@ Description:`;
     'seo-friendly-product-description',
     userPrompt,
     openAPIInformationsList,
-    roductDescriptionSEOFriendlyList
+    productDescriptionSEOFriendlyList
   );
+
   const userResponse = formatResponse(_id, 'seo-friendly-product-description', generatedContents);
 
   return userResponse;
@@ -99,23 +95,22 @@ const productReview = async (userId, userEmail, { product, rating, comment, numb
 Rating: ${removeSpaces(rating)}
 Comment: ${removeSpaces(comment)}`;
 
-  const prompt = `Write Review from Comment for following Product
+  const prompt = `You are an expert in writing engaging product reviews. Your task is to write a review based on the given product, rating, and comment. Ensure the review is detailed, highlights key features, and reflects the given rating and comment.
+
+Examples:
+Product: LG KS-Q18ENZA air conditioner
+Rating: 5 stars
+Comment: Excellent cooling, very energy efficient, and quiet operation.
+Review: The LG KS-Q18ENZA air conditioner is fantastic! It provides excellent cooling, is very energy efficient, and operates quietly. The dual inverter compressor ensures faster and quieter cooling, making it a great addition to any home. Highly recommend!
 
 ${userPrompt}
 Review:`;
 
-  let review;
-
   const openAPIInformationsList = [];
   const productReviewList = [];
 
-  // eslint-disable-next-line no-param-reassign
-  while (numberOfSuggestions--) {
-    review = await generateContentUsingGPT3('davinci', 100, prompt, 0.3, 0.2, 0.1, ['\n']);
-    // if (review.choices && review.choices[0].text.trim() !== '') {
-    //   review.choices[0].text = review.choices[0].text.trim();
-    //   break;
-    // }
+  for (let i = 0; i < numberOfSuggestions; i++) {
+    const review = await generateContentUsingGPT4('davinci', 100, prompt, 0.3, 0.2, 0.1, ['\n']);
     const { id, object, created, model, choices } = review;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -130,6 +125,7 @@ Review:`;
     openAPIInformationsList,
     productReviewList
   );
+
   const userResponse = formatResponse(_id, 'product-review', generatedContents);
 
   return userResponse;
@@ -139,8 +135,9 @@ const generateProductName = async (userId, userEmail, { productDescription, keyw
   const userPrompt = `Product description: ${removeSpaces(productDescription)}
 Keywords: ${removeSpaces(keywords)}`;
 
-  const prompt = `This is a product name generator
+  const prompt = `You are an expert in generating product names based on the given product description and keywords. Your task is to create unique and engaging product names that reflect the product's features and benefits.
 
+Examples:
 Product description: A home milkshake maker
 Keywords: fast, healthy, compact
 Product names: HomeShaker, Fit Shaker, QuickShake, Shake Maker
@@ -156,12 +153,13 @@ Product names:`;
   const generateProductNameList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const productName = await generateContentUsingGPT3('davinci', 60, prompt, 0.5, 0, 0, ['\n', 'Product names:']);
+    const productName = await generateContentUsingGPT4('davinci', 60, prompt, 0.5, 0, 0, ['\n', 'Product names:']);
     const { id, object, created, model, choices } = productName;
 
     openAPIInformationsList.push({ id, object, created, model });
     generateProductNameList.push(choices[0].text.trim());
   }
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
