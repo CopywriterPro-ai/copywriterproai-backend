@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-use-before-define */
-const OpenAI = require('openai-api');
+const OpenAI = require('openai');
 const { v4: uuidv4 } = require('uuid');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
@@ -10,101 +10,85 @@ const config = require('../config/config');
 const { openAIAPIKey } = config.openAI;
 const openai = new OpenAI(openAIAPIKey);
 
-const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop) => {
-  // let filterLabel = await filterContents(prompt);
-  // if (filterLabel === '2') {
-  //   throw new ApiError(httpStatus.BAD_REQUEST, 'Input contains unsafe contents!');
-  // }
-
-  // let gptResponse;
-  // while(1) {
-  //   gptResponse = await openai.complete({
-  //     engine,
-  //     prompt,
-  //     maxTokens,
-  //     temperature,
-  //     topP: 1,
-  //     presencePenalty,
-  //     frequencyPenalty,
-  //     bestOf: 1,
-  //     n: 1,
-  //     stream: false,
-  //     stop,
-  //   });
-  // filterLabel = await filterContents(gptResponse.data.choices[0].text);
-  // if (filterLabel !== '2') break;
-  // }
-  // return gptResponse.data;
-
+const generateContentUsingGPT4 = async (model, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop) => {
   let gptResponse;
   let count = 0; // will try to generate content for maximum 10 times
 
-  while (1) {
-    gptResponse = await openai.complete({
-      engine,
-      prompt,
-      maxTokens,
-      temperature,
-      topP: 1,
-      presencePenalty,
-      frequencyPenalty,
-      bestOf: 1,
-      n: 1,
-      stream: false,
-      stop,
-    });
+  while (count < 10) {
+    try {
+      gptResponse = await openai.chat.completions.create({
+        model: model,
+        messages: [
+          {
+            role: "system",
+            content: `You are an expert SEO-focused blog writer and professional copywriter for social media marketing. You also provide solutions for LinkedIn bio generation. Your task is to generate high-quality content tailored for various platforms, including LinkedIn bios. Use your expertise to create engaging, optimized, and professional content that aligns with the latest SEO practices and effectively communicates the intended message to the target audience.\n
+              Guidelines:
+              1. **SEO-Focused Content:**
+                 - Ensure the content is optimized for search engines.
+                 - Use relevant keywords naturally throughout the content.
+                 - Include meta descriptions that accurately summarize the content.
+                 - Utilize header tags (H1, H2, H3) to structure the content logically.
+                 - Ensure the content is original and free from plagiarism.
+                 - Optimize images with appropriate alt text.
+              2. **Social Media Marketing:**
+                 - Create compelling, shareable content for social media platforms.
+                 - Tailor content to fit the character limits of each platform (e.g., Twitter, Facebook, LinkedIn, Instagram).
+                 - Include calls-to-action (CTAs) to encourage engagement.
+                 - Use hashtags strategically to increase visibility.
+                 - Maintain a consistent brand voice across all social media content.
+                 - Create visually appealing content with the use of images, videos, and infographics.
+              3. **LinkedIn Bio Generation:**
+                 - Provide a well-crafted LinkedIn bio that highlights the individual's professional achievements, skills, and experiences.
+                 - Keep the bio concise and impactful.
+                 - Start with a strong opening statement that captures attention.
+                 - Highlight key accomplishments and quantify them where possible (e.g., "Increased website traffic by 50%").
+                 - Emphasize unique value propositions and expertise areas.
+                 - Include relevant keywords to enhance searchability on LinkedIn.
+                 - End with a call to action or statement of professional goals.
+              4. **Tone and Style:**
+                 - Maintain a professional and engaging tone.
+                 - Use language that resonates with the target audience.
+                 - Be informative yet persuasive.
+                 - Ensure clarity and readability.
+                 - Avoid jargon unless it's appropriate for the target audience.
+                 - Use active voice and compelling language.
+              5. **Additional Best Practices:**
+                 - Proofread the content to eliminate any grammatical or typographical errors.
+                 - Ensure the content aligns with the brand’s overall messaging and values.
+                 - Stay up-to-date with the latest SEO and social media trends and incorporate them into the content.
+                 - Use analytics to measure the performance of the content and make data-driven improvements.
+                 - Incorporate storytelling elements to make the content more relatable and engaging.`,
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        max_tokens: maxTokens,
+        temperature,
+        top_p: 1,
+        presence_penalty: presencePenalty,
+        frequency_penalty: frequencyPenalty,
+        stop,
+      });
 
-    if (
-      count === 10 ||
-      (gptResponse.data.choices && gptResponse.data.choices[0].text.trim().replace(/\n\s*\n/g, '\n').length >= 5)
-    ) {
-      break;
+      if (gptResponse.choices && gptResponse.choices[0].message.content.trim().replace(/\n\s*\n/g, '\n').length >= 5) {
+        break;
+      }
+    } catch (error) {
+      console.error(`Error generating content: ${error.message}`);
     }
     count += 1;
   }
-  gptResponse.data.choices[0].text = gptResponse.data.choices[0].text.trim().replace(/\n\s*\n/g, '\n');
 
-  return gptResponse.data;
+  if (!gptResponse || !gptResponse.choices || !gptResponse.choices[0] || !gptResponse.choices[0].message) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to generate content');
+  }
+
+  gptResponse.choices[0].message.content = gptResponse.choices[0].message.content.trim().replace(/\n\s*\n/g, '\n');
+
+  return gptResponse;
 };
-
-// const filterContents = async (content) => {
-//   const response = await openai.complete({
-//     engine: 'content-filter-alpha-c4',
-//     prompt: `${content}\n--\nLabel:`,
-//     max_tokens: 1,
-//     temperature: 0,
-//     topP: 1,
-//     presence_penalty: 0,
-//     frequency_penalty: 0,
-//     logprobs: 10,
-//   });
-
-//   let outputLabel = response.data.choices[0].text;
-
-//   const toxicThreshold = -0.355;
-
-//   if (outputLabel === '2') {
-//     const logprobs = response.data.choices[0].logprobs.top_logprobs[0];
-
-//     if (logprobs['2'] < toxicThreshold) {
-//       const logprob0 = logprobs['0'];
-//       const logprob1 = logprobs['1'];
-
-//       if (logprob0 && logprob1) {
-//         outputLabel = logprob0 >= logprob1 ? '0' : '1';
-//       } else if (logprob0) {
-//         outputLabel = '0';
-//       } else if (logprob1) {
-//         outputLabel = '1';
-//       }
-//     }
-//   }
-//   if (!['0', '1', '2'].includes(outputLabel)) {
-//     outputLabel = '2';
-//   }
-
-//   return outputLabel;
-// };
 
 const formatContents = async (userId, userEmail, documentType, prompt, apiInfos, choices) => {
   const contentInformation = {
@@ -128,24 +112,9 @@ const cleanAllTexts = (contents) => {
     .map((text, idx) => (idx ? text.substr(text[2] === ' ' ? 3 : 2, text.length).trim() : text.trim()));
 };
 
-// const cleanAllTexts = (contents) => {
-//   return contents.filter((text) => text.trim() !== '').map((text) => text.substr(text.indexOf('-') + 1, text.length).trim());
-// };
-
 const storeData = async (userId, userEmail, task, prompt, apiInfos, choices) => {
-  // const isIgnoresaving = config.content.ignoresavingdb.includes(userEmail);
   const formattedContents = await formatContents(userId, userEmail, task, prompt, apiInfos, choices);
-
   const content = await Content.create(formattedContents);
-
-  // let content;
-
-  // if (isIgnoresaving) {
-  //   content = { ...formattedContents, id: uuidv4() };
-  // } else {
-  //   content = await Content.create(formattedContents);
-  // }
-
   return content;
 };
 
@@ -158,7 +127,11 @@ const formatResponse = (id, task, generatedTexts) => {
 };
 
 const processListContents = async (userId, userEmail, task, prompt, { id, object, created, model, choices }) => {
-  const contents = cleanAllTexts(choices[0].text.split('\n'));
+  if (!choices || !choices.length) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to generate content');
+  }
+
+  const contents = cleanAllTexts(choices[0].message.content.split('\n'));
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
@@ -186,7 +159,7 @@ const updateBookmarkedText = async (userEmail, { contentId, index, bookmarkedTex
 };
 
 module.exports = {
-  generateContentUsingGPT3,
+  generateContentUsingGPT4,
   formatContents,
   removeSpaces,
   cleanAllTexts,

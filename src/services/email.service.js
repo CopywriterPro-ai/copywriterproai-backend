@@ -50,7 +50,7 @@ const sendWelcomeEmail = async (to, name = '') => {
 
   const html = `<div> Hi ${name}, <div><br>
   <p>Welcome to CopywriterPro! We're so excited to have you on board.<br/><br/>
-  CopywriterPro is the world's first AI powered copywriting tool. <br/><br/>
+  CopywriterPro is AI powered copywriting tool. <br/><br/>
   Here's what you can expect:<br/><br/>
   - A user-friendly interface that makes writing copy a breeze<br/>
   - Powerful AI technology that will help you write better copy, faster<br/>

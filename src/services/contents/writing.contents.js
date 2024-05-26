@@ -3,7 +3,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 const {
-  generateContentUsingGPT3,
+  generateContentUsingGPT4,
   removeSpaces,
   processListContents,
   storeData,
@@ -13,38 +13,39 @@ const {
 const paraphrase = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Paraphrase the following Paragraphs.
+  const prompt = `Paraphrase the following paragraphs in creative ways.
 
-Paragraph
+Examples:
+Paragraph:
 """
 The 8 best places of natural beauty in the world.
 """
-Paraphrase in 2 creative way(s).
+Paraphrase in 2 creative ways:
 """
 1. 8 natural locations around the world that are especially beautiful.
 2. World's most beautiful 8 natural beauties that will amaze you.
 """
 
-Paragraph
+Paragraph:
 """
 How are you?
 """
-Paraphrase in 3 creative way(s).
+Paraphrase in 3 creative ways:
 """
 1. Is everything going well for you?
 2. I hope you are doing well.
 3. Do you feel well?
 """
 
-Content
+Content:
 """
-${userText}
+${userPrompt}
 """
-Paraphrase in ${numberOfSuggestions} creative way(s).
+Paraphrase in ${numberOfSuggestions} creative ways:
 """
 1.`;
 
-  const paraphrasedContents = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 1, 0, 0, [
+  const paraphrasedContents = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 1, 0, 0, [
     '"""',
     `${numberOfSuggestions + 1}. `,
   ]);
@@ -55,20 +56,23 @@ Paraphrase in ${numberOfSuggestions} creative way(s).
 const expander = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Original Text:
+  const prompt = `Expand the following text by adding more details and information.
+
+Examples:
+Original Text:
 """
 Jupiter is the fifth closest planet to the Sun and the biggest in our Solar System. The gas giant has about one-thousandth of the Sun's mass but is still heavier than all other planets combined. Jupiter can be seen at night in a clear sky without any special equipment, which makes it stand out from other stars and objects.
 """
-Expanded with more words and information:
+Expanded Text:
 """
-Jupiter is the fifth planet from the Sun. It may be less than one-thousandth as massive as our parent star, but it outweighs all other Solar System objects combined. Jupiter is a bright object in the sky that can be readily seen by anyone with normal vision at night. Jupiter is sometimes referred to as a "gas giant" because it is made primarily of gaseous and liquid matter, rather than solid matter. Jupiter's atmosphere is composed of about 88 percent hydrogen and 12 percent helium by percent volume of gas molecules, and trace amounts of methane, water vapor, ammonia, and "smoke"-like particles of unknown composition. There are also traces  of carbon, ethane, hydrogen sulfide, neon, oxygen, phosphine, and sulfur.
+Jupiter is the fifth planet from the Sun. It may be less than one-thousandth as massive as our parent star, but it outweighs all other Solar System objects combined. Jupiter is a bright object in the sky that can be readily seen by anyone with normal vision at night. Jupiter is sometimes referred to as a "gas giant" because it is made primarily of gaseous and liquid matter, rather than solid matter. Jupiter's atmosphere is composed of about 88 percent hydrogen and 12 percent helium by percent volume of gas molecules, and trace amounts of methane, water vapor, ammonia, and "smoke"-like particles of unknown composition. There are also traces of carbon, ethane, hydrogen sulfide, neon, oxygen, phosphine, and sulfur.
 """
 
 Original Text:
 """
 ${userPrompt}
 """
-Expanded with more words and information:
+Expanded Text:
 """
 `;
 
@@ -76,7 +80,7 @@ Expanded with more words and information:
   const expandedContentsList = [];
 
   while (numberOfSuggestions--) {
-    const expandedContents = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 1, 0.2, 2, [
+    const expandedContents = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 1, 0.2, 2, [
       '"""',
       'Original Text:',
     ]);
@@ -102,11 +106,23 @@ Expanded with more words and information:
 const simplifier = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `My second grader asked me what this passage means:
+  const prompt = `Simplify the following text so that a second grader can understand it.
+
+Examples:
+Original Text:
+"""
+Jupiter is the fifth planet from the Sun. It is a giant planet made mostly of gas. It is very bright and can be seen easily at night.
+"""
+Simplified Text:
+"""
+Jupiter is the fifth planet from the Sun. It is very big and made of gas. You can see it at night because it is very bright.
+"""
+
+Original Text:
 """
 ${userPrompt}
 """
-I rephrased it for him, in plain language a second grader can understand:
+Simplified Text:
 """
 `;
 
@@ -114,7 +130,7 @@ I rephrased it for him, in plain language a second grader can understand:
   const simplifiedContentsList = [];
 
   while (numberOfSuggestions--) {
-    const simplifiedContents = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 0.7, 0.0, 0.0, ['"""']);
+    const simplifiedContents = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.7, 0.0, 0.0, ['"""']);
     const { id, object, created, model, choices } = simplifiedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -137,16 +153,21 @@ I rephrased it for him, in plain language a second grader can understand:
 const summarizer = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `${userPrompt}
+  const prompt = `Summarize the following text in a concise manner.
 
-Tl;dr
+Original Text:
+"""
+${userPrompt}
+"""
+
+Summary:
 `;
 
   const openAPIInformationsList = [];
   const summarizedContentsList = [];
 
   while (numberOfSuggestions--) {
-    const summarizedContents = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 0.7, 0.0, 0.0, ['\n\n']);
+    const summarizedContents = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.7, 0.0, 0.0, ['\n\n']);
     const { id, object, created, model, choices } = summarizedContents;
 
     openAPIInformationsList.push({ id, object, created, model });
@@ -169,14 +190,14 @@ Tl;dr
 const abstractGenerator = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Write a SHORT ABSTRACT of the ORIGINAL TEXT.
+  const prompt = `Write a short abstract of the following text.
 
-ORIGINAL TEXT:
+Original Text:
 """
 ${userPrompt}
 """
 
-SHORT ABSTRACT:
+Short Abstract:
 """
 `;
 
@@ -184,9 +205,9 @@ SHORT ABSTRACT:
   const abstractsList = [];
 
   while (numberOfSuggestions--) {
-    const abstract = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 0.7, 0.0, 0.0, [
+    const abstract = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.7, 0.0, 0.0, [
       '"""',
-      'ORIGINAL TEXT:',
+      'Original Text:',
     ]);
     const { id, object, created, model, choices } = abstract;
 
@@ -210,29 +231,37 @@ SHORT ABSTRACT:
 const notesFromPassage = async (userId, userEmail, { userText, numberOfPoints }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `I asked my students to note ALL the important informations from this passage:
+  const prompt = `Extract important notes from the following passage.
+
+Passage:
 """
 ${userPrompt}
 """
-My students wrote ${numberOfPoints} points:
+
+Notes (${numberOfPoints} points):
 1.`;
 
-  let notes;
-  while (1) {
-    notes = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 0.7, 0.0, 0.0, ['"""', '\n\n']);
-    if (notes.choices && notes.choices[0].text.trim() !== userPrompt) {
-      notes.choices[0].text = `1. ${notes.choices[0].text.trim()}`;
-      break;
-    }
+  const openAPIInformationsList = [];
+  const notesList = [];
+
+  for (let i = 0; i < numberOfPoints; i++) {
+    const notes = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.7, 0.0, 0.0, [
+      '"""',
+      '\n\n',
+    ]);
+    const { id, object, created, model, choices } = notes;
+
+    openAPIInformationsList.push({ id, object, created, model });
+    notesList.push(choices[0].text.trim());
   }
-  const { id, object, created, model, choices } = notes;
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
     'notes-from-passage',
     userPrompt,
-    { id, object, created, model },
-    choices[0].text
+    openAPIInformationsList,
+    notesList
   );
   const userResponse = formatResponse(_id, 'notes-from-passage', generatedContents);
 
@@ -242,12 +271,17 @@ My students wrote ${numberOfPoints} points:
 const grammarFixer = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Correct this to standard English:
+  const prompt = `Correct the following text to standard English.
 
+Original Text:
+"""
 ${userPrompt}
-`;
+"""
 
-  const fixedContent = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+Corrected Text:
+"""`
+
+  const fixedContent = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   fixedContent.choices[0].text = fixedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = fixedContent;
@@ -267,22 +301,23 @@ ${userPrompt}
 const changeTone = async (userId, userEmail, { userText, tone, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
 
-  const prompt = `Change the tone -
+  const prompt = `Change the tone of the following text to ${tone}.
 
-Original: The company really needs to work on its customer service.
-Humorous: Company management should take a look at their customer service.
+    Examples:
+  Original: The company really needs to work on its customer service.
+    Humorous: Company management should take a look at their customer service.
 
-Original: Let's see how much I can do for you.
-Friendly: I'd be happy to help in any way I can.
+    Original: Let's see how much I can do for you.
+  Friendly: I'd be happy to help in any way I can.
 
-Original: Do you think we’re ready for the new school year?
-Authoritative: Are we ready for the new school year?
+  Original: Do you think we’re ready for the new school year?
+    Authoritative: Are we ready for the new school year?
 
-Original: ${userPrompt}
-${tone} (${numberOfSuggestions} unique ways):
-1.`;
+    Original: ${userPrompt}
+    ${tone} (${numberOfSuggestions} unique ways):
+  1.`;
 
-  const fixedContent = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 0.8, 0.0, 0.0, [
+  const fixedContent = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.8, 0.0, 0.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
@@ -295,13 +330,13 @@ const activePassive = async (userId, userEmail, { userText, from, to }) => {
   const convertFrom = removeSpaces(from);
   const convertTo = removeSpaces(to);
 
-  const prompt = `Convert this sentence from ${convertFrom} to ${convertTo} voice.
+  const prompt = `Convert the following sentence from ${convertFrom} to ${convertTo} voice.
 
-${convertFrom}: ${userPrompt}
+    Original: ${userPrompt}
 
-${convertTo}:`;
+  Converted:`;
 
-  const convertedContent = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  const convertedContent = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   convertedContent.choices[0].text = convertedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = convertedContent;
@@ -324,12 +359,17 @@ const pointOfView = async (userId, userEmail, { userText, from, to, gender }) =>
   const convertTo = removeSpaces(to);
   const convertGender = gender ? ` (gender ${removeSpaces(gender)})` : '';
 
-  const prompt = `Convert this from ${convertFrom} to ${convertTo}:${convertGender}
+  const prompt = `Convert the following text from ${convertFrom} to ${convertTo} point of view${convertGender}.
 
-${userPrompt}
-`;
+  Original Text:
+    """
+  ${userPrompt}
+  """
 
-  const convertedContent = await generateContentUsingGPT3('text-davinci-003', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  Converted Text:
+    """`
+
+  const convertedContent = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   convertedContent.choices[0].text = convertedContent.choices[0].text.trim();
 
   const { id, object, created, model, choices } = convertedContent;

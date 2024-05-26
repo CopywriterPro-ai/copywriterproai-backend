@@ -115,26 +115,6 @@ const paymentWebhook = catchAsync(async (req, res) => {
   res.json({ received: true });
 });
 
-const udpWebhook = catchAsync(async (req, res) => {
-  const validSig = req.headers['rt-uddoktapay-api-key'] === config.uddoktapay.apikey;
-
-  if (validSig) {
-    const { body } = req;
-    switch (body.status) {
-      case 'COMPLETED':
-        paymentService.handleUDPPaymentSucceeded(body);
-        break;
-      default:
-        break;
-    }
-
-    res.json({ received: true });
-  } else {
-    return res
-      .status(httpStatus.BAD_REQUEST)
-      .send({ status: httpStatus.BAD_REQUEST, message: 'UDP Webhook signature verification failed.' });
-  }
-});
 
 const handleTrialEnd = catchAsync(async (req, res) => {
   const customer = await paymentService.findCustomer(req.user.userId);
@@ -160,6 +140,5 @@ module.exports = {
   // invoicePreview,
   getSubscriptions,
   paymentWebhook,
-  udpWebhook,
   handleTrialEnd,
 };

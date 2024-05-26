@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-use-before-define */
-const OpenAI = require('openai-api');
+const OpenAI = require('openai');
 const { v4: uuidv4 } = require('uuid');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
@@ -10,7 +10,7 @@ const config = require('../config/config');
 const { openAIAPIKey } = config.openAI;
 const openai = new OpenAI(openAIAPIKey);
 
-const generateContentUsingGPT3 = async (engine, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop) => {
+const generateContentUsingGPT4 = async (engine, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop) => {
   // let filterLabel = await filterContents(prompt);
   // if (filterLabel === '2') {
   //   throw new ApiError(httpStatus.BAD_REQUEST, 'Input contains unsafe contents!');
@@ -177,7 +177,7 @@ const updateBookmarkedText = async (userEmail, { contentId, index, bookmarkedTex
 };
 
 module.exports = {
-  generateContentUsingGPT3,
+  generateContentUsingGPT4,
   formatContents,
   removeSpaces,
   cleanAllTexts,
