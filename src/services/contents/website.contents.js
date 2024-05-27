@@ -1,50 +1,49 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT4, removeSpaces, storeData, formatResponse } = require('../content.service');
+const { generateContentUsingGPT4, storeData, formatResponse, removeSpaces } = require('../content.service');
 
 const websiteShortDescription = async (userId, userEmail, { industryType, businessName, numberOfSuggestions }) => {
   const userPrompt = `Industry: ${removeSpaces(industryType)}
-BusinessName: ${removeSpaces(businessName)}`;
+Business Name: ${removeSpaces(businessName)}`;
 
   const prompt = `Generate website short descriptions between 100 to 120 words. Ensure that the descriptions are engaging, informative, and reflect the unique qualities of the business.
 
 Examples:
 Industry: Software Firm
-BusinessName: Codephilics
+Business Name: Codephilics
 Description: Codephilics builds products that help you grow your business more effectively. Whether you are working on your dream project, running a successful startup, or part of a Fortune 500 company, we provide the tools you need to leverage your dreams. Our solutions are designed to enhance productivity, drive growth, and ensure success.
 
 Industry: Digital Marketing
-BusinessName: MarketMaster
+Business Name: MarketMaster
 Description: At MarketMaster, we specialize in creating innovative digital marketing strategies that drive results. Our team of experts is dedicated to helping businesses of all sizes enhance their online presence and achieve their marketing goals. From SEO to social media marketing, we offer a full range of services to meet your needs.
 
 ${userPrompt}
 Description:`;
 
   const openAPIInformationsList = [];
-  const websiteShortDescriptionList = [];
+  const contentList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const websiteShortDescription = await generateContentUsingGPT4('gpt-4oo', 150, prompt, 0.7, 0.3, 0, [
-      '\n',
-      'Description:',
-    ]);
-    const { id, object, created, model, choices } = websiteShortDescription;
+    const generatedContent = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Description:']);
+    const { id, object, created, model, choices } = generatedContent;
+
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
 
     openAPIInformationsList.push({ id, object, created, model });
-    websiteShortDescriptionList.push(choices[0].text.trim());
+    contentList.push(choices[0].message.content.trim());
   }
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
     'website-short-description',
     userPrompt,
     openAPIInformationsList,
-    websiteShortDescriptionList
+    contentList
   );
 
-  const userResponse = formatResponse(_id, 'website-short-description', generatedContents);
-
-  return userResponse;
+  return formatResponse(_id, 'website-short-description', generatedContents);
 };
 
 const keywordsFromText = async (userId, userEmail, { primaryText, numberOfSuggestions }) => {
@@ -60,27 +59,29 @@ ${userPrompt}
 Keywords:`;
 
   const openAPIInformationsList = [];
-  const KeywordsFromTextList = [];
+  const contentList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const KeywordsFromText = await generateContentUsingGPT4('davinci', 50, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
-    const { id, object, created, model, choices } = KeywordsFromText;
+    const generatedContent = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
+    const { id, object, created, model, choices } = generatedContent;
+
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
 
     openAPIInformationsList.push({ id, object, created, model });
-    KeywordsFromTextList.push(choices[0].text.trim());
+    contentList.push(choices[0].message.content.trim());
   }
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
     'website-keywords-from-text',
     userPrompt,
     openAPIInformationsList,
-    KeywordsFromTextList
+    contentList
   );
 
-  const userResponse = formatResponse(_id, 'website-keywords-from-text', generatedContents);
-
-  return userResponse;
+  return formatResponse(_id, 'website-keywords-from-text', generatedContents);
 };
 
 const SEOFriendlyBlogIdeas = async (userId, userEmail, { content, desiredOutcome, industry, targetAudience, numberOfSuggestions }) => {
@@ -115,27 +116,29 @@ ${userPrompt}
 Headlines:`;
 
   const openAPIInformationsList = [];
-  const seoFriendlyBlogIdeasList = [];
+  const contentList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const seoFriendlyBlogIdeas = await generateContentUsingGPT4('davinci', 70, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
-    const { id, object, created, model, choices } = seoFriendlyBlogIdeas;
+    const generatedContent = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
+    const { id, object, created, model, choices } = generatedContent;
+
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
 
     openAPIInformationsList.push({ id, object, created, model });
-    seoFriendlyBlogIdeasList.push(choices[0].text.trim());
+    contentList.push(choices[0].message.content.trim());
   }
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
     'website-seo-friendly-blog-ideas',
     userPrompt,
     openAPIInformationsList,
-    seoFriendlyBlogIdeasList
+    contentList
   );
 
-  const userResponse = formatResponse(_id, 'website-seo-friendly-blog-ideas', generatedContents);
-
-  return userResponse;
+  return formatResponse(_id, 'website-seo-friendly-blog-ideas', generatedContents);
 };
 
 const landingPageHeadline = async (userId, userEmail, { businessType, numberOfSuggestions }) => {
@@ -172,30 +175,29 @@ ${userPrompt}
 Headlines:`;
 
   const openAPIInformationsList = [];
-  const landingPageHeadlineList = [];
+  const contentList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedHeadlines = await generateContentUsingGPT4('gpt-4oo', 100, prompt, 0.9, 1, 0, [
-      '\n',
-      'Headlines:',
-    ]);
-    const { id, object, created, model, choices } = generatedHeadlines;
+    const generatedContent = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
+    const { id, object, created, model, choices } = generatedContent;
+
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
 
     openAPIInformationsList.push({ id, object, created, model });
-    landingPageHeadlineList.push(choices[0].text.trim());
+    contentList.push(choices[0].message.content.trim());
   }
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
     'website-landing-page-headline',
     userPrompt,
     openAPIInformationsList,
-    landingPageHeadlineList
+    contentList
   );
 
-  const userResponse = formatResponse(_id, 'website-landing-page-headline', generatedContents);
-
-  return userResponse;
+  return formatResponse(_id, 'website-landing-page-headline', generatedContents);
 };
 
 module.exports = {

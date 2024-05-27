@@ -49,14 +49,15 @@ Headline:`;
   const googleAdHeadlinesList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const adHeadlines = await generateContentUsingGPT4('gpt-4o', 30, prompt, 0.9, 0.3, 0.2, [
-      'Headline:',
-      '\n',
-    ]);
+    const adHeadlines = await generateContentUsingGPT4('gpt-4o', 30, prompt, 0.9, 0.3, 0.2, ['Headline:', '\n']);
     const { id, object, created, model, choices } = adHeadlines;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    googleAdHeadlinesList.push(cleanAllTexts(choices[0].text.split('\n')).join('. '));
+    googleAdHeadlinesList.push(cleanAllTexts(choices[0].message.content.split('\n')).join('. '));
   }
 
   const { _id, generatedContents } = await storeData(
@@ -117,14 +118,15 @@ Description:`;
   const googleAdDescriptionsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedAdDescription = await generateContentUsingGPT4('gpt-4o', 60, prompt, 0.9, 0, 0, [
-      '\n',
-      'Description:',
-    ]);
+    const generatedAdDescription = await generateContentUsingGPT4('gpt-4o', 60, prompt, 0.9, 0, 0, ['\n', 'Description:']);
     const { id, object, created, model, choices } = generatedAdDescription;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    googleAdDescriptionsList.push(cleanAllTexts(choices[0].text.split('\n')).join('. '));
+    googleAdDescriptionsList.push(cleanAllTexts(choices[0].message.content.split('\n')).join('. '));
   }
 
   const { _id, generatedContents } = await storeData(

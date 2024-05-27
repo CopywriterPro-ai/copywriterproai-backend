@@ -69,7 +69,7 @@ Description:`;
   const productDescriptionSEOFriendlyList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedProductDescription = await generateContentUsingGPT4('gpt-4oo', 300, prompt, 0.7, 0.2, 0.3, ['\n', 'Description:']);
+    const generatedProductDescription = await generateContentUsingGPT4('gpt-4o', 300, prompt, 0.7, 0.2, 0.3, ['\n', 'Description:']);
     const { id, object, created, model, choices } = generatedProductDescription;
 
     openAPIInformationsList.push({ id, object, created, model });

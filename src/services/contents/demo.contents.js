@@ -24,7 +24,12 @@ const formatResponse = (id, task, generatedTexts) => {
 };
 
 const processListContents = async (task, prompt, { id, object, created, model, choices }) => {
-  const contents = cleanAllTexts(choices[0].text.split('\n'));
+  const contents = cleanAllTexts(choices[0].message.content.split('\n'));
+
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('processListContents.choices[0]:', choices[0]);
+  console.log('processListContents.choices[0].message.content:', choices[0].message.content);
+
   const { _id, generatedContents } = await storeData(task, prompt, { id, object, created, model }, contents);
   return formatResponse(_id, task, generatedContents);
 };
@@ -101,6 +106,11 @@ List of 3 BLOG HEADLINES:
 1.`;
 
   const blogHeadlines = await generateContentUsingGPT4('gpt-4o', 200, prompt, 1.0, 1.0, 1.0, ['\n\n', '4. ']);
+
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('blogHeadlines.choices[0]:', blogHeadlines.choices[0]);
+  console.log('blogHeadlines.choices[0].message.content:', blogHeadlines.choices[0].message.content);
+
   return processListContents('blog-headline', userPrompt, blogHeadlines);
 };
 

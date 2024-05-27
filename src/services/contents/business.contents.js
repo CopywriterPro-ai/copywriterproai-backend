@@ -58,9 +58,14 @@ Taglines:`;
     ]);
     const { id, object, created, model, choices } = catchyBusinessTaglines;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('catchyBusinessTaglines.choices[0]:', choices[0]);
+    console.log('catchyBusinessTaglines.choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    catchyBusinessTaglinesList.push(choices[0].text.trim());
+    catchyBusinessTaglinesList.push(choices[0].message.content.trim());
   }
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,

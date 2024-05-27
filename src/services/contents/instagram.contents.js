@@ -34,6 +34,11 @@ List of ${numberOfSuggestions} Instagram Ad Texts:
 -`;
 
   const adTexts = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
+
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('choices[0]:', adTexts.choices[0]);
+  console.log('choices[0].message.content:', adTexts.choices[0].message.content);
+
   return processListContents(userId, userEmail, 'instagram-ad-texts', userPrompt, adTexts);
 };
 

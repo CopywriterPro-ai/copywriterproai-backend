@@ -32,6 +32,11 @@ List of ${numberOfSuggestions} BLOG IDEAS:
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
+
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('blogIdeas.choices[0]:', blogIdeas.choices[0]);
+  console.log('blogIdeas.choices[0].message.content:', blogIdeas.choices[0].message.content);
+
   return processListContents(userId, userEmail, 'blog-idea', userPrompt, blogIdeas);
 };
 
@@ -56,6 +61,11 @@ List of ${numberOfSuggestions} BLOG HEADLINES:
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ]);
+
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('blogHeadlines.choices[0]:', blogHeadlines.choices[0]);
+  console.log('blogHeadlines.choices[0].message.content:', blogHeadlines.choices[0].message.content);
+
   return processListContents(userId, userEmail, 'blog-headline', userPrompt, blogHeadlines);
 };
 
@@ -83,6 +93,11 @@ BLOG INTRODUCTION (A brief description of what the blog is about and why someone
     const blogIntros = await generateContentUsingGPT4('gpt-4o', 450, prompt, 1.0, 1.0, 1.0, ['\n\n\n']);
     const { id, object, created, model, choices } = blogIntros;
     openAPIInformationsList.push({ id, object, created, model });
+
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('blogIntros.choices[0]:', blogIntros.choices[0]);
+    console.log('blogIntros.choices[0].message.content:', blogIntros.choices[0].message.content);
+
     blogIntrosList.push(choices[0].message.content.trim());
   }
 
@@ -137,6 +152,11 @@ BLOG OUTLINE (${numberOfPoints} points):
     ]);
     const { id, object, created, model, choices } = blogOutlines;
     openAPIInformationsList.push({ id, object, created, model });
+
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('blogOutlines.choices[0]:', blogOutlines.choices[0]);
+    console.log('blogOutlines.choices[0].message.content:', blogOutlines.choices[0].message.content);
+
     choices[0].message.content = `1. ${choices[0].message.content}`;
 
     const cleanedBlogOutline = choices[0].message.content
@@ -186,6 +206,11 @@ ${userPrompt}
     const blogTopicWriting = await generateContentUsingGPT4('gpt-4o', 500, prompt, 0.8, 0, 0, ['\n\n\n']);
     const { id, object, created, model, choices } = blogTopicWriting;
     openAPIInformationsList.push({ id, object, created, model });
+
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('blogTopicWriting.choices[0]:', blogTopicWriting.choices[0]);
+    console.log('blogTopicWriting.choices[0].message.content:', blogTopicWriting.choices[0].message.content);
+
     blogTopicWritingsList.push(choices[0].message.content.trim());
   }
 
@@ -227,6 +252,11 @@ BLOG CONCLUSION:
     const blogOutros = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.7, 1.0, 1.0, ['\n\n']);
     const { id, object, created, model, choices } = blogOutros;
     openAPIInformationsList.push({ id, object, created, model });
+
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('blogOutros.choices[0]:', blogOutros.choices[0]);
+    console.log('blogOutros.choices[0].message.content:', blogOutros.choices[0].message.content);
+
     blogOutrosList.push(choices[0].message.content.trim());
   }
 
@@ -270,6 +300,10 @@ Blog headline: ${headline}
 
   const { id, object, created, model, choices } = _blog;
 
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('shortBlog.choices[0]:', choices[0]);
+  console.log('shortBlog.choices[0].message.content:', choices[0].message.content);
+
   const { _id, generatedContents } = await storeData(
     userId,
     userEmail,
@@ -311,6 +345,10 @@ ${contents}`;
   const _blog = await generateContentUsingGPT4('gpt-4o', 256, prompt, 1.0, 0, 0, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
+
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('longBlog.choices[0]:', choices[0]);
+  console.log('longBlog.choices[0].message.content:', choices[0].message.content);
 
   const { _id, generatedContents } = await storeData(
     userId,
@@ -360,6 +398,10 @@ ${outline[0]}
   const _blog = await generateContentUsingGPT4('gpt-4o', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n']);
 
   const { id, object, created, model, choices } = _blog;
+
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('blogFromOutline.choices[0]:', choices[0]);
+  console.log('blogFromOutline.choices[0].message.content:', choices[0].message.content);
 
   const { _id, generatedContents } = await storeData(
     userId,

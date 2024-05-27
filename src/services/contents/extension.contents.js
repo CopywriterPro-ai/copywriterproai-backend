@@ -30,6 +30,10 @@ Original: ${userPrompt}
 
   const paraphrasedContents = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.9, 0.9, 0.9, ['\n\n']);
 
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('paraphrasedContents.choices[0]:', paraphrasedContents.choices[0]);
+  console.log('paraphrasedContents.choices[0].message.content:', paraphrasedContents.choices[0].message.content);
+
   return processListContents(userId, userEmail, 'paraphrasing', userPrompt, paraphrasedContents);
 };
 
@@ -48,7 +52,11 @@ ${userPrompt}
 Corrected Text:`;
 
   const fixedContent = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
-  fixedContent.choices[0].text = fixedContent.choices[0].text.trim();
+  fixedContent.choices[0].message.content = fixedContent.choices[0].message.content.trim();
+
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('fixedContent.choices[0]:', fixedContent.choices[0]);
+  console.log('fixedContent.choices[0].message.content:', fixedContent.choices[0].message.content);
 
   const { id, object, created, model, choices } = fixedContent;
   const { _id, generatedContents } = await storeData(
@@ -57,7 +65,7 @@ Corrected Text:`;
     'grammar-fixer',
     userPrompt,
     { id, object, created, model },
-    choices[0].text
+    choices[0].message.content
   );
   const userResponse = formatResponse(_id, 'grammar-fixer', generatedContents);
 
@@ -90,8 +98,12 @@ Simplified Text for a Second Grader:
     const simplifiedContents = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.0, 0.0, ['"""']);
     const { id, object, created, model, choices } = simplifiedContents;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('simplifiedContents.choices[0]:', simplifiedContents.choices[0]);
+    console.log('simplifiedContents.choices[0].message.content:', simplifiedContents.choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    simplifiedContentsList.push(choices[0].text.trim());
+    simplifiedContentsList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(
@@ -130,8 +142,12 @@ Summary:
     const summarizedContents = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.7, 0.0, 0.0, ['\n\n']);
     const { id, object, created, model, choices } = summarizedContents;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('summarizedContents.choices[0]:', summarizedContents.choices[0]);
+    console.log('summarizedContents.choices[0].message.content:', summarizedContents.choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    summarizedContentsList.push(choices[0].text.trim());
+    summarizedContentsList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(
@@ -172,6 +188,10 @@ ${tone} (3 unique ways):
 1.`;
 
   const fixedContent = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.8, 0.0, 0.0, ['\n\n']);
+
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('fixedContent.choices[0]:', fixedContent.choices[0]);
+  console.log('fixedContent.choices[0].message.content:', fixedContent.choices[0].message.content);
 
   return processListContents(userId, userEmail, 'change-tone', userPrompt, fixedContent);
 };

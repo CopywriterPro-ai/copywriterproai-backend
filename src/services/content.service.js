@@ -21,7 +21,7 @@ const generateContentUsingGPT4 = async (model, maxTokens, prompt, temperature, f
         messages: [
           {
             role: "system",
-            content: `You are an expert SEO-focused blog writer and professional copywriter for social media marketing. You also provide solutions for LinkedIn bio generation. Your task is to generate high-quality content tailored for various platforms, including LinkedIn bios. Use your expertise to create engaging, optimized, and professional content that aligns with the latest SEO practices and effectively communicates the intended message to the target audience.\n
+            content: `You are an expert SEO-focused blog writer and professional copywriter for social media marketing. You also provide solutions for LinkedIn bio generation. Your task is to generate high-quality content tailored for various platforms, including LinkedIn bios. Use your expertise to create engaging, optimized, and professional content that aligns with the latest SEO practices and effectively communicates the intended message to the target audience. when you will generate content you don't need to say Sure, here's a creative paraphrase for the content: \n
               Guidelines:
               1. **SEO-Focused Content:**
                  - Ensure the content is optimized for search engines.
@@ -103,6 +103,9 @@ const formatContents = async (userId, userEmail, documentType, prompt, apiInfos,
 };
 
 const removeSpaces = (text) => {
+  if (typeof text !== 'string') {
+    return '';
+  }
   return text.trim().replace(/ +(?= )/g, '');
 };
 

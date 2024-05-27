@@ -49,11 +49,15 @@ ${userPrompt}
   const emailMarketingCampaignSubjectList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const marketingEmailSubject = await generateContentUsingGPT4('davinci', 100, prompt, 1, 0, 0, ['\n\n']);
+    const marketingEmailSubject = await generateContentUsingGPT4('gpt-4o', 100, prompt, 1, 0, 0, ['\n\n']);
     const { id, object, created, model, choices } = marketingEmailSubject;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('marketingEmailSubject.choices[0]:', choices[0]);
+    console.log('marketingEmailSubject.choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    emailMarketingCampaignSubjectList.push(choices[0].text.trim());
+    emailMarketingCampaignSubjectList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(
@@ -103,8 +107,12 @@ Small Email Marketing Campaign:
     const emailBody = await generateContentUsingGPT4('gpt-4o', 300, prompt, 1, 0.5, 0, ['\n\n\n', 'About:', 'Subject:']);
     const { id, object, created, model, choices } = emailBody;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('emailBody.choices[0]:', choices[0]);
+    console.log('emailBody.choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    emailMarketingCampaignBodyList.push(choices[0].text.trim());
+    emailMarketingCampaignBodyList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(
@@ -151,8 +159,12 @@ Subject:`;
     const emailBodyText = await generateContentUsingGPT4('gpt-4o', 250, prompt, 0.9, 0, 0, ['\n\n\n', 'About:', 'Subject:']);
     const { id, object, created, model, choices } = emailBodyText;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('emailBodyText.choices[0]:', choices[0]);
+    console.log('emailBodyText.choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    emailBodyList.push(choices[0].text.trim());
+    emailBodyList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(
@@ -190,8 +202,12 @@ Subject:`;
     const emailSubjectFromBody = await generateContentUsingGPT4('gpt-4o', 20, prompt, 0.7, 1, 0, ['\n', 'Subject:']);
     const { id, object, created, model, choices } = emailSubjectFromBody;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('emailSubjectFromBody.choices[0]:', choices[0]);
+    console.log('emailSubjectFromBody.choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    emailSubjectsFromBodyList.push(choices[0].text.trim());
+    emailSubjectsFromBodyList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(

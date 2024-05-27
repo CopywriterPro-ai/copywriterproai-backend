@@ -10,9 +10,35 @@ const {
   formatResponse,
 } = require('../content.service');
 
+const generateContent = async (userId, userEmail, taskType, userPrompt, prompt, numberOfSuggestions, endIndicator) => {
+  const openAPIInformationsList = [];
+  const contentList = [];
+
+  for (let i = 0; i < numberOfSuggestions; i++) {
+    const generatedContent = await generateContentUsingGPT4('gpt-4o', 2000, prompt, 1, 0, 0, [endIndicator]);
+    const { id, object, created, model, choices } = generatedContent;
+
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
+
+    openAPIInformationsList.push({ id, object, created, model });
+    contentList.push(choices[0].message.content.trim());
+  }
+
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    taskType,
+    userPrompt,
+    openAPIInformationsList,
+    contentList
+  );
+
+  return formatResponse(_id, taskType, generatedContents);
+};
+
 const paraphrase = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
-
   const prompt = `Paraphrase the following paragraphs in creative ways.
 
 Examples:
@@ -45,17 +71,11 @@ Paraphrase in ${numberOfSuggestions} creative ways:
 """
 1.`;
 
-  const paraphrasedContents = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 1, 0, 0, [
-    '"""',
-    `${numberOfSuggestions + 1}. `,
-  ]);
-
-  return processListContents(userId, userEmail, 'paraphrasing', userPrompt, paraphrasedContents);
+  return generateContent(userId, userEmail, 'paraphrasing', userPrompt, prompt, numberOfSuggestions, `${numberOfSuggestions + 1}. `);
 };
 
 const expander = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
-
   const prompt = `Expand the following text by adding more details and information.
 
 Examples:
@@ -76,36 +96,11 @@ Expanded Text:
 """
 `;
 
-  const openAPIInformationsList = [];
-  const expandedContentsList = [];
-
-  while (numberOfSuggestions--) {
-    const expandedContents = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 1, 0.2, 2, [
-      '"""',
-      'Original Text:',
-    ]);
-    const { id, object, created, model, choices } = expandedContents;
-
-    openAPIInformationsList.push({ id, object, created, model });
-    expandedContentsList.push(choices[0].text.trim());
-  }
-
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'expander',
-    userPrompt,
-    openAPIInformationsList,
-    expandedContentsList
-  );
-  const userResponse = formatResponse(_id, 'expander', generatedContents);
-
-  return userResponse;
+  return generateContent(userId, userEmail, 'expander', userPrompt, prompt, numberOfSuggestions, '"""');
 };
 
 const simplifier = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
-
   const prompt = `Simplify the following text so that a second grader can understand it.
 
 Examples:
@@ -126,33 +121,11 @@ Simplified Text:
 """
 `;
 
-  const openAPIInformationsList = [];
-  const simplifiedContentsList = [];
-
-  while (numberOfSuggestions--) {
-    const simplifiedContents = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.7, 0.0, 0.0, ['"""']);
-    const { id, object, created, model, choices } = simplifiedContents;
-
-    openAPIInformationsList.push({ id, object, created, model });
-    simplifiedContentsList.push(choices[0].text.trim());
-  }
-
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'simplifier',
-    userPrompt,
-    openAPIInformationsList,
-    simplifiedContentsList
-  );
-  const userResponse = formatResponse(_id, 'simplifier', generatedContents);
-
-  return userResponse;
+  return generateContent(userId, userEmail, 'simplifier', userPrompt, prompt, numberOfSuggestions, '"""');
 };
 
 const summarizer = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
-
   const prompt = `Summarize the following text in a concise manner.
 
 Original Text:
@@ -163,33 +136,11 @@ ${userPrompt}
 Summary:
 `;
 
-  const openAPIInformationsList = [];
-  const summarizedContentsList = [];
-
-  while (numberOfSuggestions--) {
-    const summarizedContents = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.7, 0.0, 0.0, ['\n\n']);
-    const { id, object, created, model, choices } = summarizedContents;
-
-    openAPIInformationsList.push({ id, object, created, model });
-    summarizedContentsList.push(choices[0].text.trim());
-  }
-
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'summarizer',
-    userPrompt,
-    openAPIInformationsList,
-    summarizedContentsList
-  );
-  const userResponse = formatResponse(_id, 'summarizer', generatedContents);
-
-  return userResponse;
+  return generateContent(userId, userEmail, 'summarizer', userPrompt, prompt, numberOfSuggestions, '\n\n');
 };
 
 const abstractGenerator = async (userId, userEmail, { userText, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
-
   const prompt = `Write a short abstract of the following text.
 
 Original Text:
@@ -201,36 +152,11 @@ Short Abstract:
 """
 `;
 
-  const openAPIInformationsList = [];
-  const abstractsList = [];
-
-  while (numberOfSuggestions--) {
-    const abstract = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.7, 0.0, 0.0, [
-      '"""',
-      'Original Text:',
-    ]);
-    const { id, object, created, model, choices } = abstract;
-
-    openAPIInformationsList.push({ id, object, created, model });
-    abstractsList.push(choices[0].text.trim());
-  }
-
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'abstract',
-    userPrompt,
-    openAPIInformationsList,
-    abstractsList
-  );
-  const userResponse = formatResponse(_id, 'abstract', generatedContents);
-
-  return userResponse;
+  return generateContent(userId, userEmail, 'abstract', userPrompt, prompt, numberOfSuggestions, '"""');
 };
 
 const notesFromPassage = async (userId, userEmail, { userText, numberOfPoints }) => {
   const userPrompt = removeSpaces(userText);
-
   const prompt = `Extract important notes from the following passage.
 
 Passage:
@@ -241,36 +167,11 @@ ${userPrompt}
 Notes (${numberOfPoints} points):
 1.`;
 
-  const openAPIInformationsList = [];
-  const notesList = [];
-
-  for (let i = 0; i < numberOfPoints; i++) {
-    const notes = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.7, 0.0, 0.0, [
-      '"""',
-      '\n\n',
-    ]);
-    const { id, object, created, model, choices } = notes;
-
-    openAPIInformationsList.push({ id, object, created, model });
-    notesList.push(choices[0].text.trim());
-  }
-
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'notes-from-passage',
-    userPrompt,
-    openAPIInformationsList,
-    notesList
-  );
-  const userResponse = formatResponse(_id, 'notes-from-passage', generatedContents);
-
-  return userResponse;
+  return generateContent(userId, userEmail, 'notes-from-passage', userPrompt, prompt, numberOfPoints, '\n\n');
 };
 
 const grammarFixer = async (userId, userEmail, { userText }) => {
   const userPrompt = removeSpaces(userText);
-
   const prompt = `Correct the following text to standard English.
 
 Original Text:
@@ -279,50 +180,30 @@ ${userPrompt}
 """
 
 Corrected Text:
-"""`
+"""`;
 
-  const fixedContent = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
-  fixedContent.choices[0].text = fixedContent.choices[0].text.trim();
-
-  const { id, object, created, model, choices } = fixedContent;
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'grammar-fixer',
-    userPrompt,
-    { id, object, created, model },
-    choices[0].text
-  );
-  const userResponse = formatResponse(_id, 'grammar-fixer', generatedContents);
-
-  return userResponse;
+  return generateContent(userId, userEmail, 'grammar-fixer', userPrompt, prompt, 1, '\n\n');
 };
 
 const changeTone = async (userId, userEmail, { userText, tone, numberOfSuggestions }) => {
   const userPrompt = removeSpaces(userText);
-
   const prompt = `Change the tone of the following text to ${tone}.
 
-    Examples:
-  Original: The company really needs to work on its customer service.
-    Humorous: Company management should take a look at their customer service.
+Examples:
+Original: The company really needs to work on its customer service.
+Humorous: Company management should take a look at their customer service.
 
-    Original: Let's see how much I can do for you.
-  Friendly: I'd be happy to help in any way I can.
+Original: Let's see how much I can do for you.
+Friendly: I'd be happy to help in any way I can.
 
-  Original: Do you think we’re ready for the new school year?
-    Authoritative: Are we ready for the new school year?
+Original: Do you think we’re ready for the new school year?
+Authoritative: Are we ready for the new school year?
 
-    Original: ${userPrompt}
-    ${tone} (${numberOfSuggestions} unique ways):
-  1.`;
+Original: ${userPrompt}
+${tone} (${numberOfSuggestions} unique ways):
+1.`;
 
-  const fixedContent = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.8, 0.0, 0.0, [
-    '\n\n',
-    `${numberOfSuggestions + 1}. `,
-  ]);
-
-  return processListContents(userId, userEmail, 'change-tone', userPrompt, fixedContent);
+  return generateContent(userId, userEmail, 'change-tone', userPrompt, prompt, numberOfSuggestions, `${numberOfSuggestions + 1}. `);
 };
 
 const activePassive = async (userId, userEmail, { userText, from, to }) => {
@@ -332,25 +213,11 @@ const activePassive = async (userId, userEmail, { userText, from, to }) => {
 
   const prompt = `Convert the following sentence from ${convertFrom} to ${convertTo} voice.
 
-    Original: ${userPrompt}
+Original: ${userPrompt}
 
-  Converted:`;
+Converted:`;
 
-  const convertedContent = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
-  convertedContent.choices[0].text = convertedContent.choices[0].text.trim();
-
-  const { id, object, created, model, choices } = convertedContent;
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'active-passive',
-    userPrompt,
-    { id, object, created, model },
-    choices[0].text
-  );
-  const userResponse = formatResponse(_id, 'active-passive', generatedContents);
-
-  return userResponse;
+  return generateContent(userId, userEmail, 'active-passive', userPrompt, prompt, 1, '\n\n');
 };
 
 const pointOfView = async (userId, userEmail, { userText, from, to, gender }) => {
@@ -361,29 +228,15 @@ const pointOfView = async (userId, userEmail, { userText, from, to, gender }) =>
 
   const prompt = `Convert the following text from ${convertFrom} to ${convertTo} point of view${convertGender}.
 
-  Original Text:
-    """
-  ${userPrompt}
-  """
+Original Text:
+"""
+${userPrompt}
+"""
 
-  Converted Text:
-    """`
+Converted Text:
+"""`;
 
-  const convertedContent = await generateContentUsingGPT4('gpt-4oo', 2000, prompt, 0.0, 0.0, 0.0, ['\n\n']);
-  convertedContent.choices[0].text = convertedContent.choices[0].text.trim();
-
-  const { id, object, created, model, choices } = convertedContent;
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'point-of-view',
-    userPrompt,
-    { id, object, created, model },
-    choices[0].text
-  );
-  const userResponse = formatResponse(_id, 'point-of-view', generatedContents);
-
-  return userResponse;
+  return generateContent(userId, userEmail, 'point-of-view', userPrompt, prompt, 1, '\n\n');
 };
 
 module.exports = {

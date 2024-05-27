@@ -47,8 +47,12 @@ PROFILE DESCRIPTION:`;
     const profileDescriptions = await generateContentUsingGPT4('gpt-4o', 150, prompt, 1.0, 1.0, 1.0, ['\n\n']);
     const { id, object, created, model, choices } = profileDescriptions;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    profileDescriptionsList.push(choices[0].text.trim());
+    profileDescriptionsList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(
@@ -93,14 +97,15 @@ Headline:`;
   const fiverrCategoriesHeadlineList = [];
 
   for (let i = 0; i < 5; i++) {
-    const catchyBusinessTaglines = await generateContentUsingGPT4('gpt-4o', 20, prompt, 0.9, 0, 0, [
-      '\n',
-      'Headline:',
-    ]);
+    const catchyBusinessTaglines = await generateContentUsingGPT4('gpt-4o', 20, prompt, 0.9, 0, 0, ['\n', 'Headline:']);
     const { id, object, created, model, choices } = catchyBusinessTaglines;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    fiverrCategoriesHeadlineList.push(choices[0].text.trim());
+    fiverrCategoriesHeadlineList.push(choices[0].message.content.trim());
   }
   const { _id, generatedContents } = await storeData(
     userId,

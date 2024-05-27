@@ -1,14 +1,7 @@
-/* eslint-disable no-await-in-loop */
-const {
-  generateContentUsingGPT4,
-  removeSpaces,
-  processListContents,
-  storeData,
-  formatResponse,
-} = require('../content.service');
+const { generateContentUsingGPT4, removeSpaces, processListContents, storeData, formatResponse } = require('../content.service');
 
 const campaignPostFromBusinessType = async (userId, userEmail, task, { platformType, numberOfSuggestions }) => {
-  const userPrompt = `Platform: ${removeSpaces(platformType)}`;
+  const userPrompt = `Platform: ${removeSpaces(platformType || '')}`;
 
   const prompt = `You are an expert social media marketer. Your task is to write engaging Facebook Ad primary text based on the given platform type. Use your expertise to create compelling, clear, and persuasive ad texts that capture the audience's attention and encourage them to take action.
 
@@ -28,9 +21,13 @@ List of ${numberOfSuggestions} Primary text:
 };
 
 const facebookAdPrimaryTexts = async (userId, userEmail, { businessType, companyName, benefits, numberOfSuggestions }) => {
-  const userPrompt = `Company Name: ${removeSpaces(companyName)}
-Business Type: ${removeSpaces(businessType)}
-Customers Benefit: ${removeSpaces(benefits)}`;
+  if (!businessType || !companyName || !benefits) {
+    throw new Error('Missing required parameters: businessType, companyName, or benefits');
+  }
+
+  const userPrompt = `Company Name: ${removeSpaces(companyName || '')}
+Business Type: ${removeSpaces(businessType || '')}
+Customers Benefit: ${removeSpaces(benefits || '')}`;
 
   const prompt = `You are a skilled copywriter. Your task is to write long Facebook Ads descriptions using more than 130 words. Use your expertise to create engaging, clear, and persuasive descriptions that highlight the benefits of the company’s product or service.
 
@@ -69,14 +66,15 @@ Description:`;
   const facebookAdPrimaryTextsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const description = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.8, 0.2, 0.1, [
-      'Description:',
-      '\n',
-    ]);
+    const description = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.8, 0.2, 0.1, ['Description:', '\n']);
     const { id, object, created, model, choices } = description;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    facebookAdPrimaryTextsList.push(choices[0].text.trim());
+    facebookAdPrimaryTextsList.push(choices[0].message.content.trim());
   }
   const { _id, generatedContents } = await storeData(
     userId,
@@ -93,9 +91,9 @@ Description:`;
 };
 
 const facebookAdHeadlines = async (userId, userEmail, { productName, businessType, customerBenefit, numberOfSuggestions }) => {
-  const userPrompt = `Product Name: ${removeSpaces(productName)}
-Business Type: ${removeSpaces(businessType)}
-Customer Benefit: ${removeSpaces(customerBenefit)}`;
+  const userPrompt = `Product Name: ${removeSpaces(productName || '')}
+Business Type: ${removeSpaces(businessType || '')}
+Customer Benefit: ${removeSpaces(customerBenefit || '')}`;
 
   const prompt = `You are an expert in creating catchy and short headlines for Facebook ads. Your task is to generate headlines that are engaging, clear, and persuasive, based on the given product name, business type, and customer benefit.
 
@@ -138,14 +136,15 @@ Headline:`;
   const facebookAdHeadlinesList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const headlines = await generateContentUsingGPT4('gpt-4o', 50, prompt, 0.8, 0.2, 0.1, [
-      'Headline:',
-      '\n',
-    ]);
+    const headlines = await generateContentUsingGPT4('gpt-4o', 50, prompt, 0.8, 0.2, 0.1, ['Headline:', '\n']);
     const { id, object, created, model, choices } = headlines;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    facebookAdHeadlinesList.push(choices[0].text.trim());
+    facebookAdHeadlinesList.push(choices[0].message.content.trim());
   }
   const { _id, generatedContents } = await storeData(
     userId,
@@ -162,8 +161,8 @@ Headline:`;
 };
 
 const facebookAdLinkDescription = async (userId, userEmail, { platformType, companyName }) => {
-  const userPrompt = `Company Name: ${removeSpaces(companyName)}
-Business Type: ${removeSpaces(platformType)}`;
+  const userPrompt = `Company Name: ${removeSpaces(companyName || '')}
+Business Type: ${removeSpaces(platformType || '')}`;
 
   const prompt = `You are an expert in creating engaging and persuasive link descriptions for Facebook ads. Your task is to write five long, catchy descriptions for the given platform and ad headline.
 
@@ -200,7 +199,7 @@ List of 5 catchy link descriptions using 150 words:`;
 };
 
 const facebookAdsFromProductDescription = async (userId, userEmail, { product }) => {
-  const userPrompt = `Product: ${removeSpaces(product)}`;
+  const userPrompt = `Product: ${removeSpaces(product || '')}`;
 
   const prompt = `You are an expert in creating Facebook ads. Your task is to write five engaging ads for the given product.
 
@@ -215,9 +214,7 @@ ${userPrompt}
 List of 5 Ads:
 -`;
 
-  const adsFromProductDescription = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.8, 0.2, 0.4, [
-    '\n\n',
-  ]);
+  const adsFromProductDescription = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.8, 0.2, 0.4, ['\n\n']);
   return processListContents(
     userId,
     userEmail,

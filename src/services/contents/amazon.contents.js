@@ -48,6 +48,10 @@ Description:`;
     const amazonProductListings = await generateContentUsingGPT4('gpt-4o', 500, prompt, 0.9, 0, 0, ['\n\n']);
     const { id, object, created, model, choices } = amazonProductListings;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('amazonProductListings.choices[0]:', choices[0]);
+    console.log('amazonProductListings.choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
     amazonProductListingsList.push(choices[0].message.content.trim());
   }

@@ -1,26 +1,13 @@
-const {
-  inputLimit: { packages, inputCharacterRate },
-} = require('./config');
+const { inputLimit: { packages, inputCharacterRate } } = require('./config');
 
-/**
- * Immediately Invoked Function Expression (IIFE) to create a mapping of packages
- * to their respective input character limits. This ensures the mapping is created
- * once and is available whenever the module is imported.
- *
- * @returns {Object} A mapping of package names to their corresponding input character limits.
- */
 const inputLimit = (function () {
-  // Initialize an empty object to hold the package-to-character limit mapping
   const perPackageInputCharacterLimit = {};
-
-  // Iterate over the packages array
-  packages.forEach((_package, index) => {
-    // For each package, set the character limit from the inputCharacterRate array
-    perPackageInputCharacterLimit[_package] = inputCharacterRate[index];
+  packages.forEach((pkg, index) => {
+    perPackageInputCharacterLimit[pkg] = inputCharacterRate[index];
   });
-
-  // Return the constructed mapping object
   return perPackageInputCharacterLimit;
 })();
+
+console.log(inputLimit); // Add this line to log the mapping and verify it
 
 module.exports = inputLimit;

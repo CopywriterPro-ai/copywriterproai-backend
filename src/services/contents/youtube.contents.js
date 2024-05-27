@@ -2,9 +2,35 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT4, removeSpaces, processListContents, storeData, formatResponse } = require('../content.service');
 
+const generateContent = async (userId, userEmail, taskType, userPrompt, prompt, numberOfSuggestions, endIndicator) => {
+  const openAPIInformationsList = [];
+  const contentList = [];
+
+  for (let i = 0; i < numberOfSuggestions; i++) {
+    const generatedContent = await generateContentUsingGPT4('gpt-4o', 2000, prompt, 1, 0, 0, [endIndicator]);
+    const { id, object, created, model, choices } = generatedContent;
+
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
+
+    openAPIInformationsList.push({ id, object, created, model });
+    contentList.push(choices[0].message.content.trim());
+  }
+
+  const { _id, generatedContents } = await storeData(
+    userId,
+    userEmail,
+    taskType,
+    userPrompt,
+    openAPIInformationsList,
+    contentList
+  );
+
+  return formatResponse(_id, taskType, generatedContents);
+};
+
 const youtubeVideoIdeas = async (userId, userEmail, { topic, numberOfSuggestions }) => {
   const userPrompt = `Topic: ${removeSpaces(topic)}`;
-
   const prompt = `Generate awesome YouTube video titles that get views for the following topic.
 
 Examples:
@@ -40,146 +66,49 @@ Titles:
 ${userPrompt}
 Titles:`;
 
-  const openAPIInformationsList = [];
-  const youtubeVideoIdeasList = [];
-
-  for (let i = 0; i < numberOfSuggestions; i++) {
-    const videoIdeas = await generateContentUsingGPT4('davinci', 25, prompt, 0.9, 0, 0, ['\n', 'Titles:']);
-    const { id, object, created, model, choices } = videoIdeas;
-
-    openAPIInformationsList.push({ id, object, created, model });
-    youtubeVideoIdeasList.push(choices[0].text.trim());
-  }
-
-  const { _id, generatedContents } = await storeData(
-    userId, userEmail,
-    'youtube-video-ideas',
-    userPrompt,
-    openAPIInformationsList,
-    youtubeVideoIdeasList
-  );
-
-  const userResponse = formatResponse(_id, 'youtube-video-ideas', generatedContents);
-
-  return userResponse;
+  return generateContent(userId, userEmail, 'youtube-video-ideas', userPrompt, prompt, numberOfSuggestions, 'Titles:');
 };
 
 const youtubeVideoTitleFromDescription = async (userId, userEmail, { description, numberOfSuggestions }) => {
   const userPrompt = `Description: ${removeSpaces(description)}`;
-
   const prompt = `Write a catchy YouTube video title that summarizes the following description:
 
 ${userPrompt}
 List of ${numberOfSuggestions} Titles:
 -`;
 
-  const titlesFromDescription = await generateContentUsingGPT4('gpt-4oo', 25, prompt, 0.8, 0.3, 0.4, ['\n\n']);
-  return processListContents(userId, userEmail, 'youtube-video-titles-from-description', userPrompt, titlesFromDescription);
+  return generateContent(userId, userEmail, 'youtube-video-titles-from-description', userPrompt, prompt, numberOfSuggestions, '\n\n');
+};
+
+const generateTags = async (userId, userEmail, taskType, primaryText, numberOfSuggestions, promptType) => {
+  const userPrompt = `Primary Text: ${removeSpaces(primaryText)}`;
+  const prompt = `Generate keywords extracted from the following content for ${promptType}.
+
+Primary Text: Codephilics build products that let you grow your business more effectively. We help you to leverage your dreams whether you are working on your dream project, have a successful startup, or are part of a Fortune 500.
+Keywords: Startup, Product, Product Development, Product Management, Product Marketing, Product Strategy, Transformation, Idea, Product Launch, Project Management, Consulting, Digital Transformation, Innovation, Creativity.
+
+${userPrompt}
+Keywords:`;
+
+  return generateContent(userId, userEmail, taskType, userPrompt, prompt, numberOfSuggestions, 'Keywords:');
 };
 
 const generateVideoTagsFromDescription = async (userId, userEmail, { primaryText, numberOfSuggestions }) => {
-  const userPrompt = `Primary Text: ${removeSpaces(primaryText)}`;
-
-  const prompt = `Generate keywords extracted from the following content for search engine optimization (SEO) and YouTube tags.
-
-Primary Text: Codephilics build products that let you grow your business more effectively. We help you to leverage your dreams whether you are working on your dream project, have a successful startup, or are part of a Fortune 500.
-Keywords: Startup, Product, Product Development, Product Management, Product Marketing, Product Strategy, Transformation, Idea, Product Launch, Project Management, Consulting, Digital Transformation, Innovation, Creativity.
-
-${userPrompt}
-Keywords:`;
-
-  const openAPIInformationsList = [];
-  const videoTagsFromDescriptionList = [];
-
-  for (let i = 0; i < numberOfSuggestions; i++) {
-    const videoTagsFromDescription = await generateContentUsingGPT4('davinci', 50, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
-    const { id, object, created, model, choices } = videoTagsFromDescription;
-
-    openAPIInformationsList.push({ id, object, created, model });
-    videoTagsFromDescriptionList.push(choices[0].text.trim());
-  }
-
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'youtube-video-tags-from-description',
-    userPrompt,
-    openAPIInformationsList,
-    videoTagsFromDescriptionList
-  );
-
-  const userResponse = formatResponse(_id, 'youtube-video-tags-from-description', generatedContents);
-
-  return userResponse;
+  return generateTags(userId, userEmail, 'youtube-video-tags-from-description', primaryText, numberOfSuggestions, 'search engine optimization (SEO) and YouTube tags');
 };
 
 const generateChannelTagsFromDescription = async (userId, userEmail, { primaryText, numberOfSuggestions }) => {
-  const userPrompt = `Primary Text: ${removeSpaces(primaryText)}`;
-
-  const prompt = `Generate keywords extracted from the following content for search engine optimization (SEO) and YouTube channel tags.
-
-Primary Text: Codephilics build products that let you grow your business more effectively. We help you to leverage your dreams whether you are working on your dream project, have a successful startup, or are part of a Fortune 500.
-Keywords: Startup, Product, Product Development, Product Management, Product Marketing, Product Strategy, Transformation, Idea, Product Launch, Project Management, Consulting, Digital Transformation, Innovation, Creativity.
-
-${userPrompt}
-Keywords:`;
-
-  const openAPIInformationsList = [];
-  const channelTagsFromDescriptionList = [];
-
-  for (let i = 0; i < numberOfSuggestions; i++) {
-    const channelTagsFromDescription = await generateContentUsingGPT4('davinci', 80, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
-    const { id, object, created, model, choices } = channelTagsFromDescription;
-
-    openAPIInformationsList.push({ id, object, created, model });
-    channelTagsFromDescriptionList.push(choices[0].text.trim());
-  }
-
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'youtube-channel-tags-from-description',
-    userPrompt,
-    openAPIInformationsList,
-    channelTagsFromDescriptionList
-  );
-
-  const userResponse = formatResponse(_id, 'youtube-channel-tags-from-description', generatedContents);
-
-  return userResponse;
+  return generateTags(userId, userEmail, 'youtube-channel-tags-from-description', primaryText, numberOfSuggestions, 'search engine optimization (SEO) and YouTube channel tags');
 };
 
 const generateYoutubeVideoScript = async (userId, userEmail, { title, numberOfSuggestions }) => {
   const userPrompt = `Title: ${removeSpaces(title)}`;
-
   const prompt = `Write a long YouTube video script for the following title, starting with "Hi, everyone, welcome to another brand new video," between 800 to 1200 words.
 
 ${userPrompt}
 `;
 
-  const openAPIInformationsList = [];
-  const youtubeVideoScriptList = [];
-
-  for (let i = 0; i < numberOfSuggestions; i++) {
-    const youtubeVideoScript = await generateContentUsingGPT4('gpt-4o', 2036, prompt, 0.7, 0, 0, ['\n\n\n\n']);
-    const { id, object, created, model, choices } = youtubeVideoScript;
-
-    openAPIInformationsList.push({ id, object, created, model });
-    youtubeVideoScriptList.push(choices[0].text.trim());
-  }
-
-  const { _id, generatedContents } = await storeData(
-    userId,
-    userEmail,
-    'youtube-video-script',
-    userPrompt,
-    openAPIInformationsList,
-    youtubeVideoScriptList
-  );
-
-  const userResponse = formatResponse(_id, 'youtube-video-script', generatedContents);
-
-  return userResponse;
+  return generateContent(userId, userEmail, 'youtube-video-script', userPrompt, prompt, numberOfSuggestions, '\n\n\n\n');
 };
 
 module.exports = {

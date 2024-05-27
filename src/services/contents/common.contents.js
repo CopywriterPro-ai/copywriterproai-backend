@@ -41,6 +41,11 @@ List of ${numberOfSuggestions} Image Content Ideas:
 -`;
 
   const imageIdeas = await generateContentUsingGPT4('gpt-4o', 50, prompt, 0.8, 0.1, 0.2, ['\n\n']);
+
+  // Log choices[0] and choices[0].message.content for debugging
+  console.log('imageIdeas.choices[0]:', imageIdeas.choices[0]);
+  console.log('imageIdeas.choices[0].message.content:', imageIdeas.choices[0].message.content);
+
   return processListContents(userId, userEmail, 'image-idea-from-ad-text', userPrompt, imageIdeas);
 };
 

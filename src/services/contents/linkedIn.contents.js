@@ -2,7 +2,6 @@
 const {
   generateContentUsingGPT4,
   removeSpaces,
-  processListContents,
   storeData,
   formatResponse,
 } = require('../content.service');
@@ -54,11 +53,15 @@ Description:`;
   const linkedinAdTextsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const adTexts = await generateContentUsingGPT4('davinci', 100, prompt, 0.8, 0.2, 0.3, ['\n', 'Description:']);
+    const adTexts = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.8, 0.2, 0.3, ['\n', 'Description:']);
     const { id, object, created, model, choices } = adTexts;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    linkedinAdTextsList.push(choices[0].text.trim());
+    linkedinAdTextsList.push(choices[0].message.content.trim());
   }
   const { _id, generatedContents } = await storeData(
     userId,
@@ -105,8 +108,12 @@ Summary:`;
     const linkedInSummary = await generateContentUsingGPT4('gpt-4o', 400, prompt, 0.7, 0, 0, ['\n', 'Summary:']);
     const { id, object, created, model, choices } = linkedInSummary;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('choices[0]:', choices[0]);
+    console.log('choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    generateLinkedInSummaryList.push(choices[0].text.trim());
+    generateLinkedInSummaryList.push(choices[0].message.content.trim());
   }
   const { _id, generatedContents } = await storeData(
     userId,

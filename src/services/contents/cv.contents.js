@@ -36,8 +36,12 @@ Summary:`;
     const cvSummary = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.7, 0, 0, ['\n', 'Summary:']);
     const { id, object, created, model, choices } = cvSummary;
 
+    // Log choices[0] and choices[0].message.content for debugging
+    console.log('cvSummary.choices[0]:', choices[0]);
+    console.log('cvSummary.choices[0].message.content:', choices[0].message.content);
+
     openAPIInformationsList.push({ id, object, created, model });
-    generateCVSummaryList.push(choices[0].text.trim());
+    generateCVSummaryList.push(choices[0].message.content.trim());
   }
 
   const { _id, generatedContents } = await storeData(

@@ -5,11 +5,6 @@ const Joi = require('joi');
 // Configure dotenv to load environment variables from a specific path
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
-/**
- * Define a schema using Joi to validate and describe the expected structure
- * and constraints of environment variables. This ensures all required
- * environment variables are provided and have correct formats.
- */
 const envVarsSchema = Joi.object()
   .keys({
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
@@ -18,9 +13,7 @@ const envVarsSchema = Joi.object()
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
-    JWT_EXTENSION_ACCESS_EXPIRATION_MONTHS: Joi.number()
-      .default(6)
-      .description('months after which extension access tokens expire'),
+    JWT_EXTENSION_ACCESS_EXPIRATION_MONTHS: Joi.number().default(6).description('months after which extension access tokens expire'),
     OPENAI_API_KEY: Joi.string().required().description('OpenAI secret key'),
     COPYSCAPE_USERNAME: Joi.string().required().description('Copyscape username'),
     COPYSCAPE_API_KEY: Joi.string().required().description('Copyscape API key'),
@@ -46,26 +39,23 @@ const envVarsSchema = Joi.object()
     TRIAL_WORDS: Joi.number().default(700).description('Trial words'),
     TRIAL_PLAGIARISM_CHECKER_WORDS: Joi.number().default(0).description('Trial plagiarism checker words'),
     PACKAGES: Joi.string().default('').description('Current packages'),
-    PLAGIARISM_CHECKER_ALLOWED_PACKAGES: Joi.string().default('').description('Plagiarism checker allowed packages'),
     INPUT_CHARACTER_RATE: Joi.string().default('').description('Per package input character rate'),
+    PLAGIARISM_CHECKER_ALLOWED_PACKAGES: Joi.string().default('').description('Plagiarism checker allowed packages'), // Added default value
     IGNORE_CONTENT_SAVING_EMAIL: Joi.string().allow('').default('').description('Ignore content saving email'),
   })
   .unknown(); // Allow unknown keys in environment variables
 
-// Validate the environment variables against the schema
 const { value: envVars, error } = envVarsSchema.prefs({ errors: { label: 'key' } }).validate(process.env);
 
-// If validation fails, throw an error with the validation message
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);
 }
 
-// Export the validated and processed environment variables as a configuration object
 module.exports = {
-  env: envVars.NODE_ENV, // Environment: production, development, or test
-  port: envVars.PORT, // Server port
+  env: envVars.NODE_ENV,
+  port: envVars.PORT,
   mongoose: {
-    url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''), // MongoDB connection URL with test suffix in test environment
+    url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
     options: {
       useCreateIndex: true,
       useNewUrlParser: true,
@@ -74,72 +64,72 @@ module.exports = {
     },
   },
   jwt: {
-    secret: envVars.JWT_SECRET, // JWT secret key
-    accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES, // Access token expiration time
-    refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS, // Refresh token expiration time
-    resetPasswordExpirationMinutes: 10, // Password reset token expiration time
-    extensionAccessExpirationMonths: envVars.JWT_EXTENSION_ACCESS_EXPIRATION_MONTHS, // Extended access token expiration time
+    secret: envVars.JWT_SECRET,
+    accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
+    refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
+    resetPasswordExpirationMinutes: 10,
+    extensionAccessExpirationMonths: envVars.JWT_EXTENSION_ACCESS_EXPIRATION_MONTHS,
   },
   passportConfig: {
-    authSecretKey: envVars.PASSPORT_SECRET_JWT_KEY, // Passport authentication secret key
-    authExpireTime: envVars.PASSPORT_AUTH_EXPIRES_TIME, // Passport authentication expiration time
+    authSecretKey: envVars.PASSPORT_SECRET_JWT_KEY,
+    authExpireTime: envVars.PASSPORT_AUTH_EXPIRES_TIME,
   },
   googleOauth2: {
-    clientId: envVars.GOOGLE_OAUTH2_CLIENT_ID, // Google OAuth2 client ID
-    secretId: envVars.GOOGLE_OAUTH2_SECRET_ID, // Google OAuth2 secret ID
+    clientId: envVars.GOOGLE_OAUTH2_CLIENT_ID,
+    secretId: envVars.GOOGLE_OAUTH2_SECRET_ID,
   },
   facebookOauth: {
-    appId: envVars.FACEBOOK_APP_ID, // Facebook OAuth app ID
-    appSecret: envVars.FACEBOOK_APP_SECRET, // Facebook OAuth app secret
+    appId: envVars.FACEBOOK_APP_ID,
+    appSecret: envVars.FACEBOOK_APP_SECRET,
   },
   openAI: {
-    openAIAPIKey: envVars.OPENAI_API_KEY, // OpenAI API key
+    openAIAPIKey: envVars.OPENAI_API_KEY,
   },
   copyscape: {
-    copyscapeUsername: envVars.COPYSCAPE_USERNAME, // Copyscape username
-    copyscapeAPIKey: envVars.COPYSCAPE_API_KEY, // Copyscape API key
+    copyscapeUsername: envVars.COPYSCAPE_USERNAME,
+    copyscapeAPIKey: envVars.COPYSCAPE_API_KEY,
   },
   stripe: {
-    stripeSecretKey: envVars.STRIPE_SECRET_KEY, // Stripe secret key
-    webHookSecretKey: envVars.STRIPE_WEBHOOK_SECRET_KEY, // Stripe webhook secret key
+    stripeSecretKey: envVars.STRIPE_SECRET_KEY,
+    webHookSecretKey: envVars.STRIPE_WEBHOOK_SECRET_KEY,
   },
   verifyMail: {
-    jwtSecret: envVars.MAIL_VERIFY_TOKEN_SECRET, // Mail verification JWT secret
-    jwtExpires: envVars.MAIL_VERIFY_TOKEN_EXPIRE, // Mail verification token expiration
+    jwtSecret: envVars.MAIL_VERIFY_TOKEN_SECRET,
+    jwtExpires: envVars.MAIL_VERIFY_TOKEN_EXPIRE,
   },
   email: {
     smtp: {
-      host: envVars.SMTP_HOST, // SMTP server host
-      port: envVars.SMTP_PORT, // SMTP server port
+      host: envVars.SMTP_HOST,
+      port: envVars.SMTP_PORT,
       auth: {
-        user: envVars.SMTP_USERNAME, // SMTP server username
-        pass: envVars.SMTP_PASSWORD, // SMTP server password
+        user: envVars.SMTP_USERNAME,
+        pass: envVars.SMTP_PASSWORD,
       },
     },
-    from: envVars.EMAIL_FROM, // Default from address for emails
+    from: envVars.EMAIL_FROM,
   },
   frontendUrl: {
-    web: envVars.WEB_CLIENT_URL, // Frontend web client URL
+    web: envVars.WEB_CLIENT_URL,
   },
   cors: {
-    whitelist: envVars.CORS_WHITELIST.split(','), // CORS whitelist
+    whitelist: envVars.CORS_WHITELIST.split(','),
   },
   sentry: {
-    dns: envVars.SENTRY_DNS_URL, // Sentry DNS URL for error tracking
+    dns: envVars.SENTRY_DNS_URL,
   },
   trial: {
-    days: envVars.TRIAL_DAYS, // Number of trial days
-    words: envVars.TRIAL_WORDS, // Number of trial words
-    plagiarismCheckerWords: envVars.TRIAL_PLAGIARISM_CHECKER_WORDS, // Number of trial plagiarism checker words
+    days: envVars.TRIAL_DAYS,
+    words: envVars.TRIAL_WORDS,
+    plagiarismCheckerWords: envVars.TRIAL_PLAGIARISM_CHECKER_WORDS,
   },
   inputLimit: {
-    packages: envVars.PACKAGES.split(', '), // List of current packages
-    inputCharacterRate: envVars.INPUT_CHARACTER_RATE.split(',').map(Number), // Character rate per package
+    packages: envVars.PACKAGES.split(',').map(pkg => pkg.trim()),
+    inputCharacterRate: envVars.INPUT_CHARACTER_RATE.split(',').map(rate => parseInt(rate.trim(), 10)),
   },
   plagiarismChecker: {
-    allowedPackages: envVars.PLAGIARISM_CHECKER_ALLOWED_PACKAGES.split(','), // Packages allowed for plagiarism checking
+    allowedPackages: envVars.PLAGIARISM_CHECKER_ALLOWED_PACKAGES.split(',').map(pkg => pkg.trim()), // Added .map to trim each package
   },
   content: {
-    ignoresavingdb: envVars.IGNORE_CONTENT_SAVING_EMAIL.split(','), // Emails to ignore for content saving
+    ignoresavingdb: envVars.IGNORE_CONTENT_SAVING_EMAIL.split(',').map(email => email.trim()), // Added .map to trim each email
   },
 };
