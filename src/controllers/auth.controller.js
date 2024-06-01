@@ -12,6 +12,7 @@ const {
 const { frontendUrl } = require('../config/config');
 const { authTypes } = require('../config/auths');
 const { subscription } = require('../config/plan');
+const User = require('../models/user.model');
 
 /**
  * Register a new user.
@@ -76,6 +77,10 @@ const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUser({ email, authType: authTypes.EMAIL }, password);
   const tokens = await tokenService.generateAuthTokens(user);
+  // Check if onboarding is complete
+  if (!user.hasCompletedOnboarding) {
+    return res.status(httpStatus.OK).send({ status: httpStatus.OK, user, tokens, onboarding: true });
+  }
   res.status(httpStatus.OK).send({ status: httpStatus.OK, user, tokens });
 });
 
@@ -155,7 +160,32 @@ const strategyCallback = catchAsync(async (req, res) => {
 const strategyLogin = catchAsync(async (req, res) => {
   const user = await authService.strategyUser(req.user);
   const tokens = await tokenService.generateAuthTokens({ id: user.id });
+  // Check if onboarding is complete
+  if (!user.hasCompletedOnboarding) {
+    return res.status(httpStatus.OK).send({ status: httpStatus.OK, user, tokens, onboarding: true });
+  }
   res.status(httpStatus.OK).send({ status: httpStatus.OK, user, tokens });
+});
+
+/**
+ * Complete onboarding.
+ * This function marks the user as having completed the onboarding process.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ */
+const completeOnboarding = catchAsync(async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.user.id, { hasCompletedOnboarding: true }, { new: true });
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, user });
+});
+
+const submitOwnOpenAIApiKey = catchAsync(async (req, res) => {
+  const { ownOpenAIApiKey } = req.body;
+  const user = await User.findByIdAndUpdate(req.user._id, { ownOpenAIApiKey }, { new: true });
+  if (!user) {
+    return res.status(httpStatus.NOT_FOUND).json({ error: 'User not found' });
+  }
+  return res.status(httpStatus.OK).json({ message: 'Own OpenAI API key submitted successfully', user });
 });
 
 module.exports = {
@@ -168,4 +198,6 @@ module.exports = {
   resetPassword,
   strategyCallback,
   strategyLogin,
+  completeOnboarding,
+  submitOwnOpenAIApiKey,
 };

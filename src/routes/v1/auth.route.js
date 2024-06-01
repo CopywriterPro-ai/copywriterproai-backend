@@ -5,6 +5,7 @@ const passportAuth = require('../../middlewares/passportAuth');
 const verifyEmail = require('../../middlewares/verifyEmail');
 const authValidation = require('../../validations/auth.validation');
 const authController = require('../../controllers/auth.controller');
+const auth = require('../../middlewares/auth');
 
 const router = express.Router();
 
@@ -31,5 +32,11 @@ router.get(
   passport.authenticate('facebook', { failureRedirect: '/login', session: false }),
   authController.strategyCallback
 );
+
+// Route to handle the submission of user's own OpenAI API key during onboarding
+router.post('/submit-own-openai-api-key', auth(), authController.submitOwnOpenAIApiKey);
+
+// Route to handle completing onboarding
+router.post('/complete-onboarding', auth(), authController.completeOnboarding);
 
 module.exports = router;

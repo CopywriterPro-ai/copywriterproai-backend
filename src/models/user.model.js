@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-
 const { Schema } = mongoose;
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 const { authTypes } = require('../config/auths');
-
 const authTypeEnum = Object.values(authTypes);
 
 const userSchema = new Schema(
@@ -62,6 +60,14 @@ const userSchema = new Schema(
       required: true,
       default: [],
     },
+    UserOwnOpenAIApiKey: {
+      type: String,
+      required: false,
+    },
+    hasCompletedOnboarding: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
@@ -69,12 +75,7 @@ const userSchema = new Schema(
   }
 );
 
-/**
- * Check if email is taken
- * @param {string} email - The user's email
- * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
- * @returns {Promise<boolean>}
- */
+// Check if email is taken
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   const user = await this.findOne({ email, authType: 'email', _id: { $ne: excludeUserId } });
   return !!user;
@@ -85,11 +86,7 @@ userSchema.statics.isVerifiedEmailTaken = async function (email) {
   return !!user;
 };
 
-/**
- * Check if password matches the user's password
- * @param {string} password
- * @returns {Promise<boolean>}
- */
+// Check if password matches the user's password
 userSchema.methods.isPasswordMatch = async function (password) {
   const user = this;
   return bcrypt.compare(password, user.password);

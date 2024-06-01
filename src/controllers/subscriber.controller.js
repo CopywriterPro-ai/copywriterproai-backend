@@ -1,6 +1,5 @@
 const httpStatus = require('http-status');
 const moment = require('moment-timezone');
-
 const catchAsync = require('../utils/catchAsync');
 const { subscriberService } = require('../services');
 
@@ -23,7 +22,7 @@ const generateUpdate = catchAsync(async (req, res) => {
   let calDailyCreaditUsage;
   const { role, userId } = req.user;
   const { useWords = 0 } = req.body;
-  const { activeSubscription, dailyCreaditUsage } = await subscriberService.getOwnSubscribe(userId);
+  const { activeSubscription, dailyCreaditUsage, UserOwnOpenAIApiKey } = await subscriberService.getOwnSubscribe(userId);
 
   const todayDate = moment().startOf('day').format();
   const { date, usage } = dailyCreaditUsage;
@@ -36,13 +35,10 @@ const generateUpdate = catchAsync(async (req, res) => {
     calDailyCreaditUsage = { date: todayDate, usage: useWords };
   }
 
-  let remainingWords = 0;
-  const subtractionWords = activeSubscription.words - useWords;
-
-  if (subtractionWords < 0) {
-    remainingWords = 0;
-  } else {
-    remainingWords = subtractionWords;
+  let remainingWords = activeSubscription.words;
+  if (!UserOwnOpenAIApiKey) {
+    const subtractionWords = activeSubscription.words - useWords;
+    remainingWords = subtractionWords < 0 ? 0 : subtractionWords;
   }
 
   const subscriber = await subscriberService.updateOwnSubscribe(userId, {
@@ -60,4 +56,15 @@ const subscriberSwitcher = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });
 });
 
-module.exports = { getOwnSubscribe, updateOwnSubscribe, updateOwnCopyCounter, generateUpdate, subscriberSwitcher };
+// Add new endpoints to manage trial and enforce subscription
+const manageTrial = catchAsync(async (req, res) => {
+  const subscriber = await subscriberService.manageTrial(req.user.userId);
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });
+});
+
+const enforceSubscription = catchAsync(async (req, res) => {
+  const subscriber = await subscriberService.enforceSubscription(req.user.userId);
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });
+});
+
+module.exports = { getOwnSubscribe, updateOwnSubscribe, updateOwnCopyCounter, generateUpdate, subscriberSwitcher, manageTrial, enforceSubscription };
