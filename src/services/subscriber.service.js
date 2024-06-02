@@ -89,7 +89,7 @@ const enforceSubscription = async (userId) => {
     return subscriber;
   }
 
-  // Implement subscription enforcement logic based on your application's requirements
+  // Implement subscription enforcement logic
   const { subscriptionExpire } = subscriber.activeSubscription;
   const isSubscriptionExpired = moment().isAfter(subscriptionExpire);
 
