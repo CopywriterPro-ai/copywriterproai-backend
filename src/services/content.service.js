@@ -1,18 +1,16 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-use-before-define */
+// src/services/content.service.js
+
 const OpenAI = require('openai');
 const { v4: uuidv4 } = require('uuid');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { Content } = require('../models');
-const config = require('../config/config');
 
-const { openAIAPIKey } = config.openAI;
-const openai = new OpenAI(openAIAPIKey);
-
-const generateContentUsingGPT4 = async (model, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop) => {
+const generateContentUsingGPT4 = async (model, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop, apiKey) => {
   let gptResponse;
   let count = 0; // will try to generate content for maximum 10 times
+
+  const openai = new OpenAI(apiKey); // Use the provided API key to create OpenAI instance
 
   while (count < 10) {
     try {

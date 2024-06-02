@@ -16,11 +16,6 @@ const User = require('../models/user.model');
 
 /**
  * Register a new user.
- * This function handles the registration of a new user by creating the user record in the database,
- * sending a verification email, and returning a success response.
- *
- * @param {Object} req - The request object containing user registration details.
- * @param {Object} res - The response object.
  */
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -37,11 +32,6 @@ const register = catchAsync(async (req, res) => {
 
 /**
  * Verify user account.
- * This function verifies a user's account using the token provided in the request.
- * It updates the user's verification status and sends a welcome email.
- *
- * @param {Object} req - The request object containing the verification token.
- * @param {Object} res - The response object.
  */
 const verifyAccount = catchAsync(async (req, res) => {
   const { sub: userId, email } = req.token;
@@ -68,10 +58,6 @@ const verifyAccount = catchAsync(async (req, res) => {
 
 /**
  * Login user.
- * This function handles user login by validating credentials, generating auth tokens, and returning the user and tokens.
- *
- * @param {Object} req - The request object containing login details.
- * @param {Object} res - The response object.
  */
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
@@ -86,10 +72,6 @@ const login = catchAsync(async (req, res) => {
 
 /**
  * Logout user.
- * This function handles user logout by invalidating the provided refresh token.
- *
- * @param {Object} req - The request object containing the refresh token.
- * @param {Object} res - The response object.
  */
 const logout = catchAsync(async (req, res) => {
   await authService.logout(req.body.refreshToken);
@@ -98,10 +80,6 @@ const logout = catchAsync(async (req, res) => {
 
 /**
  * Refresh authentication tokens.
- * This function generates new authentication tokens using the provided refresh token.
- *
- * @param {Object} req - The request object containing the refresh token.
- * @param {Object} res - The response object.
  */
 const refreshTokens = catchAsync(async (req, res) => {
   const tokens = await authService.refreshAuth(req.body.refreshToken);
@@ -110,10 +88,6 @@ const refreshTokens = catchAsync(async (req, res) => {
 
 /**
  * Handle forgot password.
- * This function handles the forgot password process by sending a password reset email to the user.
- *
- * @param {Object} req - The request object containing the user's email.
- * @param {Object} res - The response object.
  */
 const forgotPassword = catchAsync(async (req, res) => {
   const { email } = req.body;
@@ -126,10 +100,6 @@ const forgotPassword = catchAsync(async (req, res) => {
 
 /**
  * Reset user password.
- * This function resets the user's password using the token provided in the request.
- *
- * @param {Object} req - The request object containing the new password and token.
- * @param {Object} res - The response object.
  */
 const resetPassword = catchAsync(async (req, res) => {
   const { email } = req.token;
@@ -139,10 +109,6 @@ const resetPassword = catchAsync(async (req, res) => {
 
 /**
  * Handle OAuth strategy callback.
- * This function handles the callback from OAuth providers, generates a JWT token, and redirects to the frontend with the token.
- *
- * @param {Object} req - The request object containing the OAuth user information.
- * @param {Object} res - The response object.
  */
 const strategyCallback = catchAsync(async (req, res) => {
   const { userId, authType, _id } = req.user;
@@ -152,10 +118,6 @@ const strategyCallback = catchAsync(async (req, res) => {
 
 /**
  * Handle OAuth strategy login.
- * This function logs in the user using OAuth strategy, generates auth tokens, and returns the user and tokens.
- *
- * @param {Object} req - The request object containing the OAuth user information.
- * @param {Object} res - The response object.
  */
 const strategyLogin = catchAsync(async (req, res) => {
   const user = await authService.strategyUser(req.user);
@@ -169,16 +131,15 @@ const strategyLogin = catchAsync(async (req, res) => {
 
 /**
  * Complete onboarding.
- * This function marks the user as having completed the onboarding process.
- *
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
  */
 const completeOnboarding = catchAsync(async (req, res) => {
   const user = await User.findByIdAndUpdate(req.user.id, { hasCompletedOnboarding: true }, { new: true });
   res.status(httpStatus.OK).send({ status: httpStatus.OK, user });
 });
 
+/**
+ * Submit user's own OpenAI API key.
+ */
 const submitOwnOpenAIApiKey = catchAsync(async (req, res) => {
   const { ownOpenAIApiKey } = req.body;
   const user = await User.findByIdAndUpdate(req.user._id, { ownOpenAIApiKey }, { new: true });

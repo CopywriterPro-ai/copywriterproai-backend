@@ -20,9 +20,9 @@ const updateOwnCopyCounter = catchAsync(async (req, res) => {
 
 const generateUpdate = catchAsync(async (req, res) => {
   let calDailyCreaditUsage;
-  const { role, userId } = req.user;
+  const { role, userId, UserOwnOpenAIApiKey } = req.user;
   const { useWords = 0 } = req.body;
-  const { activeSubscription, dailyCreaditUsage, UserOwnOpenAIApiKey } = await subscriberService.getOwnSubscribe(userId);
+  const { activeSubscription, dailyCreaditUsage } = await subscriberService.getOwnSubscribe(userId);
 
   const todayDate = moment().startOf('day').format();
   const { date, usage } = dailyCreaditUsage;
@@ -67,4 +67,12 @@ const enforceSubscription = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ status: httpStatus.OK, subscriber });
 });
 
-module.exports = { getOwnSubscribe, updateOwnSubscribe, updateOwnCopyCounter, generateUpdate, subscriberSwitcher, manageTrial, enforceSubscription };
+module.exports = {
+  getOwnSubscribe,
+  updateOwnSubscribe,
+  updateOwnCopyCounter,
+  generateUpdate,
+  subscriberSwitcher,
+  manageTrial,
+  enforceSubscription,
+};
