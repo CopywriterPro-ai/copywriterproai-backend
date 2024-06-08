@@ -1,14 +1,7 @@
 const httpStatus = require('http-status');
 const { v1: uuidv1 } = require('uuid');
 const catchAsync = require('../utils/catchAsync');
-const {
-  authService,
-  userService,
-  tokenService,
-  interestService,
-  emailService,
-  subscriberService,
-} = require('../services');
+const { authService, userService, tokenService, interestService, emailService, subscriberService } = require('../services');
 const { frontendUrl } = require('../config/config');
 const { authTypes } = require('../config/auths');
 const { subscription } = require('../config/plan');
@@ -63,10 +56,6 @@ const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUser({ email, authType: authTypes.EMAIL }, password);
   const tokens = await tokenService.generateAuthTokens(user);
-  // Check if onboarding is complete
-  if (!user.hasCompletedOnboarding) {
-    return res.status(httpStatus.OK).send({ status: httpStatus.OK, user, tokens, onboarding: true });
-  }
   res.status(httpStatus.OK).send({ status: httpStatus.OK, user, tokens });
 });
 
@@ -122,10 +111,6 @@ const strategyCallback = catchAsync(async (req, res) => {
 const strategyLogin = catchAsync(async (req, res) => {
   const user = await authService.strategyUser(req.user);
   const tokens = await tokenService.generateAuthTokens({ id: user.id });
-  // Check if onboarding is complete
-  if (!user.hasCompletedOnboarding) {
-    return res.status(httpStatus.OK).send({ status: httpStatus.OK, user, tokens, onboarding: true });
-  }
   res.status(httpStatus.OK).send({ status: httpStatus.OK, user, tokens });
 });
 
