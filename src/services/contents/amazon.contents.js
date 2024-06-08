@@ -4,7 +4,8 @@ const { generateContentUsingGPT4, removeSpaces, storeData, formatResponse } = re
 const generateAmazonProductListings = async (
   userId,
   userEmail,
-  { productName, productCategories, productFeatures, numberOfSuggestions }
+  { productName, productCategories, productFeatures, numberOfSuggestions },
+  apiKey
 ) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Product Categories: ${removeSpaces(productCategories)}
@@ -45,7 +46,7 @@ Description:`;
   const amazonProductListingsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const amazonProductListings = await generateContentUsingGPT4('gpt-4o', 500, prompt, 0.9, 0, 0, ['\n\n']);
+    const amazonProductListings = await generateContentUsingGPT4('gpt-4', 500, prompt, 0.9, 0, 0, ['\n\n'], apiKey);
     const { id, object, created, model, choices } = amazonProductListings;
 
     // Log choices[0] and choices[0].message.content for debugging

@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 const { generateContentUsingGPT4, removeSpaces, storeData, formatResponse } = require('../content.service');
 
-const generateCatchyBusinessTaglines = async (userId, userEmail, { companyName, businessType, numberOfSuggestions }) => {
+const generateCatchyBusinessTaglines = async (userId, userEmail, { companyName, businessType, numberOfSuggestions }, apiKey) => {
   const userPrompt = `Company Name: ${removeSpaces(companyName)}
 Business Type: ${removeSpaces(businessType)}`;
 
@@ -55,7 +55,7 @@ Taglines:`;
     const catchyBusinessTaglines = await generateContentUsingGPT4('gpt-4o', 20, prompt, 0.9, 0, 0, [
       '\n',
       'Taglines:',
-    ]);
+    ], apiKey);
     const { id, object, created, model, choices } = catchyBusinessTaglines;
 
     // Log choices[0] and choices[0].message.content for debugging

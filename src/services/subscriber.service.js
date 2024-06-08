@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
+const moment = require('moment-timezone');
 const { Subscriber } = require('../models');
 const ApiError = require('../utils/ApiError');
+const User = require('../models/user.model'); // Import User model to check for OpenAI API key
 
 const createOwnSubscribe = async (data) => {
   const subscriber = await Subscriber.create(data);
@@ -56,4 +58,55 @@ const subscriberSwitcher = async (req) => {
   return subscriber;
 };
 
-module.exports = { createOwnSubscribe, getOwnSubscribe, updateOwnSubscribe, updateOwnCopyCounter, subscriberSwitcher };
+const manageTrial = async (userId) => {
+  const subscriber = await getOwnSubscribe(userId);
+  const user = await User.findById(userId);
+
+  // Check if the user has provided their own OpenAI API key
+  if (user.UserOwnOpenAIApiKey) {
+    // If the user has their own API key, no trial restrictions are applied
+    return subscriber;
+  }
+
+  // Implement trial management logic based on your application's requirements
+  const trialEndDate = moment(subscriber.createdAt).add(trial.days, 'days');
+  const isTrialEnded = moment().isAfter(trialEndDate);
+
+  if (isTrialEnded) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Your trial period has ended. Please subscribe to continue.');
+  }
+
+  return subscriber;
+};
+
+const enforceSubscription = async (userId) => {
+  const subscriber = await getOwnSubscribe(userId);
+  const user = await User.findById(userId);
+
+  // Check if the user has provided their own OpenAIApiKey
+  if (user.UserOwnOpenAIApiKey) {
+    // If the user has their own API key, no subscription restrictions are applied
+    return subscriber;
+  }
+
+  // Implement subscription enforcement logic
+  const { subscriptionExpire } = subscriber.activeSubscription;
+  const isSubscriptionExpired = moment().isAfter(subscriptionExpire);
+
+  if (isSubscriptionExpired) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Your subscription has expired. Please renew to continue.');
+  }
+
+  return subscriber;
+};
+
+module.exports = {
+  createOwnSubscribe,
+  getOwnSubscribe,
+  updateOwnSubscribe,
+  updateOwnCopyCounter,
+  updatesubscriptionAll,
+  subscriberSwitcher,
+  manageTrial,
+  enforceSubscription,
+};

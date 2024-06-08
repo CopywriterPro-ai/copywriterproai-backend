@@ -10,7 +10,7 @@ const {
 } = require('../content.service');
 
 // Blog Contents
-const blogIdea = async (userId, userEmail, { productName, productDescription, numberOfSuggestions = 1 }) => {
+const blogIdea = async (userId, userEmail, { productName, productDescription, numberOfSuggestions = 1 }, apiKey) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
 Product Description: ${removeSpaces(productDescription)}`;
 
@@ -31,7 +31,7 @@ List of ${numberOfSuggestions} BLOG IDEAS:
   const blogIdeas = await generateContentUsingGPT4('gpt-4o', 100, prompt, 1.0, 1.0, 1.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
-  ]);
+  ], apiKey);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('blogIdeas.choices[0]:', blogIdeas.choices[0]);
@@ -40,7 +40,7 @@ List of ${numberOfSuggestions} BLOG IDEAS:
   return processListContents(userId, userEmail, 'blog-idea', userPrompt, blogIdeas);
 };
 
-const blogHeadline = async (userId, userEmail, { about, numberOfSuggestions = 1 }) => {
+const blogHeadline = async (userId, userEmail, { about, numberOfSuggestions = 1 }, apiKey) => {
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}`;
 
   const prompt = `You are a skilled and creative blog writer. Your task is to generate attention-grabbing blog headlines relevant to the given topic. Use your expertise to create engaging, clear, and compelling headlines that effectively communicate the intended message to the target audience.
@@ -60,7 +60,7 @@ List of ${numberOfSuggestions} BLOG HEADLINES:
   const blogHeadlines = await generateContentUsingGPT4('gpt-4o', 100, prompt, 1.0, 1.0, 1.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
-  ]);
+  ], apiKey);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('blogHeadlines.choices[0]:', blogHeadlines.choices[0]);
@@ -69,7 +69,7 @@ List of ${numberOfSuggestions} BLOG HEADLINES:
   return processListContents(userId, userEmail, 'blog-headline', userPrompt, blogHeadlines);
 };
 
-const blogIntro = async (userId, userEmail, { about, headline, numberOfSuggestions = 1 }) => {
+const blogIntro = async (userId, userEmail, { about, headline, numberOfSuggestions = 1 }, apiKey) => {
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
@@ -90,7 +90,7 @@ BLOG INTRODUCTION (A brief description of what the blog is about and why someone
   const blogIntrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogIntros = await generateContentUsingGPT4('gpt-4o', 450, prompt, 1.0, 1.0, 1.0, ['\n\n\n']);
+    const blogIntros = await generateContentUsingGPT4('gpt-4o', 450, prompt, 1.0, 1.0, 1.0, ['\n\n\n'], apiKey);
     const { id, object, created, model, choices } = blogIntros;
     openAPIInformationsList.push({ id, object, created, model });
 
@@ -114,7 +114,7 @@ BLOG INTRODUCTION (A brief description of what the blog is about and why someone
   return userResponse;
 };
 
-const blogOutline = async (userId, userEmail, { about, headline, numberOfPoints, numberOfSuggestions = 1 }) => {
+const blogOutline = async (userId, userEmail, { about, headline, numberOfPoints, numberOfSuggestions = 1 }, apiKey) => {
   let userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
@@ -149,7 +149,7 @@ BLOG OUTLINE (${numberOfPoints} points):
     const blogOutlines = await generateContentUsingGPT4('gpt-4o', 200, prompt, 1, 0.5, 0.5, [
       '\n\n',
       `${numberOfPoints + 1}. `,
-    ]);
+    ], apiKey);
     const { id, object, created, model, choices } = blogOutlines;
     openAPIInformationsList.push({ id, object, created, model });
 
@@ -183,7 +183,7 @@ ${userPrompt}`;
   return userResponse;
 };
 
-const blogTopic = async (userId, userEmail, { about, headline, userText, numberOfSuggestions = 1 }) => {
+const blogTopic = async (userId, userEmail, { about, headline, userText, numberOfSuggestions = 1 }, apiKey) => {
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}
 BLOG TOPIC: ${removeSpaces(userText)}`;
@@ -203,7 +203,7 @@ ${userPrompt}
   const blogTopicWritingsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogTopicWriting = await generateContentUsingGPT4('gpt-4o', 500, prompt, 0.8, 0, 0, ['\n\n\n']);
+    const blogTopicWriting = await generateContentUsingGPT4('gpt-4o', 500, prompt, 0.8, 0, 0, ['\n\n\n'], apiKey);
     const { id, object, created, model, choices } = blogTopicWriting;
     openAPIInformationsList.push({ id, object, created, model });
 
@@ -228,7 +228,7 @@ ${userPrompt}
   return userResponse;
 };
 
-const blogOutro = async (userId, userEmail, { about, headline, numberOfSuggestions = 1 }) => {
+const blogOutro = async (userId, userEmail, { about, headline, numberOfSuggestions = 1 }, apiKey) => {
   const userPrompt = `BLOG ABOUT: ${removeSpaces(about)}
 BLOG HEADLINE: ${removeSpaces(headline)}`;
 
@@ -249,7 +249,7 @@ BLOG CONCLUSION:
   const blogOutrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogOutros = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.7, 1.0, 1.0, ['\n\n']);
+    const blogOutros = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.7, 1.0, 1.0, ['\n\n'], apiKey);
     const { id, object, created, model, choices } = blogOutros;
     openAPIInformationsList.push({ id, object, created, model });
 
@@ -273,7 +273,7 @@ BLOG CONCLUSION:
   return userResponse;
 };
 
-const shortBlog = async (userId, userEmail, { about, headline, keywords }) => {
+const shortBlog = async (userId, userEmail, { about, headline, keywords }, apiKey) => {
   about = removeSpaces(about);
   headline = removeSpaces(headline);
   keywords = keywords.map((keyword) => removeSpaces(keyword));
@@ -296,7 +296,7 @@ Blog headline: ${headline}
 
 `;
 
-  const _blog = await generateContentUsingGPT4('gpt-4o', 600, prompt, 0.7, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT4('gpt-4o', 600, prompt, 0.7, 0, 0, ['\n\n\n\n'], apiKey);
 
   const { id, object, created, model, choices } = _blog;
 
@@ -318,7 +318,7 @@ Blog headline: ${headline}
   return userResponse;
 };
 
-const longBlog = async (userId, userEmail, { about, headline, keywords, contents = '' }) => {
+const longBlog = async (userId, userEmail, { about, headline, keywords, contents = '' }, apiKey) => {
   about = removeSpaces(about);
   headline = removeSpaces(headline);
   keywords = keywords.map((keyword) => removeSpaces(keyword));
@@ -342,7 +342,7 @@ Blog headline: ${headline}
 
 ${contents}`;
 
-  const _blog = await generateContentUsingGPT4('gpt-4o', 256, prompt, 1.0, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT4('gpt-4o', 256, prompt, 1.0, 0, 0, ['\n\n\n\n'], apiKey);
 
   const { id, object, created, model, choices } = _blog;
 
@@ -364,7 +364,7 @@ ${contents}`;
   return userResponse;
 };
 
-const blogFromOutline = async (userId, userEmail, { headline, intro, outline }) => {
+const blogFromOutline = async (userId, userEmail, { headline, intro, outline }, apiKey) => {
   headline = removeSpaces(headline);
   intro = removeSpaces(intro);
 
@@ -395,7 +395,7 @@ ${outline[0]}
 
 `;
 
-  const _blog = await generateContentUsingGPT4('gpt-4o', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n']);
+  const _blog = await generateContentUsingGPT4('gpt-4o', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n'], apiKey);
 
   const { id, object, created, model, choices } = _blog;
 
