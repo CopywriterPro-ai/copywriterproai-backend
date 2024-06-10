@@ -66,7 +66,7 @@ const userSchema = new Schema(
     },
     hasCompletedOnboarding: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   {
