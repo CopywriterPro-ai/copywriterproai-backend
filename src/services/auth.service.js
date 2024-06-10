@@ -53,50 +53,43 @@ const refreshAuth = async (refreshToken) => {
   }
 };
 
-/**
- * Reset password
- * @param {string} resetPasswordToken
- * @param {string} newPassword
- * @returns {Promise}
- */
+// /**
+//  * Reset password
+//  * @param {string} resetPasswordToken
+//  * @param {string} newPassword
+//  * @returns {Promise}
+//  */
+// const resetPassword = async (resetPasswordToken, newPassword) => {
+//   try {
+//     const resetPasswordTokenDoc = await tokenService.verifyToken(resetPasswordToken, tokenTypes.RESET_PASSWORD);
+//     const user = await userService.getUserById(resetPasswordTokenDoc.user);
+//     if (!user) {
+//       throw new Error();
+//     }
+//     await userService.updateUserById(user.id, { password: newPassword });
+//     await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
+//   } catch (error) {
+//     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
+//   }
+// };
+
 const resetPassword = async ({ email, password }) => {
   try {
     const user = await userService.getUser({ email });
     if (!user) {
       throw new Error();
     }
-    await userService.updateUserById(user.id, { password });
+    await userService.updateUserById(user, user.id, { password });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
   }
 };
 
-/**
- * Handle OAuth strategy user
- * @param {Object} userData
- * @returns {Promise<User>}
- */
-const strategyUser = async ({ sub, authType, userId, email }) => {
-  let user = await userService.getUser({ userId, authType });
-
-  // If user does not exist, create a new user entry
+const strategyUser = async ({ sub, authType, userId }) => {
+  const user = await userService.getUser({ _id: sub, authType, userId });
   if (!user) {
-    user = await userService.getUser({ email }); // Check if user exists with the email
-    if (!user) {
-      const newUser = {
-        _id: sub,
-        authType,
-        userId,
-        email,
-        isVerified: true, // Assuming OAuth users are auto-verified
-      };
-      user = await userService.createUser(newUser);
-    } else {
-      // Update the userId for the existing user with the same email
-      user = await userService.updateUserById(user.id, { userId });
-    }
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-
   return user;
 };
 
