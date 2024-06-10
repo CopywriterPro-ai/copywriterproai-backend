@@ -53,43 +53,43 @@ const refreshAuth = async (refreshToken) => {
   }
 };
 
-// /**
-//  * Reset password
-//  * @param {string} resetPasswordToken
-//  * @param {string} newPassword
-//  * @returns {Promise}
-//  */
-// const resetPassword = async (resetPasswordToken, newPassword) => {
-//   try {
-//     const resetPasswordTokenDoc = await tokenService.verifyToken(resetPasswordToken, tokenTypes.RESET_PASSWORD);
-//     const user = await userService.getUserById(resetPasswordTokenDoc.user);
-//     if (!user) {
-//       throw new Error();
-//     }
-//     await userService.updateUserById(user.id, { password: newPassword });
-//     await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
-//   } catch (error) {
-//     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
-//   }
-// };
-
+/**
+ * Reset password
+ * @param {string} resetPasswordToken
+ * @param {string} newPassword
+ * @returns {Promise}
+ */
 const resetPassword = async ({ email, password }) => {
   try {
     const user = await userService.getUser({ email });
     if (!user) {
       throw new Error();
     }
-    await userService.updateUserById(user, user.id, { password });
+    await userService.updateUserById(user.id, { password });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
   }
 };
 
+/**
+ * Handle OAuth strategy user
+ * @param {Object} userData
+ * @returns {Promise<User>}
+ */
 const strategyUser = async ({ sub, authType, userId }) => {
-  const user = await userService.getUser({ _id: sub, authType, userId });
+  let user = await userService.getUser({ _id: sub, authType, userId });
+
+  // If user does not exist, create a new user entry
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    const newUser = {
+      _id: sub,
+      authType,
+      userId,
+      isVerified: true, // Assuming OAuth users are auto-verified
+    };
+    user = await userService.createUser(newUser);
   }
+
   return user;
 };
 

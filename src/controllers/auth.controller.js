@@ -8,10 +8,20 @@ const { subscription } = require('../config/plan');
 const User = require('../models/user.model');
 
 /**
- * Register a new user.
+ * Register a new user or login existing user.
  */
 const register = catchAsync(async (req, res) => {
-  const user = await userService.createUser(req.body);
+  const { email } = req.body;
+  let user = await userService.getUser({ email });
+
+  // If user already exists, directly login the user
+  if (user) {
+    const tokens = await tokenService.generateAuthTokens(user);
+    return res.status(httpStatus.OK).send({ status: httpStatus.OK, user, tokens });
+  }
+
+  // If user does not exist, create a new user
+  user = await userService.createUser(req.body);
   await emailService.sendVerifyAccountEmailUsingToken({
     id: user.id,
     email: user.email,
@@ -28,23 +38,31 @@ const register = catchAsync(async (req, res) => {
  */
 const verifyAccount = catchAsync(async (req, res) => {
   const { sub: userId, email } = req.token;
-  const user = await userService.getUser({ _id: userId, isVerified: false });
+  let user = await userService.getUser({ _id: userId, isVerified: false });
+
+  // If user is already verified, send appropriate response
   if (!user) {
-    return res
-      .status(httpStatus.BAD_REQUEST)
-      .send({ status: httpStatus.BAD_REQUEST, message: 'User not found or already verified' });
+    return res.status(httpStatus.BAD_REQUEST).send({ status: httpStatus.BAD_REQUEST, message: 'User not found or already verified' });
   }
-  const uuid = uuidv1();
-  const verifiedUser = await userService.getUser({ email, isVerified: true });
-  const { userId: userID } = await userService.updateUserById(user, userId, {
-    userId: verifiedUser ? verifiedUser.userId : uuid,
+
+  // Handle case where user with same email exists but not verified
+  const existingUser = await userService.getUser({ email, isVerified: true });
+  const userIdToUpdate = existingUser ? existingUser.userId : uuidv1();
+  const updatedUser = await userService.updateUserById(user.id, {
+    userId: userIdToUpdate,
     isVerified: true,
   });
+
   await interestService.createUserInterest(email);
-  if (!verifiedUser) {
-    await subscriberService.createOwnSubscribe({ userId: userID, subscription: subscription.FREEMIUM });
+
+  // Create subscription for new users
+  if (!existingUser) {
+    await subscriberService.createOwnSubscribe({ userId: updatedUser.userId, subscription: subscription.FREEMIUM });
   }
+
+  // Delete unverified user
   await userService.deleteunVerifiedUserByEmail(email);
+
   await emailService.sendWelcomeEmail(email, user.firstName);
   res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'Your account is verified, please sign in' });
 });
@@ -82,9 +100,7 @@ const forgotPassword = catchAsync(async (req, res) => {
   const { email } = req.body;
   await userService.registeredEmail(email);
   await emailService.sendResetPasswordEmailUsingToken(email);
-  res
-    .status(httpStatus.OK)
-    .send({ status: httpStatus.OK, message: 'An email has been sent to you with password reset instructions' });
+  res.status(httpStatus.OK).send({ status: httpStatus.OK, message: 'An email has been sent to you with password reset instructions' });
 });
 
 /**
@@ -110,7 +126,7 @@ const strategyCallback = catchAsync(async (req, res) => {
  */
 const strategyLogin = catchAsync(async (req, res) => {
   const user = await authService.strategyUser(req.user);
-  const tokens = await tokenService.generateAuthTokens({ id: user.id });
+  const tokens = await tokenService.generateAuthTokens(user);
   res.status(httpStatus.OK).send({ status: httpStatus.OK, user, tokens });
 });
 
