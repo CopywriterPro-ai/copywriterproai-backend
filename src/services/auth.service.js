@@ -76,18 +76,25 @@ const resetPassword = async ({ email, password }) => {
  * @param {Object} userData
  * @returns {Promise<User>}
  */
-const strategyUser = async ({ sub, authType, userId }) => {
-  let user = await userService.getUser({ _id: sub, authType, userId });
+const strategyUser = async ({ sub, authType, userId, email }) => {
+  let user = await userService.getUser({ userId, authType });
 
   // If user does not exist, create a new user entry
   if (!user) {
-    const newUser = {
-      _id: sub,
-      authType,
-      userId,
-      isVerified: true, // Assuming OAuth users are auto-verified
-    };
-    user = await userService.createUser(newUser);
+    user = await userService.getUser({ email }); // Check if user exists with the email
+    if (!user) {
+      const newUser = {
+        _id: sub,
+        authType,
+        userId,
+        email,
+        isVerified: true, // Assuming OAuth users are auto-verified
+      };
+      user = await userService.createUser(newUser);
+    } else {
+      // Update the userId for the existing user with the same email
+      user = await userService.updateUserById(user.id, { userId });
+    }
   }
 
   return user;
