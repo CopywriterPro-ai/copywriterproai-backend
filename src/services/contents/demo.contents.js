@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 const Demo = require('../../models/demo.model');
-const { generateContentUsingGPT4, removeSpaces, cleanAllTexts } = require('../content.service');
+const { generateContentWithModel, removeSpaces, cleanAllTexts } = require('../content.service');
 
 const storeData = async (documentType, prompt, openAPIInformation, generatedContents) => {
   const formattedContents = {
@@ -75,7 +75,7 @@ Paraphrase in 3 creative ways.
 """
 1.`;
 
-  const paraphrasedContents = await generateContentUsingGPT4('gpt-4o', 2000, prompt, 1, 0, 0, ['"""', '4. ']);
+  const paraphrasedContents = await generateContentWithModel('gpt-4o', 2000, prompt, 1, 0, 0, ['"""', '4. ']);
 
   return processListContents('paraphrasing', userPrompt, paraphrasedContents);
 };
@@ -105,7 +105,7 @@ ${userPrompt}
 List of 3 BLOG HEADLINES:
 1.`;
 
-  const blogHeadlines = await generateContentUsingGPT4('gpt-4o', 200, prompt, 1.0, 1.0, 1.0, ['\n\n', '4. ']);
+  const blogHeadlines = await generateContentWithModel('gpt-4o', 200, prompt, 1.0, 1.0, 1.0, ['\n\n', '4. ']);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('blogHeadlines.choices[0]:', blogHeadlines.choices[0]);

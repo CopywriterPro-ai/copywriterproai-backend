@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT4, storeData, formatResponse } = require('../content.service');
+const { generateContentWithModel, storeData, formatResponse } = require('../content.service');
 
 const generateRecipe = async (userId, userEmail, { recipeName, ingredients, numberOfSuggestions }) => {
   const userPrompt = `
@@ -28,7 +28,7 @@ Directions:`;
   const generateRecipeList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const recipe = await generateContentUsingGPT4('gpt-4o', 50, prompt, 0, 0, 0, ['\n', 'Directions:']);
+    const recipe = await generateContentWithModel('gpt-4o', 50, prompt, 0, 0, 0, ['\n', 'Directions:']);
     const { id, object, created, model, choices } = recipe;
 
     // Log choices[0] and choices[0].message.content for debugging

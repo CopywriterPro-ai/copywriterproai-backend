@@ -1,4 +1,4 @@
-const { generateContentUsingGPT4, storeData, formatResponse, removeSpaces } = require('../content.service');
+const { generateContentWithModel, storeData, formatResponse, removeSpaces } = require('../content.service');
 
 const generateCVSummary = async (userId, userEmail, { yourJobTitle, yearsOfExperience, keyAchievements, numberOfSuggestions }) => {
   const userPrompt = `Job Title: ${removeSpaces(yourJobTitle)}
@@ -33,7 +33,7 @@ Summary:`;
   const generateCVSummaryList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const cvSummary = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.7, 0, 0, ['\n', 'Summary:']);
+    const cvSummary = await generateContentWithModel('gpt-4o', 200, prompt, 0.7, 0, 0, ['\n', 'Summary:']);
     const { id, object, created, model, choices } = cvSummary;
 
     // Log choices[0] and choices[0].message.content for debugging

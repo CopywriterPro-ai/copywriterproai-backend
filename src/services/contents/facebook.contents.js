@@ -1,4 +1,4 @@
-const { generateContentUsingGPT4, removeSpaces, processListContents, storeData, formatResponse } = require('../content.service');
+const { generateContentWithModel, removeSpaces, processListContents, storeData, formatResponse } = require('../content.service');
 
 const campaignPostFromBusinessType = async (userId, userEmail, task, { platformType, numberOfSuggestions }) => {
   const userPrompt = `Platform: ${removeSpaces(platformType || '')}`;
@@ -16,7 +16,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} Primary text:
 -`;
 
-  const campaignPostIdea = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  const campaignPostIdea = await generateContentWithModel('gpt-4o', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
   return processListContents(userId, userEmail, task, userPrompt, campaignPostIdea);
 };
 
@@ -66,7 +66,7 @@ Description:`;
   const facebookAdPrimaryTextsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const description = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.8, 0.2, 0.1, ['Description:', '\n']);
+    const description = await generateContentWithModel('gpt-4o', 100, prompt, 0.8, 0.2, 0.1, ['Description:', '\n']);
     const { id, object, created, model, choices } = description;
 
     // Log choices[0] and choices[0].message.content for debugging
@@ -136,7 +136,7 @@ Headline:`;
   const facebookAdHeadlinesList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const headlines = await generateContentUsingGPT4('gpt-4o', 50, prompt, 0.8, 0.2, 0.1, ['Headline:', '\n']);
+    const headlines = await generateContentWithModel('gpt-4o', 50, prompt, 0.8, 0.2, 0.1, ['Headline:', '\n']);
     const { id, object, created, model, choices } = headlines;
 
     // Log choices[0] and choices[0].message.content for debugging
@@ -194,7 +194,7 @@ ${userPrompt}
 Description:
 List of 5 catchy link descriptions using 150 words:`;
 
-  const linkDescriptions = await generateContentUsingGPT4('gpt-4o', 300, prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  const linkDescriptions = await generateContentWithModel('gpt-4o', 300, prompt, 0.8, 0.2, 0.1, ['\n\n']);
   return processListContents(userId, userEmail, 'ads-facebook-link-descriptions', userPrompt, linkDescriptions);
 };
 
@@ -214,7 +214,7 @@ ${userPrompt}
 List of 5 Ads:
 -`;
 
-  const adsFromProductDescription = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.8, 0.2, 0.4, ['\n\n']);
+  const adsFromProductDescription = await generateContentWithModel('gpt-4o', 150, prompt, 0.8, 0.2, 0.4, ['\n\n']);
   return processListContents(
     userId,
     userEmail,

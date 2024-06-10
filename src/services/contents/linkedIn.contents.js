@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 const {
-  generateContentUsingGPT4,
+  generateContentWithModel,
   removeSpaces,
   storeData,
   formatResponse,
@@ -53,7 +53,7 @@ Description:`;
   const linkedinAdTextsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const adTexts = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.8, 0.2, 0.3, ['\n', 'Description:']);
+    const adTexts = await generateContentWithModel('gpt-4o', 100, prompt, 0.8, 0.2, 0.3, ['\n', 'Description:']);
     const { id, object, created, model, choices } = adTexts;
 
     // Log choices[0] and choices[0].message.content for debugging
@@ -105,7 +105,7 @@ Summary:`;
   const generateLinkedInSummaryList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const linkedInSummary = await generateContentUsingGPT4('gpt-4o', 400, prompt, 0.7, 0, 0, ['\n', 'Summary:']);
+    const linkedInSummary = await generateContentWithModel('gpt-4o', 400, prompt, 0.7, 0, 0, ['\n', 'Summary:']);
     const { id, object, created, model, choices } = linkedInSummary;
 
     // Log choices[0] and choices[0].message.content for debugging

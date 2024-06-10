@@ -2,7 +2,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 const {
-  generateContentUsingGPT4,
+  generateContentWithModel,
   removeSpaces,
   storeData,
   processListContents,
@@ -28,7 +28,7 @@ Original: ${userPrompt}
 3 unique ways to Paraphrase:
 1.`;
 
-  const paraphrasedContents = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.9, 0.9, 0.9, ['\n\n']);
+  const paraphrasedContents = await generateContentWithModel('gpt-4o', 200, prompt, 0.9, 0.9, 0.9, ['\n\n']);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('paraphrasedContents.choices[0]:', paraphrasedContents.choices[0]);
@@ -51,7 +51,7 @@ Original Text:
 ${userPrompt}
 Corrected Text:`;
 
-  const fixedContent = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
+  const fixedContent = await generateContentWithModel('gpt-4o', 200, prompt, 0.0, 0.0, 0.0, ['\n\n']);
   fixedContent.choices[0].message.content = fixedContent.choices[0].message.content.trim();
 
   // Log choices[0] and choices[0].message.content for debugging
@@ -95,7 +95,7 @@ Simplified Text for a Second Grader:
 
   let numberOfSuggestions = 3;
   while (numberOfSuggestions--) {
-    const simplifiedContents = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.0, 0.0, ['"""']);
+    const simplifiedContents = await generateContentWithModel('gpt-4o', 150, prompt, 0.7, 0.0, 0.0, ['"""']);
     const { id, object, created, model, choices } = simplifiedContents;
 
     // Log choices[0] and choices[0].message.content for debugging
@@ -139,7 +139,7 @@ Summary:
 
   let numberOfSuggestions = 3;
   while (numberOfSuggestions--) {
-    const summarizedContents = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.7, 0.0, 0.0, ['\n\n']);
+    const summarizedContents = await generateContentWithModel('gpt-4o', 100, prompt, 0.7, 0.0, 0.0, ['\n\n']);
     const { id, object, created, model, choices } = summarizedContents;
 
     // Log choices[0] and choices[0].message.content for debugging
@@ -187,7 +187,7 @@ Original: ${userPrompt}
 ${tone} (3 unique ways):
 1.`;
 
-  const fixedContent = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.8, 0.0, 0.0, ['\n\n']);
+  const fixedContent = await generateContentWithModel('gpt-4o', 200, prompt, 0.8, 0.0, 0.0, ['\n\n']);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('fixedContent.choices[0]:', fixedContent.choices[0]);

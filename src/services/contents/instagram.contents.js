@@ -1,4 +1,4 @@
-const { generateContentUsingGPT4, removeSpaces, processListContents } = require('../content.service');
+const { generateContentWithModel, removeSpaces, processListContents } = require('../content.service');
 
 const instagramAdTexts = async (userId, userEmail, { platformType, context, numberOfSuggestions }) => {
   const userPrompt = `Platform: ${removeSpaces(platformType)}
@@ -33,7 +33,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} Instagram Ad Texts:
 -`;
 
-  const adTexts = await generateContentUsingGPT4('gpt-4o', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
+  const adTexts = await generateContentWithModel('gpt-4o', 100, prompt, 0.8, 0.2, 0.1, ['\n\n']);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('choices[0]:', adTexts.choices[0]);

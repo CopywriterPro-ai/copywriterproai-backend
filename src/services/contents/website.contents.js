@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT4, storeData, formatResponse, removeSpaces } = require('../content.service');
+const { generateContentWithModel, storeData, formatResponse, removeSpaces } = require('../content.service');
 
 const websiteShortDescription = async (userId, userEmail, { industryType, businessName, numberOfSuggestions }) => {
   const userPrompt = `Industry: ${removeSpaces(industryType)}
@@ -24,7 +24,7 @@ Description:`;
   const contentList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedContent = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Description:']);
+    const generatedContent = await generateContentWithModel('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Description:']);
     const { id, object, created, model, choices } = generatedContent;
 
     console.log('choices[0]:', choices[0]);
@@ -62,7 +62,7 @@ Keywords:`;
   const contentList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedContent = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
+    const generatedContent = await generateContentWithModel('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Keywords:']);
     const { id, object, created, model, choices } = generatedContent;
 
     console.log('choices[0]:', choices[0]);
@@ -119,7 +119,7 @@ Headlines:`;
   const contentList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedContent = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
+    const generatedContent = await generateContentWithModel('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
     const { id, object, created, model, choices } = generatedContent;
 
     console.log('choices[0]:', choices[0]);
@@ -178,7 +178,7 @@ Headlines:`;
   const contentList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedContent = await generateContentUsingGPT4('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
+    const generatedContent = await generateContentWithModel('gpt-4o', 150, prompt, 0.7, 0.3, 0, ['\n', 'Headlines:']);
     const { id, object, created, model, choices } = generatedContent;
 
     console.log('choices[0]:', choices[0]);

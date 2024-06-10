@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT4, removeSpaces, storeData, formatResponse } = require('../content.service');
+const { generateContentWithModel, removeSpaces, storeData, formatResponse } = require('../content.service');
 
 const generateAmazonProductListings = async (
   userId,
@@ -46,7 +46,7 @@ Description:`;
   const amazonProductListingsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const amazonProductListings = await generateContentUsingGPT4('gpt-4', 500, prompt, 0.9, 0, 0, ['\n\n'], apiKey);
+    const amazonProductListings = await generateContentWithModel('gpt-4', 500, prompt, 0.9, 0, 0, ['\n\n'], apiKey);
     const { id, object, created, model, choices } = amazonProductListings;
 
     // Log choices[0] and choices[0].message.content for debugging

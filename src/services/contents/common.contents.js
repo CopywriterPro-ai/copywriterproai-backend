@@ -1,4 +1,4 @@
-const { generateContentUsingGPT4, processListContents, removeSpaces } = require('../content.service');
+const { generateContentWithModel, processListContents, removeSpaces } = require('../content.service');
 
 const imageIdeasFromAdText = async (userId, userEmail, { product, adText, numberOfSuggestions }, apiKey) => {
   const userPrompt = `Product: ${removeSpaces(product)}
@@ -40,7 +40,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} Image Content Ideas:
 -`;
 
-  const imageIdeas = await generateContentUsingGPT4('gpt-4o', 50, prompt, 0.8, 0.1, 0.2, ['\n\n'], apiKey);
+  const imageIdeas = await generateContentWithModel('gpt-4o', 50, prompt, 0.8, 0.1, 0.2, ['\n\n'], apiKey);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('imageIdeas.choices[0]:', imageIdeas.choices[0]);

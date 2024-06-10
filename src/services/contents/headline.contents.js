@@ -1,4 +1,4 @@
-const { generateContentUsingGPT4, processListContents, removeSpaces } = require('../content.service');
+const { generateContentWithModel, processListContents, removeSpaces } = require('../content.service');
 
 const catchyHeadline = async (userId, userEmail, { content, numberOfSuggestions }) => {
   const userPrompt = `Content: ${removeSpaces(content)}`;
@@ -26,7 +26,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} Catchy Headlines
 -`;
 
-  const catchyHeadlines = await generateContentUsingGPT4('gpt-4o', 70, prompt, 0.9, 0, 0, ['\n\n']);
+  const catchyHeadlines = await generateContentWithModel('gpt-4o', 70, prompt, 0.9, 0, 0, ['\n\n']);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('choices[0]:', catchyHeadlines.choices[0]);
@@ -62,7 +62,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} Attention-Grabbing Headlines
 -`;
 
-  const attentionGrabbingHeadlines = await generateContentUsingGPT4('gpt-4o', 70, prompt, 0.9, 0, 0, ['\n\n']);
+  const attentionGrabbingHeadlines = await generateContentWithModel('gpt-4o', 70, prompt, 0.9, 0, 0, ['\n\n']);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('choices[0]:', attentionGrabbingHeadlines.choices[0]);
@@ -98,7 +98,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} Newspaper Headlines
 -`;
 
-  const newspaperHeadlines = await generateContentUsingGPT4('gpt-4o', 70, prompt, 0.9, 0, 0, ['\n\n']);
+  const newspaperHeadlines = await generateContentWithModel('gpt-4o', 70, prompt, 0.9, 0, 0, ['\n\n']);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('choices[0]:', newspaperHeadlines.choices[0]);
@@ -134,7 +134,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} Resume Headlines
 -`;
 
-  const resumeHeadlines = await generateContentUsingGPT4('gpt-4o', 70, prompt, 0.9, 0, 0, ['\n\n']);
+  const resumeHeadlines = await generateContentWithModel('gpt-4o', 70, prompt, 0.9, 0, 0, ['\n\n']);
 
   // Log choices[0] and choices[0].message.content for debugging
   console.log('choices[0]:', resumeHeadlines.choices[0]);

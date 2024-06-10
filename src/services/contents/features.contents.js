@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT4, removeSpaces, storeData, formatResponse } = require('../content.service');
+const { generateContentWithModel, removeSpaces, storeData, formatResponse } = require('../content.service');
 
 const productDescription = async (userId, userEmail, { productName, productType, numberOfSuggestions }) => {
   const userPrompt = `Product Name: ${removeSpaces(productName)}
@@ -24,7 +24,7 @@ Short Description:`;
   const productDescriptionSEOFriendlyList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const productDescriptionSEOFriendly = await generateContentUsingGPT4('davinci', 50, prompt, 0.5, 0, 0, ['\n', 'Short Description:']);
+    const productDescriptionSEOFriendly = await generateContentWithModel('davinci', 50, prompt, 0.5, 0, 0, ['\n', 'Short Description:']);
     const { id, object, created, model, choices } = productDescriptionSEOFriendly;
 
     console.log('choices[0]:', choices[0]);
@@ -72,7 +72,7 @@ Description:`;
   const productDescriptionSEOFriendlyList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedProductDescription = await generateContentUsingGPT4('gpt-4o', 300, prompt, 0.7, 0.2, 0.3, ['\n', 'Description:']);
+    const generatedProductDescription = await generateContentWithModel('gpt-4o', 300, prompt, 0.7, 0.2, 0.3, ['\n', 'Description:']);
     const { id, object, created, model, choices } = generatedProductDescription;
 
     console.log('choices[0]:', choices[0]);
@@ -116,7 +116,7 @@ Review:`;
   const productReviewList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const review = await generateContentUsingGPT4('davinci', 100, prompt, 0.3, 0.2, 0.1, ['\n']);
+    const review = await generateContentWithModel('davinci', 100, prompt, 0.3, 0.2, 0.1, ['\n']);
     const { id, object, created, model, choices } = review;
 
     console.log('choices[0]:', choices[0]);
@@ -162,7 +162,7 @@ Product names:`;
   const generateProductNameList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const productName = await generateContentUsingGPT4('davinci', 60, prompt, 0.5, 0, 0, ['\n', 'Product names:']);
+    const productName = await generateContentWithModel('davinci', 60, prompt, 0.5, 0, 0, ['\n', 'Product names:']);
     const { id, object, created, model, choices } = productName;
 
     console.log('choices[0]:', choices[0]);

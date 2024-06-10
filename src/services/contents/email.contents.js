@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 const {
-  generateContentUsingGPT4,
+  generateContentWithModel,
   removeSpaces,
   storeData,
   formatResponse,
@@ -49,7 +49,7 @@ ${userPrompt}
   const emailMarketingCampaignSubjectList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const marketingEmailSubject = await generateContentUsingGPT4('gpt-4o', 100, prompt, 1, 0, 0, ['\n\n']);
+    const marketingEmailSubject = await generateContentWithModel('gpt-4o', 100, prompt, 1, 0, 0, ['\n\n']);
     const { id, object, created, model, choices } = marketingEmailSubject;
 
     // Log choices[0] and choices[0].message.content for debugging
@@ -104,7 +104,7 @@ Small Email Marketing Campaign:
   const emailMarketingCampaignBodyList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const emailBody = await generateContentUsingGPT4('gpt-4o', 300, prompt, 1, 0.5, 0, ['\n\n\n', 'About:', 'Subject:']);
+    const emailBody = await generateContentWithModel('gpt-4o', 300, prompt, 1, 0.5, 0, ['\n\n\n', 'About:', 'Subject:']);
     const { id, object, created, model, choices } = emailBody;
 
     // Log choices[0] and choices[0].message.content for debugging
@@ -156,7 +156,7 @@ Subject:`;
   const emailBodyList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const emailBodyText = await generateContentUsingGPT4('gpt-4o', 250, prompt, 0.9, 0, 0, ['\n\n\n', 'About:', 'Subject:']);
+    const emailBodyText = await generateContentWithModel('gpt-4o', 250, prompt, 0.9, 0, 0, ['\n\n\n', 'About:', 'Subject:']);
     const { id, object, created, model, choices } = emailBodyText;
 
     // Log choices[0] and choices[0].message.content for debugging
@@ -199,7 +199,7 @@ Subject:`;
   const emailSubjectsFromBodyList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const emailSubjectFromBody = await generateContentUsingGPT4('gpt-4o', 20, prompt, 0.7, 1, 0, ['\n', 'Subject:']);
+    const emailSubjectFromBody = await generateContentWithModel('gpt-4o', 20, prompt, 0.7, 1, 0, ['\n', 'Subject:']);
     const { id, object, created, model, choices } = emailSubjectFromBody;
 
     // Log choices[0] and choices[0].message.content for debugging

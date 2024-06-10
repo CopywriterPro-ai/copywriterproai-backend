@@ -1,13 +1,13 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT4, removeSpaces, processListContents, storeData, formatResponse } = require('../content.service');
+const { generateContentWithModel, removeSpaces, processListContents, storeData, formatResponse } = require('../content.service');
 
 const generateContent = async (userId, userEmail, taskType, userPrompt, prompt, numberOfSuggestions, endIndicator) => {
   const openAPIInformationsList = [];
   const contentList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedContent = await generateContentUsingGPT4('gpt-4o', 2000, prompt, 1, 0, 0, [endIndicator]);
+    const generatedContent = await generateContentWithModel('gpt-4o', 2000, prompt, 1, 0, 0, [endIndicator]);
     const { id, object, created, model, choices } = generatedContent;
 
     console.log('choices[0]:', choices[0]);

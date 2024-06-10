@@ -6,7 +6,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { Content } = require('../models');
 
-const generateContentUsingGPT4 = async (model, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop, apiKey) => {
+const generateContentWithModel = async (model, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop, apiKey) => {
   let gptResponse;
   let count = 0; // will try to generate content for maximum 10 times
 
@@ -160,7 +160,7 @@ const updateBookmarkedText = async (userEmail, { contentId, index, bookmarkedTex
 };
 
 module.exports = {
-  generateContentUsingGPT4,
+  generateContentWithModel,
   formatContents,
   removeSpaces,
   cleanAllTexts,

@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT4, removeSpaces, storeData, formatResponse } = require('../content.service');
+const { generateContentWithModel, removeSpaces, storeData, formatResponse } = require('../content.service');
 
 const generateSalesCopy = async (userId, userEmail, taskType, { productName, productDescription, numberOfSuggestions }, template) => {
   const cleanedProductName = removeSpaces(productName);
@@ -18,7 +18,7 @@ Product Description: ${cleanedProductName}, ${cleanedProductDescription}
   const salesCopyList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const salesCopy = await generateContentUsingGPT4('gpt-4o', 200, prompt, 1, 0, 0, ['\n\n', 'Product Description:']);
+    const salesCopy = await generateContentWithModel('gpt-4o', 200, prompt, 1, 0, 0, ['\n\n', 'Product Description:']);
     const { id, object, created, model, choices } = salesCopy;
 
     console.log('choices[0]:', choices[0]);

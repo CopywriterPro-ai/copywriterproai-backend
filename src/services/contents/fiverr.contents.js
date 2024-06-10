@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
-const { generateContentUsingGPT4, removeSpaces, storeData, formatResponse } = require('../content.service');
+const { generateContentWithModel, removeSpaces, storeData, formatResponse } = require('../content.service');
 
 const profileDescription = async (userId, userEmail, { profession, experience, numberOfSuggestions }) => {
   const userPrompt = `PROFESSION: ${removeSpaces(profession)}
@@ -44,7 +44,7 @@ PROFILE DESCRIPTION:`;
   const profileDescriptionsList = [];
 
   while (numberOfSuggestions--) {
-    const profileDescriptions = await generateContentUsingGPT4('gpt-4o', 150, prompt, 1.0, 1.0, 1.0, ['\n\n']);
+    const profileDescriptions = await generateContentWithModel('gpt-4o', 150, prompt, 1.0, 1.0, 1.0, ['\n\n']);
     const { id, object, created, model, choices } = profileDescriptions;
 
     // Log choices[0] and choices[0].message.content for debugging
@@ -97,7 +97,7 @@ Headline:`;
   const fiverrCategoriesHeadlineList = [];
 
   for (let i = 0; i < 5; i++) {
-    const catchyBusinessTaglines = await generateContentUsingGPT4('gpt-4o', 20, prompt, 0.9, 0, 0, ['\n', 'Headline:']);
+    const catchyBusinessTaglines = await generateContentWithModel('gpt-4o', 20, prompt, 0.9, 0, 0, ['\n', 'Headline:']);
     const { id, object, created, model, choices } = catchyBusinessTaglines;
 
     // Log choices[0] and choices[0].message.content for debugging

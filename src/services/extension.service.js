@@ -10,7 +10,7 @@ const config = require('../config/config');
 const { openAIAPIKey } = config.openAI;
 const openai = new OpenAI(openAIAPIKey);
 
-const generateContentUsingGPT4 = async (engine, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop) => {
+const generateContentWithModel = async (engine, maxTokens, prompt, temperature, frequencyPenalty, presencePenalty, stop) => {
   // let filterLabel = await filterContents(prompt);
   // if (filterLabel === '2') {
   //   throw new ApiError(httpStatus.BAD_REQUEST, 'Input contains unsafe contents!');
@@ -177,7 +177,7 @@ const updateBookmarkedText = async (userEmail, { contentId, index, bookmarkedTex
 };
 
 module.exports = {
-  generateContentUsingGPT4,
+  generateContentWithModel,
   formatContents,
   removeSpaces,
   cleanAllTexts,

@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 const {
-  generateContentUsingGPT4,
+  generateContentWithModel,
   cleanAllTexts,
   storeData,
   processListContents,
@@ -49,7 +49,7 @@ Headline:`;
   const googleAdHeadlinesList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const adHeadlines = await generateContentUsingGPT4('gpt-4o', 30, prompt, 0.9, 0.3, 0.2, ['Headline:', '\n']);
+    const adHeadlines = await generateContentWithModel('gpt-4o', 30, prompt, 0.9, 0.3, 0.2, ['Headline:', '\n']);
     const { id, object, created, model, choices } = adHeadlines;
 
     // Log choices[0] and choices[0].message.content for debugging
@@ -118,7 +118,7 @@ Description:`;
   const googleAdDescriptionsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const generatedAdDescription = await generateContentUsingGPT4('gpt-4o', 60, prompt, 0.9, 0, 0, ['\n', 'Description:']);
+    const generatedAdDescription = await generateContentWithModel('gpt-4o', 60, prompt, 0.9, 0, 0, ['\n', 'Description:']);
     const { id, object, created, model, choices } = generatedAdDescription;
 
     // Log choices[0] and choices[0].message.content for debugging

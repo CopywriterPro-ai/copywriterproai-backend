@@ -2,7 +2,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 const {
-  generateContentUsingGPT4,
+  generateContentWithModel,
   removeSpaces,
   processListContents,
   storeData,
@@ -28,7 +28,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} BLOG IDEAS:
 1.`;
 
-  const blogIdeas = await generateContentUsingGPT4('gpt-4o', 100, prompt, 1.0, 1.0, 1.0, [
+  const blogIdeas = await generateContentWithModel('gpt-4o', 100, prompt, 1.0, 1.0, 1.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ], apiKey);
@@ -57,7 +57,7 @@ ${userPrompt}
 List of ${numberOfSuggestions} BLOG HEADLINES:
 1.`;
 
-  const blogHeadlines = await generateContentUsingGPT4('gpt-4o', 100, prompt, 1.0, 1.0, 1.0, [
+  const blogHeadlines = await generateContentWithModel('gpt-4o', 100, prompt, 1.0, 1.0, 1.0, [
     '\n\n',
     `${numberOfSuggestions + 1}. `,
   ], apiKey);
@@ -90,7 +90,7 @@ BLOG INTRODUCTION (A brief description of what the blog is about and why someone
   const blogIntrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogIntros = await generateContentUsingGPT4('gpt-4o', 450, prompt, 1.0, 1.0, 1.0, ['\n\n\n'], apiKey);
+    const blogIntros = await generateContentWithModel('gpt-4o', 450, prompt, 1.0, 1.0, 1.0, ['\n\n\n'], apiKey);
     const { id, object, created, model, choices } = blogIntros;
     openAPIInformationsList.push({ id, object, created, model });
 
@@ -146,7 +146,7 @@ BLOG OUTLINE (${numberOfPoints} points):
   const blogOutlinesList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogOutlines = await generateContentUsingGPT4('gpt-4o', 200, prompt, 1, 0.5, 0.5, [
+    const blogOutlines = await generateContentWithModel('gpt-4o', 200, prompt, 1, 0.5, 0.5, [
       '\n\n',
       `${numberOfPoints + 1}. `,
     ], apiKey);
@@ -203,7 +203,7 @@ ${userPrompt}
   const blogTopicWritingsList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogTopicWriting = await generateContentUsingGPT4('gpt-4o', 500, prompt, 0.8, 0, 0, ['\n\n\n'], apiKey);
+    const blogTopicWriting = await generateContentWithModel('gpt-4o', 500, prompt, 0.8, 0, 0, ['\n\n\n'], apiKey);
     const { id, object, created, model, choices } = blogTopicWriting;
     openAPIInformationsList.push({ id, object, created, model });
 
@@ -249,7 +249,7 @@ BLOG CONCLUSION:
   const blogOutrosList = [];
 
   for (let i = 0; i < numberOfSuggestions; i++) {
-    const blogOutros = await generateContentUsingGPT4('gpt-4o', 200, prompt, 0.7, 1.0, 1.0, ['\n\n'], apiKey);
+    const blogOutros = await generateContentWithModel('gpt-4o', 200, prompt, 0.7, 1.0, 1.0, ['\n\n'], apiKey);
     const { id, object, created, model, choices } = blogOutros;
     openAPIInformationsList.push({ id, object, created, model });
 
@@ -296,7 +296,7 @@ Blog headline: ${headline}
 
 `;
 
-  const _blog = await generateContentUsingGPT4('gpt-4o', 600, prompt, 0.7, 0, 0, ['\n\n\n\n'], apiKey);
+  const _blog = await generateContentWithModel('gpt-4o', 600, prompt, 0.7, 0, 0, ['\n\n\n\n'], apiKey);
 
   const { id, object, created, model, choices } = _blog;
 
@@ -342,7 +342,7 @@ Blog headline: ${headline}
 
 ${contents}`;
 
-  const _blog = await generateContentUsingGPT4('gpt-4o', 256, prompt, 1.0, 0, 0, ['\n\n\n\n'], apiKey);
+  const _blog = await generateContentWithModel('gpt-4o', 256, prompt, 1.0, 0, 0, ['\n\n\n\n'], apiKey);
 
   const { id, object, created, model, choices } = _blog;
 
@@ -395,7 +395,7 @@ ${outline[0]}
 
 `;
 
-  const _blog = await generateContentUsingGPT4('gpt-4o', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n'], apiKey);
+  const _blog = await generateContentWithModel('gpt-4o', 2000, prompt, 1.0, 0, 0, ['\n\n\n\n'], apiKey);
 
   const { id, object, created, model, choices } = _blog;
 
