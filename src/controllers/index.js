@@ -1,0 +1,12 @@
+module.exports.authController = require('./auth.controller');
+module.exports.userController = require('./user.controller');
+module.exports.interestController = require('./interest.controller');
+module.exports.contentController = require('./content.controller');
+module.exports.paymentController = require('./payment.controller');
+module.exports.supportController = require('./support.controller');
+module.exports.toolController = require('./tool.controller');
+module.exports.blogController = require('./blog.controller');
+module.exports.subscriberController = require('./subscriber.controller');
+module.exports.demoController = require('./demo.controller');
+module.exports.extensionController = require('./extension.controller');
+module.exports.plagiarismCheckerController = require('./plagiarismChecker.controller');

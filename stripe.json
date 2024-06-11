@@ -1,0 +1,195 @@
+{
+  "id": "pi_randomId123456",
+  "object": "payment_intent_random",
+  "amount": 9876,
+  "amount_capturable": 1234,
+  "amount_received": 8765,
+  "application": "app_random123",
+  "application_fee_amount": 4321,
+  "canceled_at": 1629978085,
+  "cancellation_reason": "random_reason",
+  "capture_method": "manual",
+  "charges": {
+    "object": "list_random",
+    "data": [
+      {
+        "id": "ch_randomId654321",
+        "object": "charge_random",
+        "amount": 5678,
+        "amount_captured": 5678,
+        "amount_refunded": 1234,
+        "application": "app_random654",
+        "application_fee": "fee_random432",
+        "application_fee_amount": 8765,
+        "balance_transaction": "txn_random123",
+        "billing_details": {
+          "address": {
+            "city": "Random City",
+            "country": "US",
+            "line1": "123 Random St",
+            "line2": "Apt 4B",
+            "postal_code": "12345",
+            "state": "RS"
+          },
+          "email": "random_email@example.com",
+          "name": "Random Name",
+          "phone": "1234567890"
+        },
+        "calculated_statement_descriptor": "Random Descriptor",
+        "captured": false,
+        "created": 1629988888,
+        "currency": "eur",
+        "customer": "cus_random123",
+        "description": "Random Description",
+        "destination": "dest_random123",
+        "dispute": "dispute_random123",
+        "disputed": true,
+        "failure_code": "code_random123",
+        "failure_message": "Random failure message",
+        "fraud_details": {
+          "user_report": "safe"
+        },
+        "invoice": "in_random123",
+        "livemode": true,
+        "metadata": {
+          "key": "value"
+        },
+        "on_behalf_of": "random_entity",
+        "order": "order_random123",
+        "outcome": {
+          "network_status": "declined_by_network",
+          "reason": "random_reason",
+          "risk_level": "high",
+          "risk_score": 99,
+          "seller_message": "Random seller message.",
+          "type": "manual_review"
+        },
+        "paid": false,
+        "payment_intent": "pi_random123",
+        "payment_method": "pm_random123",
+        "payment_method_details": {
+          "card": {
+            "brand": "mastercard",
+            "checks": {
+              "address_line1_check": "pass",
+              "address_postal_code_check": "fail",
+              "cvc_check": "unchecked"
+            },
+            "country": "CA",
+            "exp_month": 11,
+            "exp_year": 2026,
+            "fingerprint": "randomFingerprint123",
+            "funding": "debit",
+            "installments": "enabled",
+            "last4": "9876",
+            "network": "mastercard",
+            "three_d_secure": "authenticated",
+            "wallet": "google_pay"
+          },
+          "type": "bank_transfer"
+        },
+        "receipt_email": "receipt_email@example.com",
+        "receipt_number": "receipt123",
+        "receipt_url": "https://pay.random.com/receipts/receipt123",
+        "refunded": true,
+        "refunds": {
+          "object": "list_random",
+          "data": [
+            {
+              "id": "refund_random123",
+              "amount": 5678,
+              "status": "completed"
+            }
+          ],
+          "has_more": true,
+          "total_count": 1,
+          "url": "/v1/charges/random_charge/refunds"
+        },
+        "review": "review_random123",
+        "shipping": {
+          "address": {
+            "city": "Ship City",
+            "country": "DE",
+            "line1": "456 Ship St",
+            "line2": "Suite 8",
+            "postal_code": "67890",
+            "state": "SS"
+          },
+          "carrier": "DHL",
+          "name": "Ship Name",
+          "phone": "0987654321",
+          "tracking_number": "tracking123"
+        },
+        "source": "src_random123",
+        "source_transfer": "str_random123",
+        "statement_descriptor": "Random Statement",
+        "statement_descriptor_suffix": "Suffix",
+        "status": "failed",
+        "transfer_data": {
+          "amount": 1234,
+          "destination": "dest_random456"
+        },
+        "transfer_group": "group_random123"
+      }
+    ],
+    "has_more": true,
+    "total_count": 1,
+    "url": "/v1/charges?payment_intent=random_intent"
+  },
+  "client_secret": "pi_randomSecret123",
+  "confirmation_method": "manual",
+  "created": 1629989999,
+  "currency": "eur",
+  "customer": "cus_random456",
+  "description": "Random Subscription",
+  "invoice": "in_random456",
+  "last_payment_error": {
+    "message": "Random error message",
+    "code": "random_error_code"
+  },
+  "livemode": true,
+  "metadata": {
+    "key": "value"
+  },
+  "next_action": {
+    "type": "use_stripe_sdk"
+  },
+  "on_behalf_of": "entity_random456",
+  "payment_method": "pm_random456",
+  "payment_method_options": {
+    "card": {
+      "installments": "enabled",
+      "network": "visa",
+      "request_three_d_secure": "required"
+    }
+  },
+  "payment_method_types": [
+    "bank_transfer"
+  ],
+  "receipt_email": "random_receipt@example.com",
+  "review": "review_random456",
+  "setup_future_usage": "on_session",
+  "shipping": {
+    "address": {
+      "city": "Ship City",
+      "country": "FR",
+      "line1": "789 Ship Ave",
+      "line2": "Floor 3",
+      "postal_code": "11223",
+      "state": "ST"
+    },
+    "carrier": "FedEx",
+    "name": "Random Ship Name",
+    "phone": "1122334455",
+    "tracking_number": "track456"
+  },
+  "source": "src_random456",
+  "statement_descriptor": "Random Descriptor",
+  "statement_descriptor_suffix": "Suffix",
+  "status": "pending",
+  "transfer_data": {
+    "amount": 7890,
+    "destination": "dest_random789"
+  },
+  "transfer_group": "group_random456"
+}
