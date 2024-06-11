@@ -51,6 +51,7 @@ const verifyAccount = catchAsync(async (req, res) => {
   const updatedUser = await userService.updateUserById(user.id, {
     userId: userIdToUpdate,
     isVerified: true,
+    hasCompletedOnboarding: false,
   });
 
   await interestService.createUserInterest(email);
