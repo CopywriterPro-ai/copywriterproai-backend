@@ -66,11 +66,7 @@ const userSchema = new Schema(
     },
     hasCompletedOnboarding: {
       type: Boolean,
-<<<<<<< HEAD
-      default: false,
-=======
       default: true,
->>>>>>> gitlab/master
     },
   },
   {

@@ -1,4 +1,4 @@
-# copywriter-backend
+# copywriter-api
 
 ## Requirements
 
@@ -6,6 +6,7 @@
 - [Yarn](https://yarnpkg.com/en/docs/install)
 - MongoDB Database
 
+# Windows
 
 #### Install dependencies:
 
