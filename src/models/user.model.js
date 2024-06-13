@@ -1,13 +1,17 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+<<<<<<< HEAD
 const { Schema } = mongoose;
+=======
+>>>>>>> parent of ac7c990 (sign in with google integrating..)
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 const { authTypes } = require('../config/auths');
 const authTypeEnum = Object.values(authTypes);
 
-const userSchema = new Schema(
+const userSchema = mongoose.Schema(
   {
+<<<<<<< HEAD
     userId: {
       type: String,
       unique: true,
@@ -29,9 +33,17 @@ const userSchema = new Schema(
     },
     profileAvatar: {
       type: String,
+=======
+    phoneNumber: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+>>>>>>> parent of ac7c990 (sign in with google integrating..)
     },
     password: {
       type: String,
+      required: true,
       trim: true,
       private: true, // used by the toJSON plugin
     },
@@ -55,18 +67,36 @@ const userSchema = new Schema(
       enum: ['active', 'blocked'],
       default: 'active',
     },
+<<<<<<< HEAD
     favouriteTools: {
       type: Array,
       required: true,
       default: [],
+=======
+    wordsLeft: {
+      type: Number,
+      required: true,
+      trim: true,
+      default: 1000,
+>>>>>>> parent of ac7c990 (sign in with google integrating..)
     },
     UserOwnOpenAIApiKey: {
       type: String,
       required: false,
     },
+<<<<<<< HEAD
     hasCompletedOnboarding: {
       type: Boolean,
       default: true,
+=======
+    bookmarks: {
+      type: mongoose.Schema.Types.Mixed,
+    },
+    OTP: {
+      type: String,
+      length: 6,
+      trim: true,
+>>>>>>> parent of ac7c990 (sign in with google integrating..)
     },
   },
   {

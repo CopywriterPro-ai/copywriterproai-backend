@@ -24,6 +24,7 @@ const envVarsSchema = Joi.object()
     SMTP_USERNAME: Joi.string().description('username for email server'),
     SMTP_PASSWORD: Joi.string().description('password for email server'),
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
+<<<<<<< HEAD
     GOOGLE_OAUTH2_CLIENT_ID: Joi.string().required().description('google oauth2 client id'),
     GOOGLE_OAUTH2_SECRET_ID: Joi.string().required().description('google oauth2 secret id'),
     FACEBOOK_APP_ID: Joi.string().required().description('facebook oauth app id'),
@@ -42,6 +43,8 @@ const envVarsSchema = Joi.object()
     INPUT_CHARACTER_RATE: Joi.string().default('').description('Per package input character rate'),
     PLAGIARISM_CHECKER_ALLOWED_PACKAGES: Joi.string().default('').description('Plagiarism checker allowed packages'), // Added default value
     IGNORE_CONTENT_SAVING_EMAIL: Joi.string().allow('').default('').description('Ignore content saving email'),
+=======
+>>>>>>> parent of ac7c990 (sign in with google integrating..)
   })
   .unknown(); // Allow unknown keys in environment variables
 
@@ -60,7 +63,6 @@ module.exports = {
       useCreateIndex: true,
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useFindAndModify: false,
     },
   },
   jwt: {
@@ -74,6 +76,7 @@ module.exports = {
     authSecretKey: envVars.PASSPORT_SECRET_JWT_KEY,
     authExpireTime: envVars.PASSPORT_AUTH_EXPIRES_TIME,
   },
+<<<<<<< HEAD
   googleOauth2: {
     clientId: envVars.GOOGLE_OAUTH2_CLIENT_ID,
     secretId: envVars.GOOGLE_OAUTH2_SECRET_ID,
@@ -82,6 +85,8 @@ module.exports = {
     appId: envVars.FACEBOOK_APP_ID,
     appSecret: envVars.FACEBOOK_APP_SECRET,
   },
+=======
+>>>>>>> parent of ac7c990 (sign in with google integrating..)
   openAI: {
     openAIAPIKey: envVars.OPENAI_API_KEY,
   },
@@ -108,6 +113,7 @@ module.exports = {
     },
     from: envVars.EMAIL_FROM,
   },
+<<<<<<< HEAD
   frontendUrl: {
     web: envVars.WEB_CLIENT_URL,
   },
@@ -132,4 +138,6 @@ module.exports = {
   content: {
     ignoresavingdb: envVars.IGNORE_CONTENT_SAVING_EMAIL.split(',').map(email => email.trim()), // Added .map to trim each email
   },
+=======
+>>>>>>> parent of ac7c990 (sign in with google integrating..)
 };

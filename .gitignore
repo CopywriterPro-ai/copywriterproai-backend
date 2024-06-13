@@ -4,5 +4,14 @@ node_modules
 # yarn error logs
 yarn-error.log
 
+<<<<<<< HEAD
 # .env
 .env
+=======
+# Environment varibales
+.env*
+!.env*.example
+
+# Code coverage
+coverage
+>>>>>>> parent of ac7c990 (sign in with google integrating..)
