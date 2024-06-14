@@ -1,13 +1,9 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
-<<<<<<< HEAD
 const { Strategy: GoogleStrategy } = require('passport-google-oauth20');
 const { Strategy: FacebookStrategy } = require('passport-facebook');
 const { jwt, googleOauth2, facebookOauth } = require('./config');
 const { strategyVerify } = require('../services/user.service');
 const { authTypes } = require('./auths');
-=======
-const config = require('./config');
->>>>>>> parent of ac7c990 (sign in with google integrating..)
 const { tokenTypes } = require('./tokens');
 const { User } = require('../models');
 
@@ -21,11 +17,10 @@ const googleCallbackURL = isDevelopment
 
 // Options for JWT strategy
 const jwtOptions = {
-  secretOrKey: config.jwt.secret,
+  secretOrKey: jwt.secret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 
-<<<<<<< HEAD
 // Options for Google OAuth strategy
 const googleOptions = {
   clientID: googleOauth2.clientId,
@@ -43,8 +38,6 @@ const facebookOptions = {
 };
 
 // Function to verify JWT tokens
-=======
->>>>>>> parent of ac7c990 (sign in with google integrating..)
 const jwtVerify = async (payload, done) => {
   try {
     // Check if the token type is ACCESS
@@ -64,7 +57,6 @@ const jwtVerify = async (payload, done) => {
   }
 };
 
-<<<<<<< HEAD
 // Create instances of each strategy with the options and verification functions
 const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
 const googleStrategy = new GoogleStrategy(googleOptions, strategyVerify(authTypes.GOOGLE));
@@ -74,10 +66,4 @@ module.exports = {
   jwtStrategy,
   googleStrategy,
   facebookStrategy,
-=======
-const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
-
-module.exports = {
-  jwtStrategy,
->>>>>>> parent of ac7c990 (sign in with google integrating..)
 };

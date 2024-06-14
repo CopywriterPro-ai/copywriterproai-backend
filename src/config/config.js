@@ -13,7 +13,9 @@ const envVarsSchema = Joi.object()
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
-    JWT_EXTENSION_ACCESS_EXPIRATION_MONTHS: Joi.number().default(6).description('months after which extension access tokens expire'),
+    JWT_EXTENSION_ACCESS_EXPIRATION_MONTHS: Joi.number()
+      .default(6)
+      .description('months after which extension access tokens expire'),
     OPENAI_API_KEY: Joi.string().required().description('OpenAI secret key'),
     COPYSCAPE_USERNAME: Joi.string().required().description('Copyscape username'),
     COPYSCAPE_API_KEY: Joi.string().required().description('Copyscape API key'),
@@ -24,7 +26,6 @@ const envVarsSchema = Joi.object()
     SMTP_USERNAME: Joi.string().description('username for email server'),
     SMTP_PASSWORD: Joi.string().description('password for email server'),
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
-<<<<<<< HEAD
     GOOGLE_OAUTH2_CLIENT_ID: Joi.string().required().description('google oauth2 client id'),
     GOOGLE_OAUTH2_SECRET_ID: Joi.string().required().description('google oauth2 secret id'),
     FACEBOOK_APP_ID: Joi.string().required().description('facebook oauth app id'),
@@ -43,8 +44,6 @@ const envVarsSchema = Joi.object()
     INPUT_CHARACTER_RATE: Joi.string().default('').description('Per package input character rate'),
     PLAGIARISM_CHECKER_ALLOWED_PACKAGES: Joi.string().default('').description('Plagiarism checker allowed packages'), // Added default value
     IGNORE_CONTENT_SAVING_EMAIL: Joi.string().allow('').default('').description('Ignore content saving email'),
-=======
->>>>>>> parent of ac7c990 (sign in with google integrating..)
   })
   .unknown(); // Allow unknown keys in environment variables
 
@@ -76,7 +75,6 @@ module.exports = {
     authSecretKey: envVars.PASSPORT_SECRET_JWT_KEY,
     authExpireTime: envVars.PASSPORT_AUTH_EXPIRES_TIME,
   },
-<<<<<<< HEAD
   googleOauth2: {
     clientId: envVars.GOOGLE_OAUTH2_CLIENT_ID,
     secretId: envVars.GOOGLE_OAUTH2_SECRET_ID,
@@ -85,8 +83,6 @@ module.exports = {
     appId: envVars.FACEBOOK_APP_ID,
     appSecret: envVars.FACEBOOK_APP_SECRET,
   },
-=======
->>>>>>> parent of ac7c990 (sign in with google integrating..)
   openAI: {
     openAIAPIKey: envVars.OPENAI_API_KEY,
   },
@@ -113,7 +109,6 @@ module.exports = {
     },
     from: envVars.EMAIL_FROM,
   },
-<<<<<<< HEAD
   frontendUrl: {
     web: envVars.WEB_CLIENT_URL,
   },
@@ -129,15 +124,13 @@ module.exports = {
     plagiarismCheckerWords: envVars.TRIAL_PLAGIARISM_CHECKER_WORDS,
   },
   inputLimit: {
-    packages: envVars.PACKAGES.split(',').map(pkg => pkg.trim()),
-    inputCharacterRate: envVars.INPUT_CHARACTER_RATE.split(',').map(rate => parseInt(rate.trim(), 10)),
+    packages: envVars.PACKAGES.split(',').map((pkg) => pkg.trim()),
+    inputCharacterRate: envVars.INPUT_CHARACTER_RATE.split(',').map((rate) => parseInt(rate.trim(), 10)),
   },
   plagiarismChecker: {
-    allowedPackages: envVars.PLAGIARISM_CHECKER_ALLOWED_PACKAGES.split(',').map(pkg => pkg.trim()), // Added .map to trim each package
+    allowedPackages: envVars.PLAGIARISM_CHECKER_ALLOWED_PACKAGES.split(',').map((pkg) => pkg.trim()), // Added .map to trim each package
   },
   content: {
-    ignoresavingdb: envVars.IGNORE_CONTENT_SAVING_EMAIL.split(',').map(email => email.trim()), // Added .map to trim each email
+    ignoresavingdb: envVars.IGNORE_CONTENT_SAVING_EMAIL.split(',').map((email) => email.trim()), // Added .map to trim each email
   },
-=======
->>>>>>> parent of ac7c990 (sign in with google integrating..)
 };
