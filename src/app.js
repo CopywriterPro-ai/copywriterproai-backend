@@ -11,12 +11,8 @@ const Sentry = require('@sentry/node');
 const Tracing = require('@sentry/tracing');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
-<<<<<<< HEAD
 const corsOptions = require('./config/corsoptions');
 const { jwtStrategy, googleStrategy, facebookStrategy } = require('./config/passport');
-=======
-const { jwtStrategy } = require('./config/passport');
->>>>>>> parent of ac7c990 (sign in with google integrating..)
 const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
@@ -81,7 +77,6 @@ app.options('*', cors(corsOptions));
 // passportjs authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
-<<<<<<< HEAD
 passport.use('google', googleStrategy);
 passport.use('facebook', facebookStrategy);
 
@@ -90,8 +85,6 @@ if (config.env === 'production') {
   app.use(Sentry.Handlers.requestHandler());
   app.use(Sentry.Handlers.tracingHandler());
 }
-=======
->>>>>>> parent of ac7c990 (sign in with google integrating..)
 
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {
