@@ -1,13 +1,11 @@
+const passport = require('passport');
 const express = require('express');
 const validate = require('../../middlewares/validate');
 const passportAuth = require('../../middlewares/passportAuth');
 const verifyEmail = require('../../middlewares/verifyEmail');
 const authValidation = require('../../validations/auth.validation');
 const authController = require('../../controllers/auth.controller');
-<<<<<<< HEAD
 const auth = require('../../middlewares/auth');
-=======
->>>>>>> parent of ac7c990 (sign in with google integrating..)
 
 const router = express.Router();
 
@@ -17,7 +15,6 @@ router.post('/login', validate(authValidation.login), authController.login);
 router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
-<<<<<<< HEAD
 router.post('/reset-password', validate(authValidation.resetPassword), verifyEmail(), authController.resetPassword);
 router.post('/strategy-login', validate(authValidation.strategyLogin), passportAuth(), authController.strategyLogin);
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
@@ -35,9 +32,6 @@ router.get(
   passport.authenticate('facebook', { failureRedirect: '/login', session: false }),
   authController.strategyCallback
 );
-=======
-router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
->>>>>>> parent of ac7c990 (sign in with google integrating..)
 
 // Route to handle the submission of user's own OpenAI API key during onboarding
 router.post('/submit-own-openai-api-key', auth(), authController.submitOwnOpenAIApiKey);
