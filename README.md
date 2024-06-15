@@ -44,6 +44,8 @@ Welcome to the backend repository of CopywriterProAI, the world's first open-sou
 - Node v12.0+
 - Yarn
 - MongoDB Database
+- Docker
+- Docker Compose
 
 
 #### Install dependencies:
@@ -59,7 +61,7 @@ Copy from .env.example file and add new environment variables:
 .env
 ```
 
-# Frontend environment variables
+# Environment variables
 ```bash
 PORT=8080
 
@@ -140,6 +142,34 @@ Running in Production
 
 yarn start
 ```
+
+#### Docker Setup
+To simplify the setup for developers, we provide a Docker configuration that allows you to run the project with a single docker-compose up command.
+
+#### Docker Setup Steps
+Clone the repository:
+
+```bash
+git clone https://github.com/your-repo/your-project.git
+cd your-project
+```
+Copy the .env.sample file to .env and update any necessary configuration:
+
+```bash
+
+cp .env.sample .env
+```
+
+#### Build and run the project using Docker Compose:
+
+```bash
+
+docker-compose up --build
+```
+
+#### Access the application:
+
+The backend will be running on http://localhost:8080.
 
 ## 🚀 Documentation
 
