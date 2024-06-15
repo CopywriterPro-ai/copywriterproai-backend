@@ -150,8 +150,8 @@ To simplify the setup for developers, we provide a Docker configuration that all
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-repo/your-project.git
-cd your-project
+git clone https://github.com/CopywriterPro-ai/copywriterproai-backend
+cd copywriterproai-backend
 ```
 Copy the .env.sample file to .env and update any necessary configuration:
 
