@@ -1,0 +1,60 @@
+name: 🐛 Bug Report
+description: Create a report to help us improve
+# title: "Bug Report"
+labels: [bug, triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for submitting a Bug Report!
+
+  - type: checkboxes
+    attributes:
+      label: Search before asking
+      description: >
+        Please search the Ultralytics [issues](https://github.com/CopywriterPro-ai/copywriterproai-backend/issues) to see if a similar bug report already exists.
+      options:
+        - label: >
+            I have searched the CopywriterPro [issues](https://github.com/CopywriterPro-ai/copywriterproai-backend/issues) and found no similar bug report.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Bug
+      description: Provide console output with error messages and/or screenshots of the bug.
+      placeholder: |
+        Provide a brief description of the problem here.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: Provide clearly ordered steps to reproduce the issue
+      placeholder: |
+        Include as much information as possible (screenshots, logs, tracebacks etc.) to receive the most helpful response.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: Clearly describe the current behavior
+      placeholder: |
+        Include as much information as possible (screenshots, logs, tracebacks etc.) to receive the most helpful response.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: Clearly describe the expected behavior
+      placeholder: |
+        Include as much information as possible (screenshots, logs, tracebacks etc.) to receive the most helpful response.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional
+      description: Anything else you would like to share?
