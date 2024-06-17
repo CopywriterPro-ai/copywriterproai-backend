@@ -25,7 +25,6 @@ body:
       placeholder: |
         What new feature would you like to see in CopywriterPro?
     validations:
-      required: true
 
   - type: textarea
     attributes:
