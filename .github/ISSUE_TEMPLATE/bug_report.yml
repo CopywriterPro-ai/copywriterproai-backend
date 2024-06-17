@@ -12,7 +12,7 @@ body:
     attributes:
       label: Search before asking
       description: >
-        Please search the Ultralytics [issues](https://github.com/CopywriterPro-ai/copywriterproai-backend/issues) to see if a similar bug report already exists.
+        Please search the CopywriterPro [issues](https://github.com/CopywriterPro-ai/copywriterproai-backend/issues) to see if a similar bug report already exists.
       options:
         - label: >
             I have searched the CopywriterPro [issues](https://github.com/CopywriterPro-ai/copywriterproai-backend/issues) and found no similar bug report.

@@ -1,0 +1,41 @@
+name: 🚀 Feature Request
+description: Suggest an idea for this project
+# title: "Feature Request"
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for submitting a Feature Request!
+
+  - type: checkboxes
+    attributes:
+      label: Search before asking
+      description: >
+        Please search the CopywriterPro [issues](https://github.com/CopywriterPro-ai/copywriterproai-backend/issues) to see if a similar feature request already exists.
+      options:
+        - label: >
+            I have searched the CopywriterPro [issues](https://github.com/CopywriterPro-ai/copywriterproai-backend/issues) and found no similar feature request.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: A short description of your feature.
+      placeholder: |
+        What new feature would you like to see in CopywriterPro?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Use case
+      description: |
+        Describe the use case of your feature request.
+      placeholder: |
+        How would this feature be used, and who would use it?
+
+  - type: textarea
+    attributes:
+      label: Additional
+      description: Anything else you would like to share?
