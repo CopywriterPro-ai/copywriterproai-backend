@@ -20,39 +20,20 @@ body:
 
   - type: textarea
     attributes:
-      label: Bug
-      description: Provide console output with error messages and/or screenshots of the bug.
+      label: Description
+      description: A short description of your feature.
       placeholder: |
-        Provide a brief description of the problem here.
+        What new feature would you like to see in CopywriterPro?
     validations:
       required: true
 
   - type: textarea
     attributes:
-      label: Steps To Reproduce
-      description: Provide clearly ordered steps to reproduce the issue
+      label: Use case
+      description: |
+        Describe the use case of your feature request.
       placeholder: |
-        Include as much information as possible (screenshots, logs, tracebacks etc.) to receive the most helpful response.
-    validations:
-      required: true
-
-  - type: textarea
-    attributes:
-      label: Current Behavior
-      description: Clearly describe the current behavior
-      placeholder: |
-        Include as much information as possible (screenshots, logs, tracebacks etc.) to receive the most helpful response.
-    validations:
-      required: true
-
-  - type: textarea
-    attributes:
-      label: Expected Behavior
-      description: Clearly describe the expected behavior
-      placeholder: |
-        Include as much information as possible (screenshots, logs, tracebacks etc.) to receive the most helpful response.
-    validations:
-      required: true
+        How would this feature be used, and who would use it?
 
   - type: textarea
     attributes:
