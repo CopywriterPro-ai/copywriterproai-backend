@@ -1,9 +1,9 @@
 ---
-name: Propose Enhancement
+name: 🚀 Propose Enhancement
 about: Suggest an idea for this project
-title: ""
+title: ''
 labels: enhancement
-assignees: ""
+assignees: ''
 ---
 
 ## Context
